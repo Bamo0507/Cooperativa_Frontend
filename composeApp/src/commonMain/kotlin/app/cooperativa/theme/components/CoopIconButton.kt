@@ -9,7 +9,7 @@ import androidx.compose.ui.Modifier
 import app.cooperativa.theme.CoopTheme
 
 @Composable
-fun LDIconButton(
+fun CoopIconButton(
     onClick: () -> Unit,
     modifier: Modifier = Modifier,
     enabled: Boolean = true,

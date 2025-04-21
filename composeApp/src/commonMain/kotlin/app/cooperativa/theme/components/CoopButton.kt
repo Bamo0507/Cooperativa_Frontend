@@ -16,7 +16,7 @@ import androidx.compose.ui.unit.dp
 import app.cooperativa.theme.CoopTheme
 
 @Composable
-fun LDButton(
+fun CoopButton(
     onClick: () -> Unit,
     modifier: Modifier = Modifier,
     enabled: Boolean = true,

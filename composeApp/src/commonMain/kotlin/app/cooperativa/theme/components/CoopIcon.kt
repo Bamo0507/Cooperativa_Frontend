@@ -11,7 +11,7 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import app.cooperativa.theme.CoopTheme
 
 @Composable
-fun LDIcon(
+fun CoopIcon(
     imageVector: ImageVector,
     contentDescription: String?,
     modifier: Modifier = Modifier,
@@ -26,7 +26,7 @@ fun LDIcon(
 }
 
 @Composable
-fun LDIcon(
+fun CoopIcon(
     bitmap: ImageBitmap,
     contentDescription: String?,
     modifier: Modifier = Modifier,
@@ -41,7 +41,7 @@ fun LDIcon(
 }
 
 @Composable
-fun LDIcon(
+fun CoopIcon(
     painter: Painter,
     contentDescription: String?,
     modifier: Modifier = Modifier,

@@ -28,7 +28,7 @@ private fun outlinedButtonBorder(enabled: Boolean = true): BorderStroke =
     )
 
 @Composable
-fun LDOutlinedButton(
+fun CoopOutlinedButton(
     onClick: () -> Unit,
     modifier: Modifier = Modifier,
     enabled: Boolean = true,
