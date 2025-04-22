@@ -60,7 +60,7 @@ fun SociosNavigationBar(
                         CoopIcon(
                             imageVector      = icon,
                             contentDescription = label,
-                            tint             = CoopTheme.colorScheme.tertiary,
+                            tint             = CoopTheme.colorScheme.onSecondary,
                             modifier         = Modifier.size(24.dp)
                         )
 

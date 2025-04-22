@@ -19,7 +19,7 @@ import app.cooperativa.theme.components.CoopIcon
 import app.cooperativa.theme.components.CoopText
 
 @Composable
-fun DirectivaNavitationBar(
+fun DirectivaNavigationBar(
     selectedIndex: Int,
     onItemSelected: (Int) -> Unit
 ) {
@@ -52,7 +52,7 @@ fun DirectivaNavitationBar(
                         CoopIcon(
                             imageVector        = icon,
                             contentDescription = label,
-                            tint               = CoopTheme.colorScheme.tertiary,
+                            tint               = CoopTheme.colorScheme.onSecondary,
                             modifier           = Modifier.size(24.dp)
                         )
                     } else {
