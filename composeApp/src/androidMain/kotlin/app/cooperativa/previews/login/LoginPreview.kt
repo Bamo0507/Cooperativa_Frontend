@@ -4,7 +4,7 @@ import android.content.res.Configuration
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
-import app.cooperativa.login.LoginScreen
+import app.cooperativa.presentation.login.LoginScreen
 import app.cooperativa.theme.CoopTheme
 
 @Preview(
