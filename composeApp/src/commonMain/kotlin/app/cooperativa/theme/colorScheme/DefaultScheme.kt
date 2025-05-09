@@ -4,7 +4,7 @@ import androidx.compose.ui.graphics.Color
 import app.cooperativa.theme.CoopColorScheme
 
 val LightColorScheme = CoopColorScheme(
-    surface   = Color(0xFFF5F5F5),
+    surface   = Color(0xFFFFFFFF),
     onSurface = Color(0xFF2A2F35),
     primary   = Color(0xFFD0E7E8),
     onPrimary = Color(0xFF21434A),

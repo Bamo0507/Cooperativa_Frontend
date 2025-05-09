@@ -1,4 +1,4 @@
-package app.cooperativa.data.model
+package app.cooperativa.data.model.dto
 
 enum class FineType {
     LOAN,
