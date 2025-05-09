@@ -24,6 +24,7 @@ fun DPaymentsPendingPreviewLight() {
     CoopTheme {
         DPaymentsScreen(
             payments = samplePendientes,
+            selectedTabIndex = 0,
             modifier = Modifier.padding(16.dp)
         )
     }
@@ -39,6 +40,39 @@ fun DPaymentsPendingPreviewDark() {
     CoopTheme {
         DPaymentsScreen(
             payments = samplePendientes,
+            selectedTabIndex = 0,
+            modifier = Modifier.padding(16.dp)
+        )
+    }
+}
+
+@Preview(
+    name = "Pagados Light Mode",
+    showBackground = true,
+    uiMode = Configuration.UI_MODE_NIGHT_NO
+)
+@Composable
+fun DPaymentsPayedPreviewLight() {
+    CoopTheme {
+        DPaymentsScreen(
+            payments = samplePendientes,
+            selectedTabIndex = 1,
+            modifier = Modifier.padding(16.dp)
+        )
+    }
+}
+
+@Preview(
+    name = "Pagados Dark Mode",
+    showBackground = true,
+    uiMode = Configuration.UI_MODE_NIGHT_YES
+)
+@Composable
+fun DPaymentsPayedPreviewDark() {
+    CoopTheme {
+        DPaymentsScreen(
+            payments = samplePendientes,
+            selectedTabIndex = 1,
             modifier = Modifier.padding(16.dp)
         )
     }

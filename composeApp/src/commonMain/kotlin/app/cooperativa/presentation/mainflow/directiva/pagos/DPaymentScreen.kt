@@ -3,6 +3,7 @@ package app.cooperativa.presentation.mainflow.directiva.pagos
 import androidx.compose.foundation.background
 import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -38,43 +39,36 @@ import app.cooperativa.data.model.dto.Payment
 import app.cooperativa.data.model.ui.BasicInfoPayment
 import app.cooperativa.theme.CoopTheme
 import app.cooperativa.theme.components.CoopIcon
+import app.cooperativa.theme.components.CoopSearchBar
 import app.cooperativa.theme.components.CoopText
+import app.cooperativa.theme.components.CoopTopBar
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun DPaymentsRoute() {
     val payments = rememberSaveable { mutableStateOf(PaymentMockData.getAllPaymentsBasicInfo()) }
 
-    DPaymentsScreen(payments = payments.value)
+    DPaymentsScreen(
+        payments = payments.value,
+        selectedTabIndex = 0
+    )
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun DPaymentsScreen(
     payments: List<BasicInfoPayment>,
+    selectedTabIndex: Int,
+    changeIndex: (Int) -> Unit = {},
     modifier: Modifier = Modifier
 ) {
-    var filterIndex by rememberSaveable { mutableStateOf(0) }
     val chipOptions = listOf("Pendientes", "Pagados", "Moras")
 
     Scaffold(
-        containerColor = CoopTheme.colorScheme.surface,
         topBar = {
-            TopAppBar(
-                title = {
-                    CoopText(
-                        text = "Pagos",
-                        fontWeight = FontWeight.Bold,
-                        textAlign = TextAlign.Center,
-                        modifier = Modifier.fillMaxWidth()
-                    )
-                },
-                colors = TopAppBarDefaults.topAppBarColors(
-                    containerColor = CoopTheme.colorScheme.primary,
-                    titleContentColor = CoopTheme.colorScheme.onPrimary
-                )
-            )
-        }
+            CoopTopBar(title = "Pagos")
+        },
+        containerColor = CoopTheme.colorScheme.surface,
     ) { padding ->
         Column(
             modifier = modifier
@@ -84,13 +78,13 @@ fun DPaymentsScreen(
         ) {
             // Chips
             FilterChipsRow(
-                selectedIndex = filterIndex,
-                onSelect = { filterIndex = it },
+                selectedIndex = selectedTabIndex,
+                onSelect = {},
                 modifier = Modifier.padding(bottom = 12.dp)
             )
 
             // Filtrar y mostrar según estado
-            if (filterIndex == 0) {
+            if (selectedTabIndex == 0) {
                 // Pendientes
                 payments.forEach { basic ->
                     if(basic.isPaymentPending == true){
@@ -103,8 +97,26 @@ fun DPaymentsScreen(
                     }
 
                 }
-            } else if (filterIndex == 1) {
+            } else if (selectedTabIndex == 1) {
                 // Pagados
+                // Search bar
+                CoopSearchBar(
+                    query = "",
+                    onQueryChanged = {},
+                    placeholder = "Bryan Martinez",
+                    modifier = Modifier.padding(bottom = 8.dp)
+                )
+
+                payments.forEach { basic ->
+                    if(basic.isPaymentPending == false){
+                        PaymentItem(
+                            idPayment = basic.id,
+                            paymentName = basic.paymentName,
+                            affiliatedName = basic.username,
+                            modifier = Modifier.padding(vertical = 8.dp)
+                        )
+                    }
+                }
 
             } else {
                 // En mora
@@ -153,7 +165,8 @@ fun PaymentItem(
             Spacer(modifier = Modifier.width(8.dp))
             CoopIcon(
                 imageVector = Icons.Filled.ArrowForward,
-                contentDescription = "Ir al detalle"
+                contentDescription = "Ir al detalle",
+                tint = CoopTheme.colorScheme.secondary
             )
         }
     }
