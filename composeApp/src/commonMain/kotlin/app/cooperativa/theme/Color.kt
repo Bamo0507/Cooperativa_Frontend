@@ -14,7 +14,8 @@ data class CoopColorScheme(
     val secondary: Color,
     val onSecondary: Color,
     val tertiary: Color,
-    val onTertiary: Color
+    val onTertiary: Color,
+    val surfaceVariant: Color
 )
 
 val LocalReplacementColorScheme = staticCompositionLocalOf {
@@ -26,6 +27,7 @@ val LocalReplacementColorScheme = staticCompositionLocalOf {
         secondary = Color.Unspecified,
         onSecondary = Color.Unspecified,
         tertiary = Color.Unspecified,
-        onTertiary = Color.Unspecified
+        onTertiary = Color.Unspecified,
+        surfaceVariant = Color.Unspecified
     )
 }

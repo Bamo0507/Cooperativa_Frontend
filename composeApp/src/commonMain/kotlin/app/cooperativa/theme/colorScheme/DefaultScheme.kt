@@ -12,6 +12,7 @@ val LightColorScheme = CoopColorScheme(
     onSecondary = Color(0xFF0B2A41),
     tertiary   = Color(0xFF043259),
     onTertiary = Color(0xFFE1F3FF),
+    surfaceVariant = Color(0xFFF5F5F5)
 )
 
 val DarkColorScheme = CoopColorScheme(
@@ -22,5 +23,6 @@ val DarkColorScheme = CoopColorScheme(
     onSurface = Color(0xFFD6D9DE),
     onPrimary = Color(0xFF112437),
     onSecondary = Color(0xFFCBE5FF),
-    onTertiary = Color(0xFFD3ECEC)
+    onTertiary = Color(0xFFD3ECEC),
+    surfaceVariant = Color(0xFF1e1e1e)
 )
