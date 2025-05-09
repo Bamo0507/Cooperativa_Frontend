@@ -2,7 +2,7 @@ package app.cooperativa.previews.account
 
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.tooling.preview.Preview
-import app.cooperativa.account.directiva.AccountScreen
+import app.cooperativa.presentation.mainflow.directiva.account.AccountScreen
 import app.cooperativa.theme.CoopTheme
 import app.cooperativa.theme.components.CoopSurface
 

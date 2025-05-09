@@ -1,4 +1,4 @@
-package app.cooperativa.account.directiva
+package app.cooperativa.presentation.mainflow.directiva.account
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
