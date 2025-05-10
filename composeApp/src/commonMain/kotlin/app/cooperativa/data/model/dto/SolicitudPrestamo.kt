@@ -7,6 +7,6 @@ data class SolicitudPrestamo(
     val montoTotal: Float,
     val plazoMeses: Int,
     val motivo: String,
-    val codeudores: List<Codeudor>,
+    val codeudores: List<Codeudor>?,
     val comentarios: String?
 )
