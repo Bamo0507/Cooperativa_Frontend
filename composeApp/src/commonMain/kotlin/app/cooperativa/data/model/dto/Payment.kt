@@ -11,6 +11,8 @@ data class Payment(
 
     val quotas: List<Quotas>? = null,
     val loanPayments: List<LoanPayment>? = null,
+    val finePayments: List<FinePayment>? = null,
+    val contributionPayments: List<Contribution>? = null,
 
     val paymentImage: String,
 

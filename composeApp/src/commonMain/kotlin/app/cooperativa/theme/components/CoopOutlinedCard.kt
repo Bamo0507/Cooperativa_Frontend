@@ -1,5 +1,6 @@
 package app.cooperativa.theme.components
 
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -16,7 +17,7 @@ import app.cooperativa.theme.CoopTheme
 
 @Composable
 fun CoopOutlinedCard(
-    onClick: () -> Unit,
+    onClick: () -> Unit = {},
     modifier: Modifier = Modifier,
     shape: RoundedCornerShape = RoundedCornerShape(16.dp),
     containerColor: Color = CoopTheme.colorScheme.surfaceVariant,
@@ -32,6 +33,7 @@ fun CoopOutlinedCard(
             containerColor = containerColor,
             contentColor = contentColor
         ),
+        border = BorderStroke(width = 1.dp, color = CoopTheme.colorScheme.primary),
         elevation = CardDefaults.outlinedCardElevation(
             defaultElevation = elevation
         )
