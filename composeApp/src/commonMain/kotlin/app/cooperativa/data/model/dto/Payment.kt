@@ -1,9 +1,10 @@
-package app.cooperativa.data.model
+package app.cooperativa.data.model.dto
 
 import kotlinx.datetime.LocalDate
 
 data class Payment(
     val id: Int,
+
     val paymentName: String,
     val userName: String,
     val paymentDate: LocalDate,
@@ -13,4 +14,5 @@ data class Payment(
 
     val paymentImage: String,
 
+    val isPaymentPending: Boolean = true
 )

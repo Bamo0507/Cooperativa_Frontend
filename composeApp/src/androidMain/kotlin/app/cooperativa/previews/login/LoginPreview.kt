@@ -24,7 +24,7 @@ fun LoginScreenPreviewLight() {
             passwordVisible = false,
             onPasswordVisibleToggle = {},
             onLogin = {}
-        )
+    )
     }
 }
 
