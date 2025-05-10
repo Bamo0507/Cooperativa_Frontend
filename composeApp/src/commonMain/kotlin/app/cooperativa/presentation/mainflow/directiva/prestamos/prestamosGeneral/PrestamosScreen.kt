@@ -13,6 +13,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowForward
@@ -20,33 +21,36 @@ import androidx.compose.material3.FilterChip
 import androidx.compose.material3.FilterChipDefaults
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
-import app.cooperativa.data.localdb.SolicitudPrestamoMockData
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import app.cooperativa.data.localdb.PaymentMockData
+import app.cooperativa.data.localdb.SolicitudPrestamoMockData
 import app.cooperativa.data.localdb.PrestamoMockData
+import app.cooperativa.data.model.dto.Estados
 import app.cooperativa.data.model.dto.Prestamo
-import app.cooperativa.data.model.dto.SolicitudPrestamo
 import app.cooperativa.data.model.ui.BasicInfoLoan
 import app.cooperativa.theme.CoopTheme
 import app.cooperativa.theme.components.CoopIcon
 import app.cooperativa.theme.components.CoopOutlinedCard
+import app.cooperativa.theme.components.CoopSearchBar
 import app.cooperativa.theme.components.CoopText
 import app.cooperativa.theme.components.CoopTopBar
+import app.cooperativa.utils.PrestamoUtils
 
 @Composable
 fun PrestamosRoute() {
-    val reqLoans = rememberSaveable { mutableStateOf(SolicitudPrestamoMockData.getAllBasicInfo()) }
-    val approvedLoans = rememberSaveable { mutableStateOf(PrestamoMockData.getAllPrestamos())}
+    val reqLoansState = rememberSaveable { mutableStateOf(SolicitudPrestamoMockData.getAllBasicInfo()) }
+    val approvedLoansState = rememberSaveable { mutableStateOf(PrestamoMockData.getAllPrestamos()) }
+    val selectedIndexState = rememberSaveable { mutableStateOf(0) }
 
     PrestamoScreen(
-        reqLoans = reqLoans.value,
-        approvedLoans = approvedLoans.value,
-        selectedTabIndex = 0
+        reqLoans = reqLoansState.value,
+        approvedLoans = approvedLoansState.value,
+        selectedTabIndex = selectedIndexState.value,
+        changeIndex = { selectedIndexState.value = it }
     )
 }
 
@@ -56,67 +60,91 @@ fun PrestamoScreen(
     approvedLoans: List<Prestamo>,
     selectedTabIndex: Int,
     changeIndex: (Int) -> Unit = {},
+    prestamoUtils: PrestamoUtils = PrestamoUtils,
     modifier: Modifier = Modifier
-){
+) {
     Scaffold(
-        topBar = {
-            CoopTopBar(title = "Préstamos")
-        },
-        containerColor = CoopTheme.colorScheme.surface,
-    ){ padding ->
+        topBar = { CoopTopBar(title = "Préstamos") },
+        containerColor = CoopTheme.colorScheme.surface
+    ) { padding ->
         Column(
             modifier = modifier
                 .background(CoopTheme.colorScheme.surface)
                 .padding(padding)
                 .padding(vertical = 6.dp, horizontal = 12.dp)
         ) {
-            //Chips
             FilterChipsRow(
                 selectedIndex = selectedTabIndex,
-                onSelect = { changeIndex(it) },
+                onSelect = changeIndex,
                 modifier = Modifier.padding(bottom = 12.dp)
             )
 
-            if(selectedTabIndex == 0) {
-                LazyColumn(
-                    modifier = Modifier.fillMaxSize(),
-                    contentPadding = PaddingValues(vertical = 8.dp),
-                    verticalArrangement = Arrangement.spacedBy(8.dp)
-                ) {
-                    items(reqLoans.size) { index ->
-                        SoliticudItem(
-                            idSolicitud = reqLoans[index].id,
-                            solicitudName = reqLoans[index].loanName,
-                            affiliatedName = reqLoans[index].username,
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .padding(
-                                    horizontal = 4.dp,
-                                    vertical = 2.dp
-                                )
-                        )
+            when (selectedTabIndex) {
+                0 -> {
+                    LazyColumn(
+                        modifier = Modifier.fillMaxSize(),
+                        contentPadding = PaddingValues(vertical = 8.dp),
+                        verticalArrangement = Arrangement.spacedBy(8.dp)
+                    ) {
+                        items(reqLoans) { basic ->
+                            SolicitudItem(
+                                idSolicitud = basic.id,
+                                solicitudName = basic.loanName,
+                                affiliatedName = basic.username,
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .padding(horizontal = 4.dp, vertical = 2.dp)
+                            )
+                        }
                     }
                 }
-            } else if (selectedTabIndex == 1) {
-                //TODO
-            } else if (selectedTabIndex == 2 ) {
-                //TODO
-            }
+                1 -> {
+                    CoopSearchBar(
+                        query = "",
+                        onQueryChanged = {},
+                        placeholder = "Buscar préstamo",
+                        modifier = Modifier.padding(bottom = 8.dp)
+                    )
 
+                    LazyColumn(
+                        modifier = Modifier.fillMaxSize(),
+                        contentPadding = PaddingValues(vertical = 8.dp),
+                        verticalArrangement = Arrangement.spacedBy(8.dp)
+                    ) {
+                        //TODO: Incluir nombre del solicitante
+                        items(approvedLoans) { prestamo ->
+                            PrestamoItem(
+                                prestamoName = prestamo.nombre,
+                                montoTotal = prestamo.montoTotal,
+                                cantCuotas = prestamo.mensualidadesPrestamo.count(),
+                                cantPagadas = prestamoUtils.countPaidInstallments(prestamo),
+                                montoCancelado = prestamoUtils.totalPaidAmount(prestamo),
+                                montoPendiente = prestamoUtils.remainingAmount(prestamo),
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .padding(horizontal = 4.dp, vertical = 2.dp)
+                            )
+                        }
+                    }
+                }
+                2 -> {
+                    // TODO: Lista de préstamos completados
+                }
+            }
         }
     }
 }
 
 @Composable
-fun SoliticudItem(
+fun SolicitudItem(
     idSolicitud: Int,
     solicitudName: String,
     affiliatedName: String,
     modifier: Modifier = Modifier
-){
+) {
     CoopOutlinedCard(
         onClick = { /* TODO */ },
-        modifier = modifier.padding(vertical = 2.dp),
+        modifier = modifier.padding(vertical = 2.dp)
     ) {
         Row(
             modifier = Modifier
@@ -124,7 +152,7 @@ fun SoliticudItem(
                 .padding(16.dp),
             horizontalArrangement = Arrangement.SpaceBetween,
             verticalAlignment = Alignment.CenterVertically
-        ){
+        ) {
             Column {
                 CoopText(
                     text = solicitudName,
@@ -136,7 +164,6 @@ fun SoliticudItem(
                 CoopText(
                     text = affiliatedName
                 )
-
             }
 
             Spacer(modifier = Modifier.width(8.dp))
@@ -147,7 +174,70 @@ fun SoliticudItem(
                 tint = CoopTheme.colorScheme.primary
             )
         }
+    }
+}
 
+//TODO: NOMBRE DE SOLICITANTE METERLO EN EL MODEL
+@Composable
+fun PrestamoItem(
+    nombreSolicitante: String = "",
+    prestamoName: String,
+    montoTotal: Float,
+    cantCuotas: Int,
+    cantPagadas: Int,
+    montoCancelado: Float,
+    montoPendiente: Float,
+    modifier: Modifier = Modifier
+) {
+    CoopOutlinedCard(
+        onClick = { /* TODO */ },
+        modifier = modifier.padding(vertical = 2.dp)
+    ) {
+        Column(
+            modifier = Modifier.fillMaxWidth().padding(16.dp)
+        ) {
+            CoopText(
+                text = "$prestamoName",
+                fontWeight = FontWeight.Bold,
+                color = CoopTheme.colorScheme.onSurface
+            )
+
+            Spacer(modifier = Modifier.height(4.dp))
+
+            //Aqui tengo que hacer el cambio
+            CoopText(
+                text = "Bryan Martinez",
+                style = CoopTheme.typography.bodyMedium,
+                fontWeight = FontWeight.Bold,
+                color = CoopTheme.colorScheme.onSurface.copy(alpha = 0.5f)
+            )
+
+            Spacer(modifier = Modifier.height(12.dp))
+
+            CoopText(
+                text = "Cuotas: $cantPagadas / $cantCuotas",
+                style = CoopTheme.typography.bodyMedium,
+                color = CoopTheme.colorScheme.onSurface
+            )
+
+            CoopText(
+                text = "Pagado: $montoCancelado",
+                style = CoopTheme.typography.bodyMedium,
+                color = CoopTheme.colorScheme.onSurface
+            )
+
+            CoopText(
+                text = "Pendiente: $montoPendiente",
+                style = CoopTheme.typography.bodyMedium,
+                color = CoopTheme.colorScheme.onSurface
+            )
+
+            CoopText(
+                text = "Total: $montoTotal",
+                style = CoopTheme.typography.bodyMedium,
+                color = CoopTheme.colorScheme.onSurface
+            )
+        }
     }
 }
 
