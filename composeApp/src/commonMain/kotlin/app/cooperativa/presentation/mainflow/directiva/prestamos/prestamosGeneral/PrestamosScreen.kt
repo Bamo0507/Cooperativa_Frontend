@@ -113,7 +113,7 @@ fun PrestamoScreen(
                     ) {
                         //TODO: Incluir nombre del solicitante
                         items(approvedLoans) { prestamo ->
-                            PrestamoItem(
+                            PrestamoVigenteItem(
                                 prestamoName = prestamo.nombre,
                                 montoTotal = prestamo.montoTotal,
                                 cantCuotas = prestamo.mensualidadesPrestamo.count(),
@@ -128,7 +128,33 @@ fun PrestamoScreen(
                     }
                 }
                 2 -> {
-                    // TODO: Lista de préstamos completados
+                    // TODO: Lista de préstamos completados, filtrar acorde
+                    CoopSearchBar(
+                        query = "",
+                        onQueryChanged = {},
+                        placeholder = "Buscar préstamo",
+                        modifier = Modifier.padding(bottom = 8.dp)
+                    )
+
+                    LazyColumn(
+                        modifier = Modifier.fillMaxSize(),
+                        contentPadding = PaddingValues(vertical = 8.dp),
+                        verticalArrangement = Arrangement.spacedBy(8.dp)
+                    ) {
+                        //TODO: Incluir nombre del solicitante
+                        items(approvedLoans) { prestamo ->
+                            PrestamoCompletadoItem(
+                                solicitanteName = "Bryan Martinez",
+                                prestamoName = prestamo.nombre,
+                                montoTotal = prestamo.montoTotal,
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .padding(horizontal = 4.dp, vertical = 2.dp)
+                            )
+                        }
+                    }
+
+
                 }
             }
         }
@@ -177,9 +203,53 @@ fun SolicitudItem(
     }
 }
 
+@Composable
+fun PrestamoCompletadoItem(
+    prestamoName: String,
+    solicitanteName: String,
+    montoTotal: Float,
+    modifier: Modifier = Modifier
+){
+    CoopOutlinedCard(
+        modifier = modifier.padding(vertical = 2.dp)
+    ){
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(16.dp),
+            horizontalArrangement = Arrangement.SpaceBetween,
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Column {
+                CoopText(
+                    text = prestamoName,
+                    fontWeight = FontWeight.Bold,
+                    style = CoopTheme.typography.bodyMedium,
+                )
+
+                Spacer(modifier = Modifier.height(4.dp))
+
+                CoopText(
+                    text = solicitanteName,
+                    style = CoopTheme.typography.bodyMedium,
+                )
+            }
+
+            Spacer(modifier = Modifier.width(8.dp))
+
+            CoopText(
+                text = "Q${montoTotal.toString()}",
+                style = CoopTheme.typography.bodyMedium,
+                fontWeight = FontWeight.Bold
+            )
+        }
+
+    }
+}
+
 //TODO: NOMBRE DE SOLICITANTE METERLO EN EL MODEL
 @Composable
-fun PrestamoItem(
+fun PrestamoVigenteItem(
     nombreSolicitante: String = "",
     prestamoName: String,
     montoTotal: Float,
@@ -190,7 +260,6 @@ fun PrestamoItem(
     modifier: Modifier = Modifier
 ) {
     CoopOutlinedCard(
-        onClick = { /* TODO */ },
         modifier = modifier.padding(vertical = 2.dp)
     ) {
         Column(
