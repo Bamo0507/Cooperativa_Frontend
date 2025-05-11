@@ -36,22 +36,24 @@ import cooperativa.composeapp.generated.resources.login_background
 import org.jetbrains.compose.resources.painterResource
 
 @Composable
-fun LoginRoute() {
+fun LoginRoute(
+    onLogin: () -> Unit
+) {
     // Cambiar mas adelante por el STATE y un VIEWMODEL y declarar como EVENTS del screen
-    var username = rememberSaveable { mutableStateOf(" ") }
+    var username = rememberSaveable { mutableStateOf("") }
     var onTextChange = { text: String -> username.value = text }
-    var password = rememberSaveable { mutableStateOf(" ") }
+    var password = rememberSaveable { mutableStateOf("") }
     var onTextChangePassword = { text: String -> password.value = text }
     var passwordVisible = rememberSaveable { mutableStateOf(false) }
     var onPasswordVisible = { passwordVisible.value = !passwordVisible.value }
 
-
+    //LOGIN TODO QUE SE ESCUCHE EL FLOW PARA SABER A DONDE MANDARLO
     LoginScreen(
         username = username.value,
         onTextChange = onTextChange,
         password = password.value,
         onTextChangePassword = onTextChangePassword,
-        onLogin = { /*TODO*/ },
+        onLogin = onLogin,
         passwordVisible = passwordVisible.value,
         onPasswordVisibleToggle = onPasswordVisible
     )
@@ -191,6 +193,7 @@ fun LoginScreen(
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(50.dp)
+                    .padding(horizontal = 16.dp)
             ) {
                 CoopText("Iniciar Sesión", fontWeight = FontWeight.Bold)
             }

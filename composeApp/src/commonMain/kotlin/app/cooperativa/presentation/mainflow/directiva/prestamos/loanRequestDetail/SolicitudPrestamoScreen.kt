@@ -37,14 +37,16 @@ import app.cooperativa.theme.components.CoopText
 import app.cooperativa.theme.components.CoopTopBar
 
 @Composable
-fun SolicitudPrestamoRoute(){
-    //TODO: INCLUIR NOMBRE DE PRESTAMO EN SOLICITUD MODEL
-    val prestamoSolicitud = SolicitudPrestamoMockData.getSolicitudById(1)
+fun SolicitudPrestamoRoute(
+    solicitudId: Int,
+    onBackClick: () -> Unit
+){
+    val prestamoSolicitud = SolicitudPrestamoMockData.getSolicitudById(solicitudId)
 
     if (prestamoSolicitud != null) {
         SolicitudPrestamoScreen(
             prestamo = prestamoSolicitud,
-            onBackClick = { /*TODO*/ }
+            onBackClick = { onBackClick() }
         )
     }
 }
@@ -205,8 +207,8 @@ fun SolicitudPrestamoScreen(
                 value = "",
                 onValueChange = {},
                 label = { CoopText(text = "Interés") },
-                placeholder = { CoopText(text = "Coloca el interés") },
-                modifier = Modifier.fillMaxWidth().height(50.dp),
+                placeholder = { CoopText(text = "") },
+                modifier = Modifier.fillMaxWidth().height(60.dp),
                 shape = MaterialTheme.shapes.medium,
                 containerColor = CoopTheme.colorScheme.surfaceVariant,
                 focusedBorderColor = CoopTheme.colorScheme.primary,
@@ -277,13 +279,11 @@ fun SolicitudPrestamoScreen(
                         CoopIcon(
                             Icons.Default.Check,
                             contentDescription = "Aprobar",
-                            tint = CoopTheme.colorScheme.onTertiary
                         )
                         Spacer(modifier = Modifier.width(4.dp))
                         CoopText(
                             text = "Aprobar",
                             style = CoopTheme.typography.bodyLarge,
-                            color = CoopTheme.colorScheme.onTertiary
                         )
                     }
                 }

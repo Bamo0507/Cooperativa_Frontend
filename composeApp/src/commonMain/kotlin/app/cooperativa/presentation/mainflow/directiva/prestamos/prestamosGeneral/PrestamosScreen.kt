@@ -41,7 +41,9 @@ import app.cooperativa.theme.components.CoopTopBar
 import app.cooperativa.utils.PrestamoUtils
 
 @Composable
-fun PrestamosRoute() {
+fun PrestamosRoute(
+    onPendingLoanClick: (Int) -> Unit,
+) {
     val reqLoansState = rememberSaveable { mutableStateOf(SolicitudPrestamoMockData.getAllBasicInfo()) }
     val approvedLoansState = rememberSaveable { mutableStateOf(PrestamoMockData.getAllPrestamos()) }
     val selectedIndexState = rememberSaveable { mutableStateOf(0) }
@@ -50,7 +52,8 @@ fun PrestamosRoute() {
         reqLoans = reqLoansState.value,
         approvedLoans = approvedLoansState.value,
         selectedTabIndex = selectedIndexState.value,
-        changeIndex = { selectedIndexState.value = it }
+        changeIndex = { selectedIndexState.value = it },
+        onPendingLoanClick = onPendingLoanClick
     )
 }
 
@@ -60,6 +63,7 @@ fun PrestamoScreen(
     approvedLoans: List<Prestamo>,
     selectedTabIndex: Int,
     changeIndex: (Int) -> Unit = {},
+    onPendingLoanClick: (Int) -> Unit,
     prestamoUtils: PrestamoUtils = PrestamoUtils,
     modifier: Modifier = Modifier
 ) {
@@ -71,7 +75,7 @@ fun PrestamoScreen(
             modifier = modifier
                 .background(CoopTheme.colorScheme.surface)
                 .padding(padding)
-                .padding(vertical = 6.dp, horizontal = 12.dp)
+                .padding(vertical = 6.dp, horizontal = 24.dp)
         ) {
             FilterChipsRow(
                 selectedIndex = selectedTabIndex,
@@ -91,9 +95,10 @@ fun PrestamoScreen(
                                 idSolicitud = basic.id,
                                 solicitudName = basic.loanName,
                                 affiliatedName = basic.username,
+                                onPendingLoanClick = { onPendingLoanClick(basic.id) },
                                 modifier = Modifier
                                     .fillMaxWidth()
-                                    .padding(horizontal = 4.dp, vertical = 2.dp)
+                                    .padding(vertical = 2.dp)
                             )
                         }
                     }
@@ -123,7 +128,7 @@ fun PrestamoScreen(
                                 montoPendiente = prestamoUtils.remainingAmount(prestamo),
                                 modifier = Modifier
                                     .fillMaxWidth()
-                                    .padding(horizontal = 4.dp, vertical = 2.dp)
+                                    .padding(vertical = 2.dp)
                             )
                         }
                     }
@@ -150,7 +155,7 @@ fun PrestamoScreen(
                                 montoTotal = prestamo.montoTotal,
                                 modifier = Modifier
                                     .fillMaxWidth()
-                                    .padding(horizontal = 4.dp, vertical = 2.dp)
+                                    .padding(vertical = 2.dp)
                             )
                         }
                     }
@@ -167,10 +172,11 @@ fun SolicitudItem(
     idSolicitud: Int,
     solicitudName: String,
     affiliatedName: String,
+    onPendingLoanClick: (Int) -> Unit,
     modifier: Modifier = Modifier
 ) {
     CoopOutlinedCard(
-        onClick = { /* TODO */ },
+        onClick = { onPendingLoanClick(idSolicitud) },
         modifier = modifier.padding(vertical = 2.dp)
     ) {
         Row(
@@ -198,7 +204,7 @@ fun SolicitudItem(
             CoopIcon(
                 imageVector = Icons.Filled.ArrowForward,
                 contentDescription = "Ir al detalle",
-                tint = CoopTheme.colorScheme.primary
+                tint = CoopTheme.colorScheme.secondary
             )
         }
     }
