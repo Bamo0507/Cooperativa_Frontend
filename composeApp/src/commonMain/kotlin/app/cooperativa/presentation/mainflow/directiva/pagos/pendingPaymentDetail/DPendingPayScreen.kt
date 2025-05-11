@@ -293,7 +293,7 @@ fun DPendingPayScreen(
                 CoopIcon(
                     Icons.Default.Wallpaper,
                     contentDescription = "Imagen momentanea",
-                    tint = CoopTheme.colorScheme.tertiary,
+                    tint = CoopTheme.colorScheme.primary,
                     modifier = Modifier.size(100.dp)
                 )
             }
@@ -306,13 +306,14 @@ fun DPendingPayScreen(
                 modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp),
                 shape = RoundedCornerShape(16.dp),
                 colors = ButtonDefaults.buttonColors(
-                    containerColor = CoopTheme.colorScheme.tertiary,
+                    containerColor = CoopTheme.colorScheme.primary,
                 )
             ){
                 CoopText(
                     text = "Ver Boleta",
                     style = CoopTheme.typography.bodyLarge,
-                    color = CoopTheme.colorScheme.onTertiary
+                    color = CoopTheme.colorScheme.onPrimary,
+                    fontWeight = FontWeight.Bold
                 )
             }
 
@@ -321,7 +322,8 @@ fun DPendingPayScreen(
                 text = "Comentarios",
                 color = CoopTheme.colorScheme.onSurface.copy(alpha = 0.8f),
                 style = CoopTheme.typography.bodyLarge,
-                modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp)
+                modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp),
+                fontWeight = FontWeight.Bold
             )
 
             CoopOutlinedTextField(
@@ -367,8 +369,8 @@ fun DPendingPayScreen(
                     onClick = { /* TODO */ },
                     shape = RoundedCornerShape(16.dp),
                     colors = ButtonDefaults.buttonColors(
-                        containerColor = CoopTheme.colorScheme.tertiary,
-                        contentColor = CoopTheme.colorScheme.onTertiary
+                        containerColor = CoopTheme.colorScheme.primary,
+                        contentColor = CoopTheme.colorScheme.onPrimary
                     ),
                     modifier = Modifier.height(48.dp)
                 ){
@@ -379,13 +381,13 @@ fun DPendingPayScreen(
                         CoopIcon(
                             Icons.Default.Check,
                             contentDescription = "Aprobar",
-                            tint = CoopTheme.colorScheme.onTertiary
+                            tint = CoopTheme.colorScheme.onPrimary
                         )
                         Spacer(modifier = Modifier.width(4.dp))
                         CoopText(
                             text = "Aprobar",
                             style = CoopTheme.typography.bodyLarge,
-                            color = CoopTheme.colorScheme.onTertiary
+                            color = CoopTheme.colorScheme.onPrimary
                         )
                     }
                 }

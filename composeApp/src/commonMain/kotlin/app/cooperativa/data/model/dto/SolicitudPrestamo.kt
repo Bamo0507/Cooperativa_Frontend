@@ -4,6 +4,7 @@ import app.cooperativa.data.model.dto.Codeudor
 
 data class SolicitudPrestamo(
     val nombreSolicitante: String,
+    val nombrePrestamo: String,
     val montoTotal: Float,
     val plazoMeses: Int,
     val motivo: String,

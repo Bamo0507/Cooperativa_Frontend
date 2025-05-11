@@ -12,6 +12,7 @@ object SolicitudPrestamoMockData {
     private val mockSolicitudes = listOf(
         SolicitudPrestamo(
             nombreSolicitante = "Laura Martínez",
+            nombrePrestamo = "Préstamo Hogar",
             montoTotal = 15000.0f,
             plazoMeses = 12,
             motivo = "Consolidación de Deuda",
@@ -37,6 +38,7 @@ object SolicitudPrestamoMockData {
         ),
         SolicitudPrestamo(
             nombreSolicitante = "Mario López",
+            nombrePrestamo = "Préstamo Moto",
             montoTotal = 5000.0f,
             plazoMeses = 24,
             motivo = "Compra Moto",
@@ -45,6 +47,7 @@ object SolicitudPrestamoMockData {
         ),
         SolicitudPrestamo(
             nombreSolicitante = "Ana Pérez",
+            nombrePrestamo = "Préstamo Emergencia",
             montoTotal = 8000.0f,
             plazoMeses = 6,
             motivo = "Emergencia Médica",
@@ -62,6 +65,7 @@ object SolicitudPrestamoMockData {
         ),
         SolicitudPrestamo(
             nombreSolicitante = "Juan Gómez",
+            nombrePrestamo = "Préstamo Auto",
             montoTotal = 20000.0f,
             plazoMeses = 36,
             motivo = "Expansión Negocio",

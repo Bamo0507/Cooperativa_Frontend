@@ -11,6 +11,7 @@ object PrestamoMockData {
     private val mockPrestamos = listOf(
         Prestamo(
             idPrestamo = 1,
+            nombreSolicitante = "Laura Martínez",
             nombre = "Préstamo Vivienda",
             montoTotal = 10000.0f,
             montoCancelado = 10000.0f,
@@ -49,6 +50,7 @@ object PrestamoMockData {
         ),
         Prestamo(
             idPrestamo = 2,
+            nombreSolicitante = "Miguel Rodríguez",
             nombre = "Préstamo Vehículo",
             montoTotal = 5000.0f,
             montoCancelado = 1500.0f,
@@ -95,6 +97,7 @@ object PrestamoMockData {
         ),
         Prestamo(
             idPrestamo = 3,
+            nombreSolicitante = "Pedro Rodríguez",
             nombre = "Préstamo Estudiantil",
             montoTotal = 8000.0f,
             montoCancelado = 0.0f,
@@ -124,6 +127,7 @@ object PrestamoMockData {
         ),
         Prestamo(
             idPrestamo = 4,
+            nombreSolicitante = "Luis Rodríguez",
             nombre = "Préstamo Emergencia",
             montoTotal = 2000.0f,
             montoCancelado = 0.0f,

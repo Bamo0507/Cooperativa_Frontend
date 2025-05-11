@@ -13,6 +13,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import app.cooperativa.theme.CoopTheme
 
@@ -56,7 +57,9 @@ fun CoopTopBar(
                 fontWeight = FontWeight.Bold,
                 style = CoopTheme.typography.headlineSmall,
                 modifier = Modifier.fillMaxWidth(),
-                textAlign = if (leadingArrow) TextAlign.Start else TextAlign.Center
+                textAlign = if (leadingArrow) TextAlign.Start else TextAlign.Center,
+                maxLines = 1,
+                overflow = TextOverflow.Ellipsis
             )
         }
     }
