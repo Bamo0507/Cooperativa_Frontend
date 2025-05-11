@@ -44,14 +44,20 @@ import app.cooperativa.theme.utils.dateToString
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun DPaymentsRoute() {
+fun DPaymentsRoute(
+    onPaymentClick: (Int) -> Unit
+) {
     val payments = rememberSaveable { mutableStateOf(PaymentMockData.getAllPaymentsBasicInfo()) }
     val fines = rememberSaveable { mutableStateOf(FineMockData.getAllFines()) }
+
+    val selectedTabIndex = rememberSaveable { mutableStateOf(0) }
 
     DPaymentsScreen(
         payments = payments.value,
         fines = fines.value,
-        selectedTabIndex = 0
+        selectedTabIndex = selectedTabIndex.value,
+        changeIndex = { selectedTabIndex.value = it },
+        onPaymentClick = onPaymentClick
     )
 }
 
@@ -62,10 +68,9 @@ fun DPaymentsScreen(
     payments: List<BasicInfoPayment>,
     selectedTabIndex: Int,
     changeIndex: (Int) -> Unit = {},
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    onPaymentClick: (Int) -> Unit
 ) {
-    val chipOptions = listOf("Pendientes", "Pagados", "Moras")
-
     Scaffold(
         topBar = {
             CoopTopBar(title = "Pagos")
@@ -76,12 +81,12 @@ fun DPaymentsScreen(
             modifier = modifier
                 .background(CoopTheme.colorScheme.surface)
                 .padding(padding)
-                .padding(vertical = 6.dp, horizontal = 8.dp)
+                .padding(vertical = 6.dp, horizontal = 16.dp)
         ) {
             // Chips
             FilterChipsRow(
                 selectedIndex = selectedTabIndex,
-                onSelect = {},
+                onSelect = changeIndex,
                 modifier = Modifier.padding(bottom = 12.dp)
             )
 
@@ -100,7 +105,8 @@ fun DPaymentsScreen(
                             affiliatedName = basic.username,
                             modifier = Modifier
                                 .fillMaxWidth()
-                                .padding(horizontal = 8.dp, vertical = 2.dp)
+                                .padding(horizontal = 8.dp, vertical = 2.dp),
+                            onPaymentClick = onPaymentClick
                         )
                     }
                 }
@@ -111,7 +117,7 @@ fun DPaymentsScreen(
                     query = "",
                     onQueryChanged = {},
                     placeholder = "Bryan Martinez",
-                    modifier = Modifier.padding(bottom = 8.dp)
+                    modifier = Modifier.padding(bottom = 8.dp).padding(horizontal = 4.dp)
                 )
 
                 LazyColumn(
@@ -126,7 +132,8 @@ fun DPaymentsScreen(
                             affiliatedName = basic.username,
                             modifier = Modifier
                                 .fillMaxWidth()
-                                .padding(horizontal = 8.dp, vertical = 2.dp)
+                                .padding(horizontal = 8.dp, vertical = 2.dp),
+                            onPaymentClick = { /*TODO*/ }
                         )
                     }
                 }
@@ -137,7 +144,7 @@ fun DPaymentsScreen(
                     query = "",
                     onQueryChanged = {},
                     placeholder = "Bryan Martinez",
-                    modifier = Modifier.padding(bottom = 8.dp)
+                    modifier = Modifier.padding(bottom = 8.dp).padding(horizontal = 4.dp)
                 )
 
                 LazyColumn(
@@ -166,10 +173,11 @@ fun PaymentItem(
     idPayment: Int,
     paymentName: String,
     affiliatedName: String,
+    onPaymentClick: (Int) -> Unit,
     modifier: Modifier = Modifier
 ) {
     CoopOutlinedCard(
-        onClick = { /* TODO */ },
+        onClick = { onPaymentClick(idPayment) },
         modifier = modifier.padding(vertical = 2.dp),
     ) {
         Row(

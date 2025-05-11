@@ -43,13 +43,16 @@ import app.cooperativa.theme.components.CoopTopBar
 import app.cooperativa.theme.utils.dateToString
 
 @Composable
-fun DPendingPayRoute() {
+fun DPendingPayRoute(
+    paymentId: Int,
+    onBackClick: () -> Unit
+) {
     // TODO: change when navigation is implemented
-    val payment = PaymentMockData.getPaymentById(2)
+    val payment = PaymentMockData.getPaymentById(paymentId)
 
     DPendingPayScreen(
         payment = payment!!,
-        onBackClick = {}
+        onBackClick = { onBackClick() }
     )
 }
 

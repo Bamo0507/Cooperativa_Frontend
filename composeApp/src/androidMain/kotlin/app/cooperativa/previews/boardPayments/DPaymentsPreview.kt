@@ -26,7 +26,8 @@ fun DPaymentsPendingPreviewLight() {
             fines = sampleFines,
             payments = samplePendientes,
             selectedTabIndex = 0,
-            modifier = Modifier.padding(16.dp)
+            modifier = Modifier.padding(16.dp),
+            onPaymentClick = {}
         )
     }
 }
@@ -43,7 +44,8 @@ fun DPaymentsPendingPreviewDark() {
             fines = sampleFines,
             payments = samplePendientes,
             selectedTabIndex = 0,
-            modifier = Modifier.padding(16.dp)
+            modifier = Modifier.padding(16.dp),
+            onPaymentClick = {}
         )
     }
 }
@@ -60,7 +62,8 @@ fun DPaymentsPayedPreviewLight() {
             fines = sampleFines,
             payments = samplePendientes,
             selectedTabIndex = 1,
-            modifier = Modifier.padding(16.dp)
+            modifier = Modifier.padding(16.dp),
+            onPaymentClick = {}
         )
     }
 }
@@ -77,7 +80,8 @@ fun DPaymentsPayedPreviewDark() {
             fines = sampleFines,
             payments = samplePendientes,
             selectedTabIndex = 1,
-            modifier = Modifier.padding(16.dp)
+            modifier = Modifier.padding(16.dp),
+            onPaymentClick = {}
         )
     }
 }
@@ -94,7 +98,8 @@ fun DPaymentsFinesPreviewLight() {
             fines = sampleFines,
             payments = samplePendientes,
             selectedTabIndex = 2,
-            modifier = Modifier.padding(16.dp)
+            modifier = Modifier.padding(16.dp),
+            onPaymentClick = {}
         )
     }
 }
@@ -111,7 +116,8 @@ fun DPaymentsFinesPreviewDark() {
             fines = sampleFines,
             payments = samplePendientes,
             selectedTabIndex = 2,
-            modifier = Modifier.padding(16.dp)
+            modifier = Modifier.padding(16.dp),
+            onPaymentClick = {}
         )
     }
 }
