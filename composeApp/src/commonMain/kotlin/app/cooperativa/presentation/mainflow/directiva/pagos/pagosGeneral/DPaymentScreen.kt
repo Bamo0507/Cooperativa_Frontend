@@ -81,7 +81,7 @@ fun DPaymentsScreen(
             modifier = modifier
                 .background(CoopTheme.colorScheme.surface)
                 .padding(padding)
-                .padding(vertical = 6.dp, horizontal = 16.dp)
+                .padding(vertical = 6.dp, horizontal = 24.dp)
         ) {
             // Chips
             FilterChipsRow(
@@ -105,7 +105,7 @@ fun DPaymentsScreen(
                             affiliatedName = basic.username,
                             modifier = Modifier
                                 .fillMaxWidth()
-                                .padding(horizontal = 8.dp, vertical = 2.dp),
+                                .padding(vertical = 2.dp),
                             onPaymentClick = onPaymentClick
                         )
                     }

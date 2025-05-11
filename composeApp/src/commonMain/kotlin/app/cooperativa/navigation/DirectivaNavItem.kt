@@ -10,6 +10,8 @@ import androidx.compose.material.icons.outlined.Person
 import androidx.compose.ui.graphics.vector.ImageVector
 import app.cooperativa.presentation.mainflow.directiva.pagos.DPaymentNavGraph
 import app.cooperativa.presentation.mainflow.directiva.pagos.pagosGeneral.GeneralPaymentDestination
+import app.cooperativa.presentation.mainflow.directiva.prestamos.DLoanNavGraph
+import app.cooperativa.presentation.mainflow.directiva.prestamos.prestamosGeneral.PrestamoNavigationDestination
 
 // Clase de datos para los items de la barra de navegación
 data class DirectivaNavItem(
@@ -31,7 +33,7 @@ val navigationItemsDirectiva = listOf(
         title = "Préstamos",
         selectedIcon = Icons.Filled.Folder,
         unselectedIcon = Icons.Outlined.Folder,
-        destination = DPaymentNavGraph //TODO
+        destination = DLoanNavGraph
     ),
     DirectivaNavItem(
         title = "Cuenta",
@@ -44,6 +46,6 @@ val navigationItemsDirectiva = listOf(
 // Top-level destinations, los dejas temporalmente todos iguales
 val topLevelDestinationsDirectiva = listOf(
     GeneralPaymentDestination::class,
-    GeneralPaymentDestination::class,//TODO
+    PrestamoNavigationDestination::class,
     GeneralPaymentDestination::class//TODO
 )

@@ -16,7 +16,6 @@ data object DPaymentNavGraph
 fun NavGraphBuilder.dPaymentNavGraph(
     navController: NavController
 ){
-    //Nested Navigation de Personajes
     navigation<DPaymentNavGraph>(startDestination = GeneralPaymentDestination){
         //Pantalla General de los pagos
         boardGeneralPayment(

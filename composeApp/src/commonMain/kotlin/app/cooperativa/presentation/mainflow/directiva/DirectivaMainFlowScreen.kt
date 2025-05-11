@@ -23,6 +23,7 @@ import app.cooperativa.navigation.DirectivaBottomNavBar
 import app.cooperativa.navigation.topLevelDestinationsDirectiva
 import app.cooperativa.presentation.mainflow.directiva.pagos.DPaymentNavGraph
 import app.cooperativa.presentation.mainflow.directiva.pagos.dPaymentNavGraph
+import app.cooperativa.presentation.mainflow.directiva.prestamos.dLoanNavGraph
 
 @Composable
 fun DirectivaMainFlowScreen(
@@ -75,6 +76,8 @@ fun DirectivaMainFlowScreen(
             modifier = Modifier.padding(padding)
         ){
             dPaymentNavGraph(navController)
+
+            dLoanNavGraph(navController)
 
 
 

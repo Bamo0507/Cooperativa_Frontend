@@ -27,6 +27,7 @@ fun PrestamosSolicitudesPreviewLight() {
             approvedLoans = sampleApprovedLoans,
             selectedTabIndex = 0,
             changeIndex = {},
+            onPendingLoanClick = {},
             modifier = Modifier.padding(16.dp)
         )
     }
@@ -45,6 +46,7 @@ fun PrestamosSolicitudesPreviewDark() {
             approvedLoans = sampleApprovedLoans,
             selectedTabIndex = 0,
             changeIndex = {},
+            onPendingLoanClick = {},
             modifier = Modifier.padding(16.dp)
         )
     }
@@ -63,6 +65,7 @@ fun PrestamosVigentesPreviewLight() {
             approvedLoans = sampleApprovedLoans,
             selectedTabIndex = 1,
             changeIndex = {},
+            onPendingLoanClick = {},
             modifier = Modifier.padding(16.dp)
         )
     }
@@ -81,6 +84,7 @@ fun PrestamosVigentesPreviewDark() {
             approvedLoans = sampleApprovedLoans,
             selectedTabIndex = 1,
             changeIndex = {},
+            onPendingLoanClick = {},
             modifier = Modifier.padding(16.dp)
         )
     }
@@ -100,6 +104,7 @@ fun PrestamosCompletadosPreviewLight() {
             approvedLoans = sampleApprovedLoans,
             selectedTabIndex = 2,
             changeIndex = {},
+            onPendingLoanClick = {},
             modifier = Modifier.padding(16.dp)
         )
     }
@@ -118,6 +123,7 @@ fun PrestamosCompletadosPreviewDark() {
             approvedLoans = sampleApprovedLoans,
             selectedTabIndex = 2,
             changeIndex = {},
+            onPendingLoanClick = {},
             modifier = Modifier.padding(16.dp)
         )
     }
