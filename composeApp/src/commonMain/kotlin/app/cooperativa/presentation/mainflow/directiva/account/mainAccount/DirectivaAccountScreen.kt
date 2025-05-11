@@ -55,15 +55,7 @@ fun DirectivaAccountScreen(
 ) {
     Box(
         modifier = Modifier
-            .fillMaxSize()
-            .background(
-                brush = Brush.verticalGradient(
-                    colors = listOf(
-                        Color.Transparent, // para que la imagen no tape todo
-                        CoopTheme.colorScheme.surface
-                    )
-                )
-            )
+            .fillMaxSize().background(color = CoopTheme.colorScheme.surface)
     ) {
         Image(
             painter = painterResource(Res.drawable.account_background),
