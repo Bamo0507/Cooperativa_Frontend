@@ -1,11 +1,6 @@
 package app.cooperativa.navigation
 
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.size
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.AttachMoney
-import androidx.compose.material.icons.filled.Folder
-import androidx.compose.material.icons.filled.Person
 import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.NavigationBarItemDefaults
@@ -18,28 +13,28 @@ import app.cooperativa.theme.CoopTheme
 import app.cooperativa.theme.components.CoopIcon
 import app.cooperativa.theme.components.CoopText
 
+/**
+ * Barra de navegación inferior, personalizada según tus temas y componentes.
+ *
+ * @param checkItemSelected determina si el destino está seleccionado.
+ * @param onNavItemClick    callback con el destino seleccionado.
+ */
 @Composable
-fun DirectivaNavigationBar(
-    selectedIndex: Int,
-    onItemSelected: (Int) -> Unit
+fun DirectivaBottomNavBar(
+    checkItemSelected: (Any) -> Boolean,
+    onNavItemClick: (Any) -> Unit
 ) {
-    val items = listOf(
-        Icons.Default.AttachMoney to "Pagos",
-        Icons.Default.Folder      to "Préstamos",
-        Icons.Default.Person      to "Cuenta"
-    )
-
     NavigationBar(
         containerColor = CoopTheme.colorScheme.primary,
         tonalElevation = 4.dp
     ) {
-        items.forEachIndexed { index, (icon, label) ->
-            val isSelected = index == selectedIndex
+        navigationItemsDirectiva.forEach { navItem ->
+            val isSelected = checkItemSelected(navItem.destination)
 
             NavigationBarItem(
                 selected = isSelected,
-                onClick  = { onItemSelected(index) },
-                colors   = NavigationBarItemDefaults.colors(
+                onClick = { onNavItemClick(navItem.destination) },
+                colors = NavigationBarItemDefaults.colors(
                     indicatorColor      = CoopTheme.colorScheme.surface,
                     selectedIconColor   = CoopTheme.colorScheme.onPrimary,
                     unselectedIconColor = CoopTheme.colorScheme.secondary,
@@ -48,25 +43,21 @@ fun DirectivaNavigationBar(
                 ),
                 alwaysShowLabel = true,
                 icon = {
-                    if (isSelected) {
-                        CoopIcon(
-                            imageVector        = icon,
-                            contentDescription = label,
-                            tint               = CoopTheme.colorScheme.onSecondary,
-                            modifier           = Modifier.size(24.dp)
-                        )
-                    } else {
-                        CoopIcon(
-                            imageVector        = icon,
-                            contentDescription = label,
-                            tint               = CoopTheme.colorScheme.onPrimary,
-                            modifier           = Modifier.size(24.dp)
-                        )
-                    }
+                    CoopIcon(
+                        imageVector        = if (isSelected) navItem.selectedIcon else navItem.unselectedIcon,
+                        contentDescription = navItem.title,
+                        tint               = (
+                                if (isSelected)
+                                    CoopTheme.colorScheme.onSecondary
+                                else
+                                    CoopTheme.colorScheme.onPrimary
+                                ),
+                        modifier           = Modifier.size(24.dp)
+                    )
                 },
                 label = {
                     CoopText(
-                        text       = label,
+                        text       = navItem.title,
                         color      = CoopTheme.colorScheme.onPrimary,
                         fontSize   = 12.sp,
                         fontWeight = FontWeight.Medium

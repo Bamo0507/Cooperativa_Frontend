@@ -6,6 +6,8 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import app.cooperativa.presentation.login.LoginDestination
 import app.cooperativa.presentation.login.loginScreen
+import app.cooperativa.presentation.mainflow.directiva.DirectivaMainNavigation
+import app.cooperativa.presentation.mainflow.directiva.directivaMainNavigationGraph
 import app.cooperativa.presentation.mainflow.directiva.pagos.dPaymentNavGraph
 import app.cooperativa.presentation.mainflow.directiva.pagos.pagosGeneral.GeneralPaymentDestination
 
@@ -17,9 +19,10 @@ fun AppNavigation(
         navController = navController,
         startDestination = LoginDestination
     ){
+        //TODO: MANEJAR HACIA QUE MAINFLOW LO MANDO SI ES SOCIO O DIRECTIVA
         loginScreen(
             onLogin = {
-                navController.navigate(GeneralPaymentDestination){
+                navController.navigate(DirectivaMainNavigation){
                     popUpTo(LoginDestination){
                         inclusive = true
                     }
@@ -27,6 +30,8 @@ fun AppNavigation(
             }
         )
 
-        dPaymentNavGraph(navController)
+        directivaMainNavigationGraph()
+
+
     }
 }
