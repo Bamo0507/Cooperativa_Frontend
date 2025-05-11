@@ -4,6 +4,7 @@ import kotlinx.datetime.LocalDate
 
 data class Prestamo(
     val idPrestamo: Int,
+    val nombreSolicitante: String,
     val nombre: String,
     val montoTotal: Float,
     val montoCancelado: Float,

@@ -22,6 +22,7 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import app.cooperativa.data.localdb.SolicitudPrestamoMockData
@@ -57,7 +58,7 @@ fun SolicitudPrestamoScreen(
     Scaffold(
         topBar = {
             CoopTopBar(
-                title = "Préstamo de Negocio",
+                title = prestamo.nombrePrestamo,
                 leadingArrow = true,
                 onBackClick = onBackClick,
                 modifier = Modifier.padding(bottom = 4.dp)
@@ -207,7 +208,9 @@ fun SolicitudPrestamoScreen(
                 placeholder = { CoopText(text = "Coloca el interés") },
                 modifier = Modifier.fillMaxWidth().height(50.dp),
                 shape = MaterialTheme.shapes.medium,
-                containerColor = CoopTheme.colorScheme.surfaceVariant
+                containerColor = CoopTheme.colorScheme.surfaceVariant,
+                focusedBorderColor = CoopTheme.colorScheme.primary,
+                unfocusedBorderColor = CoopTheme.colorScheme.primary
             )
 
             Spacer(modifier = Modifier.height(16.dp))
@@ -216,7 +219,8 @@ fun SolicitudPrestamoScreen(
                 text = "Comentarios",
                 color = CoopTheme.colorScheme.onSurface.copy(alpha = 0.8f),
                 style = CoopTheme.typography.bodyLarge,
-                modifier = Modifier.padding(vertical = 8.dp)
+                modifier = Modifier.padding(vertical = 8.dp),
+                fontWeight = FontWeight.Bold
             )
 
             CoopOutlinedTextField(
@@ -261,8 +265,8 @@ fun SolicitudPrestamoScreen(
                     onClick = { /* TODO */ },
                     shape = RoundedCornerShape(16.dp),
                     colors = ButtonDefaults.buttonColors(
-                        containerColor = CoopTheme.colorScheme.tertiary,
-                        contentColor = CoopTheme.colorScheme.onTertiary
+                        containerColor = CoopTheme.colorScheme.primary,
+                        contentColor = CoopTheme.colorScheme.onPrimary
                     ),
                     modifier = Modifier.height(48.dp)
                 ){

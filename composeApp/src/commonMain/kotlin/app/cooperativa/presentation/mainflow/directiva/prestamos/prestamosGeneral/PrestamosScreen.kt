@@ -114,6 +114,7 @@ fun PrestamoScreen(
                         //TODO: Incluir nombre del solicitante
                         items(approvedLoans) { prestamo ->
                             PrestamoVigenteItem(
+                                nombreSolicitante = prestamo.nombreSolicitante,
                                 prestamoName = prestamo.nombre,
                                 montoTotal = prestamo.montoTotal,
                                 cantCuotas = prestamo.mensualidadesPrestamo.count(),
@@ -144,7 +145,7 @@ fun PrestamoScreen(
                         //TODO: Incluir nombre del solicitante
                         items(approvedLoans) { prestamo ->
                             PrestamoCompletadoItem(
-                                solicitanteName = "Bryan Martinez",
+                                solicitanteName = prestamo.nombreSolicitante,
                                 prestamoName = prestamo.nombre,
                                 montoTotal = prestamo.montoTotal,
                                 modifier = Modifier
@@ -250,7 +251,7 @@ fun PrestamoCompletadoItem(
 //TODO: NOMBRE DE SOLICITANTE METERLO EN EL MODEL
 @Composable
 fun PrestamoVigenteItem(
-    nombreSolicitante: String = "",
+    nombreSolicitante: String,
     prestamoName: String,
     montoTotal: Float,
     cantCuotas: Int,
