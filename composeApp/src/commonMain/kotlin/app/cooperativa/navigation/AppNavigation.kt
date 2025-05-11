@@ -19,6 +19,8 @@ fun AppNavigation(
         navController = navController,
         startDestination = LoginDestination
     ){
+        //TODO: HACER LA SPLASH SCREEN, Y OTRA DEFAULT DE RELOAD
+
         //TODO: MANEJAR HACIA QUE MAINFLOW LO MANDO SI ES SOCIO O DIRECTIVA
         loginScreen(
             onLogin = {
@@ -30,7 +32,13 @@ fun AppNavigation(
             }
         )
 
-        directivaMainNavigationGraph()
+        directivaMainNavigationGraph(
+            onLogOutClick = {
+                navController.navigate(LoginDestination){
+                    popUpTo(0)
+                }
+            }
+        )
 
 
     }

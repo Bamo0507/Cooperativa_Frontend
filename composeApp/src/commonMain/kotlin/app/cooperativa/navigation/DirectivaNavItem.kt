@@ -8,6 +8,8 @@ import androidx.compose.material.icons.outlined.AttachMoney
 import androidx.compose.material.icons.outlined.Folder
 import androidx.compose.material.icons.outlined.Person
 import androidx.compose.ui.graphics.vector.ImageVector
+import app.cooperativa.presentation.mainflow.directiva.account.DAccountNavGraph
+import app.cooperativa.presentation.mainflow.directiva.account.mainAccount.DirectivaAccountDestination
 import app.cooperativa.presentation.mainflow.directiva.pagos.DPaymentNavGraph
 import app.cooperativa.presentation.mainflow.directiva.pagos.pagosGeneral.GeneralPaymentDestination
 import app.cooperativa.presentation.mainflow.directiva.prestamos.DLoanNavGraph
@@ -39,7 +41,7 @@ val navigationItemsDirectiva = listOf(
         title = "Cuenta",
         selectedIcon = Icons.Filled.Person,
         unselectedIcon = Icons.Outlined.Person,
-        destination = DPaymentNavGraph //TODO
+        destination = DAccountNavGraph
     )
 )
 
@@ -47,5 +49,5 @@ val navigationItemsDirectiva = listOf(
 val topLevelDestinationsDirectiva = listOf(
     GeneralPaymentDestination::class,
     PrestamoNavigationDestination::class,
-    GeneralPaymentDestination::class//TODO
+    DirectivaAccountDestination::class
 )

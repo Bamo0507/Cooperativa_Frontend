@@ -2,7 +2,7 @@ package app.cooperativa.previews.account
 
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.tooling.preview.Preview
-import app.cooperativa.presentation.mainflow.directiva.account.AccountScreen
+import app.cooperativa.presentation.mainflow.directiva.account.mainAccount.DirectivaAccountScreen
 import app.cooperativa.theme.CoopTheme
 import app.cooperativa.theme.components.CoopSurface
 
@@ -12,7 +12,7 @@ import app.cooperativa.theme.components.CoopSurface
 fun AccountScreenPreviewLight() {
     CoopTheme {
         CoopSurface {
-            AccountScreen(
+            DirectivaAccountScreen(
                 onChangeToMember = {},
                 onLogout = {}
             )
@@ -25,7 +25,7 @@ fun AccountScreenPreviewLight() {
 fun AccountScreenPreviewDark() {
     CoopTheme {
         CoopSurface {
-            AccountScreen(
+            DirectivaAccountScreen(
                 onChangeToMember = {},
                 onLogout = {}
             )

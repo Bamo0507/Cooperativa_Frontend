@@ -21,6 +21,7 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import app.cooperativa.navigation.DirectivaBottomNavBar
 import app.cooperativa.navigation.topLevelDestinationsDirectiva
+import app.cooperativa.presentation.mainflow.directiva.account.dAccountNavGraph
 import app.cooperativa.presentation.mainflow.directiva.pagos.DPaymentNavGraph
 import app.cooperativa.presentation.mainflow.directiva.pagos.dPaymentNavGraph
 import app.cooperativa.presentation.mainflow.directiva.prestamos.dLoanNavGraph
@@ -28,7 +29,7 @@ import app.cooperativa.presentation.mainflow.directiva.prestamos.dLoanNavGraph
 @Composable
 fun DirectivaMainFlowScreen(
     navController: NavHostController = rememberNavController(),
-    onLogOutClick: () -> Unit = {}, //TODO: IMPLEMENTAR
+    onLogOutClick: () -> Unit,
 ){
     var bottomBarVisible by rememberSaveable {
         mutableStateOf(false)
@@ -79,7 +80,7 @@ fun DirectivaMainFlowScreen(
 
             dLoanNavGraph(navController)
 
-
+            dAccountNavGraph(navController, onLogOutClick)
 
         }
 

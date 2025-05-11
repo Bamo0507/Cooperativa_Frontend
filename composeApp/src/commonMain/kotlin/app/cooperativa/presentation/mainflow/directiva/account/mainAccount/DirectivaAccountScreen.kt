@@ -1,4 +1,4 @@
-package app.cooperativa.presentation.mainflow.directiva.account
+package app.cooperativa.presentation.mainflow.directiva.account.mainAccount
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -38,18 +38,18 @@ import cooperativa.composeapp.generated.resources.account_background
 import org.jetbrains.compose.resources.painterResource
 
 @Composable
-fun AccountRoute(
+fun DirectivaAccountRoute(
     onChangeToMember: () -> Unit,
     onLogout: () -> Unit
 ) {
-    AccountScreen(
+    DirectivaAccountScreen(
         onChangeToMember = onChangeToMember,
         onLogout = onLogout
     )
 }
 
 @Composable
-fun AccountScreen(
+fun DirectivaAccountScreen(
     onChangeToMember: () -> Unit,
     onLogout: () -> Unit
 ) {

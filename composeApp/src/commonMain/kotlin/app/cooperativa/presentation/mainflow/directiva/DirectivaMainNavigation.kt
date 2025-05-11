@@ -10,12 +10,8 @@ import kotlinx.serialization.Serializable
 @Serializable
 data object DirectivaMainNavigation
 
-fun NavController.navigateToDirectivaMainGraph(navOptions: NavOptions? = null){
-    this.navigate(DirectivaMainNavigation, navOptions)
-}
-
 fun NavGraphBuilder.directivaMainNavigationGraph(
-    onLogOutClick: ()->Unit = {}, //TODO: IMPLEMENTAR
+    onLogOutClick: ()->Unit,
 ){
     composable<DirectivaMainNavigation> {
         val nestedNavController = rememberNavController()
