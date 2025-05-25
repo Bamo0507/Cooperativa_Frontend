@@ -4,6 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import app.cooperativa.domain.DPrestamoRepository
 import app.cooperativa.domain.MockPrestamosRepository
+import app.cooperativa.utils.PrestamoUtils
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
@@ -36,12 +37,20 @@ class DPrestamoViewModel(
             try {
                 val solicitudes = repository.fetchSolicitudes()
                 val prestamos = repository.fetchPrestamosAprobados()
+                val vigentes = prestamos.filter {
+                    PrestamoUtils.countPaidInstallments(it) < it.plazoMeses
+                }
+                val completados = prestamos.filter {
+                    PrestamoUtils.countPaidInstallments(it) == it.plazoMeses
+                }
 
                 _uiState.update { state ->
                     state.copy(
                         isLoading = false,
                         reqLoans = solicitudes,
-                        approvedLoans = prestamos
+                        allLoans = prestamos,
+                        prestamosVigentes = vigentes,
+                        prestamosCompletados = completados
                     )
                 }
             } catch (e: Exception) {

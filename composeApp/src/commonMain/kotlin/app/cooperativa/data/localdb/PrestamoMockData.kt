@@ -134,7 +134,7 @@ object PrestamoMockData {
             motivo = "Emergencia Médica",
             estado = Estados.RECHAZADO,
             tasaInteres = 6.0f,
-            fechaSolicitud = LocalDate(2025, 3, 5),
+            fechaSolicitud = LocalDate(2025, 1, 5),
             plazoMeses = 6,
             mesesCancelados = 0,
             codeudores = listOf(

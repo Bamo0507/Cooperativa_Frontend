@@ -7,7 +7,9 @@ data class DPrestamoState(
     val selectedTabIndex: Int = 0,
     val searchQuery: String = "",
     val reqLoans: List<BasicInfoLoan> = emptyList(),
-    val approvedLoans: List<Prestamo> = emptyList(),
+    val allLoans: List<Prestamo> = emptyList(),
+    val prestamosVigentes: List<Prestamo> = emptyList(),
+    val prestamosCompletados: List<Prestamo> = emptyList(),
     val isLoading: Boolean = false,
     val errorMessage: String? = null
 )

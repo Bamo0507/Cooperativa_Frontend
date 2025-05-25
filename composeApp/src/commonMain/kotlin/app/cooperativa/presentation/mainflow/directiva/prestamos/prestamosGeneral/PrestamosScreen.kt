@@ -112,13 +112,12 @@ fun PrestamoScreen(
                         contentPadding = PaddingValues(vertical = 8.dp),
                         verticalArrangement = Arrangement.spacedBy(8.dp)
                     ) {
-                        //TODO: Incluir nombre del solicitante
-                        items(state.approvedLoans) { prestamo ->
+                        items(state.prestamosVigentes) { prestamo ->
                             PrestamoVigenteItem(
                                 nombreSolicitante = prestamo.nombreSolicitante,
                                 prestamoName = prestamo.nombre,
                                 montoTotal = prestamo.montoTotal,
-                                cantCuotas = prestamo.mensualidadesPrestamo.count(),
+                                cantCuotas = prestamo.plazoMeses,
                                 cantPagadas = prestamoUtils.countPaidInstallments(prestamo),
                                 montoCancelado = prestamoUtils.totalPaidAmount(prestamo),
                                 montoPendiente = prestamoUtils.remainingAmount(prestamo),
@@ -143,8 +142,7 @@ fun PrestamoScreen(
                         contentPadding = PaddingValues(vertical = 8.dp),
                         verticalArrangement = Arrangement.spacedBy(8.dp)
                     ) {
-                        //TODO: Incluir nombre del solicitante
-                        items(state.approvedLoans) { prestamo ->
+                        items(state.prestamosCompletados) { prestamo ->
                             PrestamoCompletadoItem(
                                 solicitanteName = prestamo.nombreSolicitante,
                                 prestamoName = prestamo.nombre,
