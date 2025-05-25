@@ -37,6 +37,7 @@ import app.cooperativa.theme.components.CoopSearchBar
 import app.cooperativa.theme.components.CoopText
 import app.cooperativa.theme.components.CoopTopBar
 import app.cooperativa.utils.PrestamoUtils
+import app.cooperativa.utils.formatMoney
 import org.koin.compose.koinInject
 
 @Composable
@@ -238,7 +239,7 @@ fun PrestamoCompletadoItem(
             Spacer(modifier = Modifier.width(8.dp))
 
             CoopText(
-                text = "Q${montoTotal.toString()}",
+                text = formatMoney(montoTotal),
                 style = CoopTheme.typography.bodyMedium,
                 fontWeight = FontWeight.Bold
             )
@@ -289,19 +290,19 @@ fun PrestamoVigenteItem(
             )
 
             CoopText(
-                text = "Pagado: $montoCancelado",
+                text = "Pagado: ${formatMoney(montoCancelado)}",
                 style = CoopTheme.typography.bodyMedium,
                 color = CoopTheme.colorScheme.onSurface
             )
 
             CoopText(
-                text = "Pendiente: $montoPendiente",
+                text = "Pendiente: ${formatMoney(montoPendiente)}",
                 style = CoopTheme.typography.bodyMedium,
                 color = CoopTheme.colorScheme.onSurface
             )
 
             CoopText(
-                text = "Total: $montoTotal",
+                text = "Total: ${formatMoney(montoTotal)} ",
                 style = CoopTheme.typography.bodyMedium,
                 color = CoopTheme.colorScheme.onSurface
             )
