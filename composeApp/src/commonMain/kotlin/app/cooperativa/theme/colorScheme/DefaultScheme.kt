@@ -26,5 +26,5 @@ val DarkColorScheme = CoopColorScheme(
     onSecondary = Color(0xFFCBE5FF),
     onTertiary = Color(0xFFD3ECEC),
     surfaceVariant = Color(0xFF1e1e1e),
-    error = Color(0xCF6679)
+    error = Color(0xFFCF6679)
 )
