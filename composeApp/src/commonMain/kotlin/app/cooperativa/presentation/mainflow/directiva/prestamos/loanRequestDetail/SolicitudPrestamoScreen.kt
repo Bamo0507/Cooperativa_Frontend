@@ -35,6 +35,7 @@ import app.cooperativa.theme.components.CoopOutlinedCard
 import app.cooperativa.theme.components.CoopOutlinedTextField
 import app.cooperativa.theme.components.CoopText
 import app.cooperativa.theme.components.CoopTopBar
+import app.cooperativa.utils.formatMoney
 
 @Composable
 fun SolicitudPrestamoRoute(
@@ -103,7 +104,7 @@ fun SolicitudPrestamoScreen(
                     )
 
                     CoopText(
-                        text = "Q${prestamo.montoTotal.toString()}",
+                        text = formatMoney(prestamo.montoTotal),
                         color = CoopTheme.colorScheme.onSurface,
                         style = CoopTheme.typography.bodyMedium
                     )

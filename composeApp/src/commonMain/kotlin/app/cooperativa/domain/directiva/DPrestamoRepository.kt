@@ -1,4 +1,4 @@
-package app.cooperativa.domain
+package app.cooperativa.domain.directiva
 
 import app.cooperativa.data.localdb.PrestamoMockData
 import app.cooperativa.data.localdb.SolicitudPrestamoMockData

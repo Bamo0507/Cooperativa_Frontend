@@ -3,8 +3,7 @@ package app.cooperativa.presentation.mainflow.directiva.prestamos.prestamosGener
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import app.cooperativa.data.model.dto.Prestamo
-import app.cooperativa.domain.DPrestamoRepository
-import app.cooperativa.domain.MockPrestamosRepository
+import app.cooperativa.domain.directiva.MockPrestamosRepository
 import app.cooperativa.utils.PrestamoUtils
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
