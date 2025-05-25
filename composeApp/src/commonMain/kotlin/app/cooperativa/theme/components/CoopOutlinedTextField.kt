@@ -36,7 +36,7 @@ fun CoopOutlinedTextField(
     keyboardOptions: KeyboardOptions = KeyboardOptions.Default,
     keyboardActions: KeyboardActions = KeyboardActions.Default,
     shape: Shape = MaterialTheme.shapes.medium,
-    containerColor: Color = CoopTheme.colorScheme.surface,
+    containerColor: Color = CoopTheme.colorScheme.surfaceVariant,
     contentColor: Color = CoopTheme.colorScheme.onSurface,
     cursorColor: Color = CoopTheme.colorScheme.primary,
     focusedBorderColor: Color = CoopTheme.colorScheme.primary,

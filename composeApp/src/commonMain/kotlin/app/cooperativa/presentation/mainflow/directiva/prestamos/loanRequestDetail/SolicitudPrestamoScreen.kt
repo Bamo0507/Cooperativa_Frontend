@@ -12,6 +12,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Check
@@ -21,10 +22,14 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import app.cooperativa.data.localdb.SolicitudPrestamoMockData
@@ -186,15 +191,22 @@ fun SolicitudPrestamoScreen(
             }
 
             // Interés (%) Input
+            CoopText(
+                text = "Interés (%)",
+                style = CoopTheme.typography.bodyLarge,
+                fontWeight = FontWeight.Bold,
+                modifier = Modifier.padding(vertical = 8.dp)
+            )
             CoopOutlinedTextField(
                 value = interestInput.toString(),
                 onValueChange = { input -> input.toFloatOrNull()?.let(onInterestChange) },
-                label = { CoopText(text = "Interés (%)") },
-                placeholder = { CoopText(text = "%") },
                 modifier = Modifier
                     .fillMaxWidth()
-                    .height(60.dp),
-                shape = MaterialTheme.shapes.medium
+                    .height(60.dp)
+                    .border(1.dp, CoopTheme.colorScheme.primary, RoundedCornerShape(16.dp)),
+                singleLine = true,
+                maxLines = 1,
+                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number)
             )
 
             Spacer(modifier = Modifier.height(16.dp))
@@ -247,3 +259,4 @@ fun SolicitudPrestamoScreen(
         }
     }
 }
+
