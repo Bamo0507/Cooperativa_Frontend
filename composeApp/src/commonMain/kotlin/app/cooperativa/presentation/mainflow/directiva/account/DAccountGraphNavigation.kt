@@ -12,7 +12,7 @@ data object DAccountNavGraph
 
 fun NavGraphBuilder.dAccountNavGraph(
     navController: NavController,
-    onLogOutClick: ()->Unit
+    onLogOutClick: ()->Unit,
 ){
     navigation<DAccountNavGraph>(startDestination = DirectivaAccountDestination){
         directivaAccountScreen(
