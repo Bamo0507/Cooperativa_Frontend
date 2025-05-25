@@ -18,20 +18,20 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Check
 import androidx.compose.material.icons.filled.Close
-import androidx.compose.material.icons.filled.Image
 import androidx.compose.material.icons.filled.Wallpaper
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import app.cooperativa.data.localdb.PaymentMockData
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import app.cooperativa.data.model.dto.Payment
+import app.cooperativa.presentation.mainflow.directiva.pagos.pendingPaymentDetail.DPendingPayViewModel
+import app.cooperativa.presentation.mainflow.directiva.pagos.pendingPaymentDetail.DPendingPayState
 import app.cooperativa.theme.CoopTheme
 import app.cooperativa.theme.components.CoopButton
 import app.cooperativa.theme.components.CoopIcon
@@ -41,26 +41,39 @@ import app.cooperativa.theme.components.CoopOutlinedTextField
 import app.cooperativa.theme.components.CoopText
 import app.cooperativa.theme.components.CoopTopBar
 import app.cooperativa.theme.utils.dateToString
+import app.cooperativa.utils.formatMoney
+import org.koin.compose.koinInject
+import org.koin.core.parameter.parametersOf
 
 @Composable
 fun DPendingPayRoute(
     paymentId: Int,
-    onBackClick: () -> Unit
+    onBackClick: () -> Unit,
+    viewModel: DPendingPayViewModel = koinInject { parametersOf(paymentId) }
 ) {
-    val payment = PaymentMockData.getPaymentById(paymentId)
-
-    DPendingPayScreen(
-        payment = payment!!,
-        onBackClick = { onBackClick() }
-    )
+    val state by viewModel.uiState.collectAsStateWithLifecycle()
+    state.payment?.let { payment ->
+        DPendingPayScreen(
+            payment = payment,
+            commentInput = state.commentInput,
+            onCommentChange = viewModel::onCommentChange,
+            onApprove = viewModel::onApprove,
+            onReject = viewModel::onReject,
+            onBackClick = onBackClick
+        )
+    }
 }
 
 @Composable
 fun DPendingPayScreen(
     payment: Payment,
+    commentInput: String,
+    onCommentChange: (String) -> Unit,
+    onApprove: () -> Unit,
+    onReject: () -> Unit,
     onBackClick: () -> Unit,
     modifier: Modifier = Modifier
-){
+) {
     Scaffold(
         topBar = {
             CoopTopBar(
@@ -77,224 +90,50 @@ fun DPendingPayScreen(
                 .background(CoopTheme.colorScheme.surface)
                 .padding(padding)
                 .padding(vertical = 6.dp, horizontal = 8.dp)
-                .verticalScroll(state = rememberScrollState(), enabled = true)
+                .verticalScroll(rememberScrollState())
         ) {
-            Spacer(modifier = Modifier.height(8.dp))
-
-            if(payment.quotas?.isNotEmpty() == true) {
-                CoopOutlinedCard(
-                    modifier = Modifier.padding(vertical = 10.dp, horizontal = 16.dp)
-                ){
-                    Column(
-                        modifier = Modifier.padding(16.dp)
-                    ) {
-                        CoopText(
-                            text = "Cuotas",
-                            fontWeight = FontWeight.Bold,
-                            textAlign = TextAlign.Start,
-                            style = CoopTheme.typography.bodyLarge,
-                            color = CoopTheme.colorScheme.onSecondary
-                        )
-                        Spacer(modifier = Modifier.height(4.dp))
-
-                        payment.quotas.forEach { quota ->
-                            Row (
-                                modifier = Modifier
-                                    .fillMaxWidth()
-                                    .padding(vertical = 6.dp),
-                                horizontalArrangement = Arrangement.SpaceBetween,
-                                verticalAlignment = Alignment.CenterVertically
-                            ){
-                                Column {
-                                    CoopText(
-                                        text = dateToString(quota.date),
-                                        textAlign = TextAlign.Start,
-                                        style = CoopTheme.typography.bodyMedium,
-                                    )
-                                    CoopText(
-                                        text = quota.userName,
-                                        textAlign = TextAlign.Start,
-                                        style = CoopTheme.typography.bodyMedium,
-                                    )
-                                }
-                                Spacer(modifier = Modifier.weight(1f))
-
-                                CoopText(
-                                    text = "Q${quota.amount}",
-                                    textAlign = TextAlign.End,
-                                    style = CoopTheme.typography.bodyMedium,
-                                    color = CoopTheme.colorScheme.onSecondary
-                                )
-                            }
-                        }
-                    }
-                }
+            // Cuotas
+            payment.quotas.orEmpty().takeIf { it.isNotEmpty() }?.let { list ->
+                DPendingSection(
+                    title = "Cuotas",
+                    values = list.map { dateToString(it.date) to formatMoney(it.amount) }
+                )
+            }
+            // Préstamos
+            payment.loanPayments.orEmpty().takeIf { it.isNotEmpty() }?.let { list ->
+                DPendingSection(
+                    title = "Préstamos",
+                    values = list.map { dateToString(it.date) to formatMoney(it.amountPayed) }
+                )
+            }
+            // Multas
+            payment.finePayments.orEmpty().takeIf { it.isNotEmpty() }?.let { list ->
+                DPendingSection(
+                    title = "Multas",
+                    values = list.map { it.fineName to formatMoney(it.amount) }
+                )
+            }
+            // Aportes
+            payment.contributionPayments.orEmpty().takeIf { it.isNotEmpty() }?.let { list ->
+                DPendingSection(
+                    title = "Aportes",
+                    values = list.map { it.user to formatMoney(it.amount) }
+                )
             }
 
-            if(payment.loanPayments?.isNotEmpty() == true) {
-                CoopOutlinedCard(
-                    modifier = Modifier.padding(vertical = 10.dp, horizontal = 16.dp)
-                ){
-                    Column(
-                        modifier = Modifier.padding(16.dp)
-                    ) {
-                        CoopText(
-                            text = "Préstamos",
-                            fontWeight = FontWeight.Bold,
-                            textAlign = TextAlign.Start,
-                            style = CoopTheme.typography.bodyLarge,
-                            color = CoopTheme.colorScheme.onSecondary
-                        )
-
-                        Spacer(modifier = Modifier.height(4.dp))
-
-                        payment.loanPayments.forEach { loanPayment ->
-                            Row (
-                                modifier = Modifier
-                                    .fillMaxWidth()
-                                    .padding(vertical = 6.dp),
-                                horizontalArrangement = Arrangement.SpaceBetween,
-                                verticalAlignment = Alignment.CenterVertically
-                            ){
-                                Column {
-                                    CoopText(
-                                        text = dateToString(loanPayment.date),
-                                        textAlign = TextAlign.Start,
-                                        style = CoopTheme.typography.bodyMedium,
-                                    )
-                                    CoopText(
-                                        text = loanPayment.loanName,
-                                        textAlign = TextAlign.Start,
-                                        style = CoopTheme.typography.bodyMedium,
-                                    )
-                                    CoopText(
-                                        text = loanPayment.userName,
-                                        textAlign = TextAlign.Start,
-                                        style = CoopTheme.typography.bodyMedium,
-                                    )
-                                }
-                                Spacer(modifier = Modifier.weight(1f))
-
-                                CoopText(
-                                    text = "Q${loanPayment.amountPayed}",
-                                    textAlign = TextAlign.End,
-                                    style = CoopTheme.typography.bodyMedium,
-                                    color = CoopTheme.colorScheme.onSecondary
-                                )
-                            }
-                        }
-
-                    }
-                }
-            }
-
-            if (payment.finePayments?.isNotEmpty() == true) {
-                CoopOutlinedCard(
-                    modifier = Modifier.padding(vertical = 10.dp, horizontal = 16.dp)
-                ){
-                    Column(
-                        modifier = Modifier.padding(16.dp)
-                    ) {
-                        CoopText(
-                            text = "Multas",
-                            fontWeight = FontWeight.Bold,
-                            textAlign = TextAlign.Start,
-                            style = CoopTheme.typography.bodyLarge,
-                            color = CoopTheme.colorScheme.onSecondary
-                        )
-                        Spacer(modifier = Modifier.height(4.dp))
-
-                        payment.finePayments.forEach { finePayment ->
-                            Row (
-                                modifier = Modifier
-                                    .fillMaxWidth()
-                                    .padding(vertical = 6.dp),
-                                horizontalArrangement = Arrangement.SpaceBetween,
-                                verticalAlignment = Alignment.CenterVertically
-                            ){
-                                Column {
-                                    CoopText(
-                                        text = finePayment.fineName,
-                                        textAlign = TextAlign.Start,
-                                        style = CoopTheme.typography.bodyMedium,
-                                    )
-                                    CoopText(
-                                        text = finePayment.user,
-                                        textAlign = TextAlign.Start,
-                                        style = CoopTheme.typography.bodyMedium,
-                                    )
-                                }
-                                Spacer(modifier = Modifier.weight(1f))
-
-                                CoopText(
-                                    text = "${finePayment.amount}",
-                                    textAlign = TextAlign.End,
-                                    style = CoopTheme.typography.bodyMedium,
-                                    color = CoopTheme.colorScheme.onSecondary
-                                )
-                            }
-                        }
-                    }
-                }
-            }
-
-            if (payment.contributionPayments?.isNotEmpty() == true) {
-                CoopOutlinedCard(
-                    modifier = Modifier.padding(vertical = 10.dp, horizontal = 16.dp)
-                ){
-                    Column(
-                        modifier = Modifier.padding(16.dp)
-                    ) {
-                        CoopText(
-                            text = "Aportes",
-                            fontWeight = FontWeight.Bold,
-                            textAlign = TextAlign.Start,
-                            style = CoopTheme.typography.bodyLarge,
-                            color = CoopTheme.colorScheme.onSecondary
-                        )
-                        Spacer(modifier = Modifier.height(4.dp))
-
-                        payment.contributionPayments.forEach { contributionPayment ->
-                            Row (
-                                modifier = Modifier
-                                    .fillMaxWidth()
-                                    .padding(vertical = 6.dp),
-                                horizontalArrangement = Arrangement.SpaceBetween,
-                                verticalAlignment = Alignment.CenterVertically
-                            ){
-                                CoopText(
-                                    text = contributionPayment.user,
-                                    textAlign = TextAlign.Start,
-                                    style = CoopTheme.typography.bodyMedium,
-                                )
-                                Spacer(modifier = Modifier.weight(1f))
-
-                                CoopText(
-                                    text = "${contributionPayment.amount}",
-                                    textAlign = TextAlign.End,
-                                    style = CoopTheme.typography.bodyMedium,
-                                    color = CoopTheme.colorScheme.onSecondary
-                                )
-                            }
-                        }
-                    }
-                }
-            }
-
-            //TODO: Hacer un preview de la imagen a mostrar cuando se de ver boleta
-            // De momento con un color de fonto
+            // Imagen
             Box(
-                modifier = modifier
+                modifier = Modifier
                     .fillMaxWidth()
                     .height(160.dp)
                     .padding(16.dp)
-                    .background(CoopTheme.colorScheme.surface, shape = RoundedCornerShape(16.dp))
-                    .border(1.dp, CoopTheme.colorScheme.primary, shape = RoundedCornerShape(16.dp)),
+                    .background(CoopTheme.colorScheme.surface, RoundedCornerShape(16.dp))
+                    .border(1.dp, CoopTheme.colorScheme.primary, RoundedCornerShape(16.dp)),
                 contentAlignment = Alignment.Center
-            ){
+            ) {
                 CoopIcon(
                     Icons.Default.Wallpaper,
-                    contentDescription = "Imagen momentanea",
+                    contentDescription = "Imagen boleta",
                     tint = CoopTheme.colorScheme.primary,
                     modifier = Modifier.size(100.dp)
                 )
@@ -319,88 +158,61 @@ fun DPendingPayScreen(
                 )
             }
 
-            // Comment section
+
+            // Comentarios
             CoopText(
                 text = "Comentarios",
-                color = CoopTheme.colorScheme.onSurface.copy(alpha = 0.8f),
-                style = CoopTheme.typography.bodyLarge,
-                modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp),
-                fontWeight = FontWeight.Bold
+                fontWeight = FontWeight.Bold,
+                modifier = Modifier.padding(vertical = 8.dp, horizontal = 16.dp)
             )
-
             CoopOutlinedTextField(
-                value = "",
-                onValueChange = {},
+                value = commentInput,
+                onValueChange = onCommentChange,
                 modifier = Modifier
+                    .fillMaxWidth()
                     .padding(horizontal = 16.dp)
-                    .border(1.dp, CoopTheme.colorScheme.primary, shape = RoundedCornerShape(16.dp))
-                    .height(128.dp),
+                    .border(1.dp, CoopTheme.colorScheme.primary, RoundedCornerShape(16.dp))
+                    .height(128.dp)
             )
 
+            // Botones de acción
             Row(
-                modifier = Modifier
-                    .padding(horizontal = 16.dp, vertical = 12.dp),
-                horizontalArrangement = Arrangement.SpaceBetween
+                horizontalArrangement = Arrangement.SpaceBetween,
+                modifier = Modifier.fillMaxWidth().padding(vertical = 8.dp, horizontal = 16.dp)
             ) {
-                CoopOutlinedButton(
-                    onClick = { /* TODO */ },
-                    shape = RoundedCornerShape(16.dp),
-                    modifier = Modifier.height(48.dp)
-                ){
-                    Row(
-                        horizontalArrangement = Arrangement.Center,
-                        verticalAlignment = Alignment.CenterVertically
-                    ){
-                        CoopIcon(
-                            Icons.Default.Close,
-                            contentDescription = "Rechazar",
-                            tint = CoopTheme.colorScheme.onSurface
-                        )
-                        Spacer(modifier = Modifier.width(4.dp))
-                        CoopText(
-                            text = "Negar",
-                            style = CoopTheme.typography.bodyLarge,
-                            color = CoopTheme.colorScheme.onSurface
-                        )
-                    }
+                CoopOutlinedButton(onClick = onReject, shape = RoundedCornerShape(16.dp)) {
+                    CoopIcon(Icons.Default.Close, "Rechazar")
+                    Spacer(Modifier.width(4.dp))
+                    CoopText("Negar")
                 }
-
-                Spacer(modifier = Modifier.weight(1f))
-
-                CoopButton(
-                    onClick = { /* TODO */ },
-                    shape = RoundedCornerShape(16.dp),
-                    colors = ButtonDefaults.buttonColors(
-                        containerColor = CoopTheme.colorScheme.primary,
-                        contentColor = CoopTheme.colorScheme.onPrimary
-                    ),
-                    modifier = Modifier.height(48.dp)
-                ){
-                    Row(
-                        horizontalArrangement = Arrangement.Center,
-                        verticalAlignment = Alignment.CenterVertically
-                    ){
-                        CoopIcon(
-                            Icons.Default.Check,
-                            contentDescription = "Aprobar",
-                            tint = CoopTheme.colorScheme.onPrimary
-                        )
-                        Spacer(modifier = Modifier.width(4.dp))
-                        CoopText(
-                            text = "Aprobar",
-                            style = CoopTheme.typography.bodyLarge,
-                            color = CoopTheme.colorScheme.onPrimary
-                        )
-                    }
+                CoopButton(onClick = onApprove, shape = RoundedCornerShape(16.dp), colors = ButtonDefaults.buttonColors(containerColor = CoopTheme.colorScheme.primary)) {
+                    CoopIcon(Icons.Default.Check, "Aprobar")
+                    Spacer(Modifier.width(4.dp))
+                    CoopText("Aprobar", color = CoopTheme.colorScheme.onPrimary)
                 }
-
-
             }
-
-
-
         }
-
     }
+}
 
+@Composable
+private fun DPendingSection(
+    title: String,
+    values: List<Pair<String, String>>
+) {
+    CoopOutlinedCard(modifier = Modifier.padding(vertical = 10.dp, horizontal = 16.dp)) {
+        Column(Modifier.padding(16.dp)) {
+            CoopText(text = title, fontWeight = FontWeight.Bold)
+            Spacer(Modifier.height(4.dp))
+            values.forEach { (label, value) ->
+                Row(
+                    modifier = Modifier.fillMaxWidth().padding(vertical = 6.dp),
+                    horizontalArrangement = Arrangement.SpaceBetween
+                ) {
+                    CoopText(label)
+                    CoopText(value, color = CoopTheme.colorScheme.onSecondary)
+                }
+            }
+        }
+    }
 }
