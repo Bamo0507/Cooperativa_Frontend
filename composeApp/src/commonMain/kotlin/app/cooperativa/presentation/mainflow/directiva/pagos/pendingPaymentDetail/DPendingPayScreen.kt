@@ -47,7 +47,6 @@ fun DPendingPayRoute(
     paymentId: Int,
     onBackClick: () -> Unit
 ) {
-    // TODO: change when navigation is implemented
     val payment = PaymentMockData.getPaymentById(paymentId)
 
     DPendingPayScreen(

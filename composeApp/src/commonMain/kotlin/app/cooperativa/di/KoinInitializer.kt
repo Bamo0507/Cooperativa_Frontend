@@ -8,7 +8,8 @@ import org.koin.core.KoinApplication
 fun getKoinModules() = listOf(
     dprestamosmodule,
     dsolicitudprestamomodule,
-    dpagosmodule
+    dpagosmodule,
+    dpendingpaymodule
 )
 
 object KoinHelper {
