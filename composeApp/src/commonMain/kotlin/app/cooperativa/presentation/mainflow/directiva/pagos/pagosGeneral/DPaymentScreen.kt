@@ -22,18 +22,20 @@ import androidx.compose.material3.FilterChip
 import androidx.compose.material3.FilterChipDefaults
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import app.cooperativa.data.localdb.FineMockData
-import app.cooperativa.data.localdb.PaymentMockData
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import org.koin.compose.koinInject
+
 import app.cooperativa.data.model.dto.Fine
 import app.cooperativa.data.model.dto.FineType
 import app.cooperativa.data.model.ui.BasicInfoPayment
+import app.cooperativa.presentation.mainflow.directiva.pagos.pagosGeneral.DPaymentsState
+import app.cooperativa.presentation.mainflow.directiva.pagos.pagosGeneral.DPaymentsViewModel
 import app.cooperativa.theme.CoopTheme
 import app.cooperativa.theme.components.CoopIcon
 import app.cooperativa.theme.components.CoopOutlinedCard
@@ -41,41 +43,40 @@ import app.cooperativa.theme.components.CoopSearchBar
 import app.cooperativa.theme.components.CoopText
 import app.cooperativa.theme.components.CoopTopBar
 import app.cooperativa.theme.utils.dateToString
+import app.cooperativa.utils.formatMoney
 
-@OptIn(ExperimentalMaterial3Api::class)
+/**
+ * Route: inyecta ViewModel y observa el estado para la pantalla de Pagos.
+ */
 @Composable
 fun DPaymentsRoute(
-    onPaymentClick: (Int) -> Unit
+    onPaymentClick: (Int) -> Unit,
+    viewModel: DPaymentsViewModel = koinInject()
 ) {
-    val payments = rememberSaveable { mutableStateOf(PaymentMockData.getAllPaymentsBasicInfo()) }
-    val fines = rememberSaveable { mutableStateOf(FineMockData.getAllFines()) }
-
-    val selectedTabIndex = rememberSaveable { mutableStateOf(0) }
+    val state by viewModel.uiState.collectAsStateWithLifecycle()
 
     DPaymentsScreen(
-        payments = payments.value,
-        fines = fines.value,
-        selectedTabIndex = selectedTabIndex.value,
-        changeIndex = { selectedTabIndex.value = it },
+        state = state,
+        onTabSelected = viewModel::onTabSelected,
+        onSearchQueryChange = viewModel::onSearchQueryChange,
         onPaymentClick = onPaymentClick
     )
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
+/**
+ * Screen: recibe el estado completo y lambdas de interacción.
+ */
 @Composable
 fun DPaymentsScreen(
-    fines: List<Fine>,
-    payments: List<BasicInfoPayment>,
-    selectedTabIndex: Int,
-    changeIndex: (Int) -> Unit = {},
-    modifier: Modifier = Modifier,
-    onPaymentClick: (Int) -> Unit
+    state: DPaymentsState,
+    onTabSelected: (Int) -> Unit,
+    onSearchQueryChange: (String) -> Unit,
+    onPaymentClick: (Int) -> Unit,
+    modifier: Modifier = Modifier
 ) {
     Scaffold(
-        topBar = {
-            CoopTopBar(title = "Pagos")
-        },
-        containerColor = CoopTheme.colorScheme.surface,
+        topBar = { CoopTopBar(title = "Pagos") },
+        containerColor = CoopTheme.colorScheme.surface
     ) { padding ->
         Column(
             modifier = modifier
@@ -83,90 +84,88 @@ fun DPaymentsScreen(
                 .padding(padding)
                 .padding(vertical = 6.dp, horizontal = 24.dp)
         ) {
-            // Chips
+            // Chips para filtrar pestañas
             FilterChipsRow(
-                selectedIndex = selectedTabIndex,
-                onSelect = changeIndex,
+                selectedIndex = state.selectedTabIndex,
+                onSelect = onTabSelected,
                 modifier = Modifier.padding(bottom = 12.dp)
             )
 
-            // Filtrar y mostrar según estado
-            if (selectedTabIndex == 0) {
-                // Pendientes
-                LazyColumn(
-                    modifier = Modifier.fillMaxSize(),
-                    contentPadding = PaddingValues(vertical = 8.dp),
-                    verticalArrangement = Arrangement.spacedBy(8.dp)
-                ) {
-                    items(payments.filter { it.isPaymentPending }) { basic ->
-                        PaymentItem(
-                            idPayment = basic.id,
-                            paymentName = basic.paymentName,
-                            affiliatedName = basic.username,
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .padding(vertical = 2.dp),
-                            onPaymentClick = onPaymentClick
-                        )
+            when (state.selectedTabIndex) {
+                0 -> {
+                    // Pagos pendientes
+                    LazyColumn(
+                        modifier = Modifier.fillMaxSize(),
+                        contentPadding = PaddingValues(vertical = 8.dp),
+                        verticalArrangement = Arrangement.spacedBy(8.dp)
+                    ) {
+                        items(state.pendingPayments) { basic ->
+                            PaymentItem(
+                                idPayment = basic.id,
+                                paymentName = basic.paymentName,
+                                affiliatedName = basic.username,
+                                onPaymentClick = onPaymentClick,
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .padding(vertical = 2.dp)
+                            )
+                        }
                     }
                 }
-            } else if (selectedTabIndex == 1) {
-                // Pagados
-                // Search bar
-                CoopSearchBar(
-                    query = "",
-                    onQueryChanged = {},
-                    placeholder = "Bryan Martinez",
-                    modifier = Modifier.padding(bottom = 8.dp).padding(horizontal = 4.dp)
-                )
-
-                LazyColumn(
-                    modifier = Modifier.fillMaxSize(),
-                    contentPadding = PaddingValues(vertical = 8.dp),
-                    verticalArrangement = Arrangement.spacedBy(8.dp)
-                ) {
-                    items(payments.filter { !it.isPaymentPending }) { basic ->
-                        PaymentItem(
-                            idPayment = basic.id,
-                            paymentName = basic.paymentName,
-                            affiliatedName = basic.username,
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .padding(horizontal = 8.dp, vertical = 2.dp),
-                            onPaymentClick = { /*TODO*/ }
-                        )
+                1 -> {
+                    CoopSearchBar(
+                        query = state.searchQuery,
+                        onQueryChanged = onSearchQueryChange,
+                        placeholder = "Buscar...",
+                        modifier = Modifier
+                            .padding(bottom = 8.dp)
+                    )
+                    LazyColumn(
+                        modifier = Modifier.fillMaxSize(),
+                        contentPadding = PaddingValues(vertical = 8.dp),
+                        verticalArrangement = Arrangement.spacedBy(8.dp)
+                    ) {
+                        items(state.paidPayments) { basic ->
+                            PaymentItem(
+                                idPayment = basic.id,
+                                paymentName = basic.paymentName,
+                                affiliatedName = basic.username,
+                                onPaymentClick = { /* TODO */},
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .padding(vertical = 2.dp)
+                            )
+                        }
                     }
                 }
-
-            } else {
-                // En mora
-                CoopSearchBar(
-                    query = "",
-                    onQueryChanged = {},
-                    placeholder = "Bryan Martinez",
-                    modifier = Modifier.padding(bottom = 8.dp).padding(horizontal = 4.dp)
-                )
-
-                LazyColumn(
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .padding(vertical = 8.dp),
-                    contentPadding = PaddingValues(vertical = 8.dp),
-                    verticalArrangement = Arrangement.spacedBy(8.dp)
-                ) {
-                    items(fines) { fine ->
-                        FineSection(
-                            fine = fine,
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .padding(horizontal = 8.dp, vertical = 4.dp)
-                        )
+                2 -> {
+                    CoopSearchBar(
+                        query = state.searchQuery,
+                        onQueryChanged = onSearchQueryChange,
+                        placeholder = "Buscar...",
+                        modifier = Modifier
+                            .padding(bottom = 8.dp)
+                    )
+                    LazyColumn(
+                        modifier = Modifier.fillMaxSize(),
+                        contentPadding = PaddingValues(vertical = 8.dp),
+                        verticalArrangement = Arrangement.spacedBy(8.dp)
+                    ) {
+                        items(state.fines) { fine ->
+                            FineSection(
+                                fine = fine,
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .padding(vertical = 4.dp)
+                            )
+                        }
                     }
                 }
             }
         }
     }
 }
+
 
 @Composable
 fun PaymentItem(
@@ -313,7 +312,7 @@ fun FineSection(
                                 )
 
                                 CoopText(
-                                    text = "Q${(fineDetail.amount)}",
+                                    text = formatMoney(fineDetail.amount),
                                     textAlign = TextAlign.End,
                                     style = CoopTheme.typography.bodyMedium
                                 )
@@ -359,12 +358,11 @@ fun FineSection(
 
                             Spacer(modifier = Modifier.weight(1f))
                             CoopText(
-                                text = "Q${fineDetail.amount.toString()}",
+                                text = formatMoney(fineDetail.amount),
                                 textAlign = TextAlign.End,
                                 style = CoopTheme.typography.bodyMedium
                             )
                         }
-
                     }
 
                 }

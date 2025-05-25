@@ -9,10 +9,21 @@ import androidx.compose.ui.unit.dp
 import app.cooperativa.data.localdb.SolicitudPrestamoMockData
 import app.cooperativa.data.localdb.PrestamoMockData
 import app.cooperativa.presentation.mainflow.directiva.prestamos.prestamosGeneral.PrestamoScreen
+import app.cooperativa.presentation.mainflow.directiva.prestamos.prestamosGeneral.DPrestamoState
 import app.cooperativa.theme.CoopTheme
 
+// Datos de ejemplo (mock)
 private val sampleReqLoans = SolicitudPrestamoMockData.getAllBasicInfo()
-private val sampleApprovedLoans = PrestamoMockData.getAllPrestamos()
+private val sampleAllLoans = PrestamoMockData.getAllPrestamos()
+
+// Estado base que reutilizan todos los previews
+private val dummyState = DPrestamoState(
+    selectedTabIndex = 0,
+    reqLoans = sampleReqLoans,
+    allLoans = sampleAllLoans,
+    prestamosVigentes = sampleAllLoans.filter { it.mensualidadesPrestamo.size < it.plazoMeses },
+    prestamosCompletados = sampleAllLoans.filter { it.mensualidadesPrestamo.size >= it.plazoMeses }
+)
 
 @Preview(
     name = "Solicitudes Light Mode",
@@ -23,10 +34,9 @@ private val sampleApprovedLoans = PrestamoMockData.getAllPrestamos()
 fun PrestamosSolicitudesPreviewLight() {
     CoopTheme {
         PrestamoScreen(
-            reqLoans = sampleReqLoans,
-            approvedLoans = sampleApprovedLoans,
-            selectedTabIndex = 0,
-            changeIndex = {},
+            state = dummyState.copy(selectedTabIndex = 0),
+            onTabSelected = {},
+            onSearchQueryChanged = {},
             onPendingLoanClick = {},
             modifier = Modifier.padding(16.dp)
         )
@@ -42,10 +52,9 @@ fun PrestamosSolicitudesPreviewLight() {
 fun PrestamosSolicitudesPreviewDark() {
     CoopTheme {
         PrestamoScreen(
-            reqLoans = sampleReqLoans,
-            approvedLoans = sampleApprovedLoans,
-            selectedTabIndex = 0,
-            changeIndex = {},
+            state = dummyState.copy(selectedTabIndex = 0),
+            onTabSelected = {},
+            onSearchQueryChanged = {},
             onPendingLoanClick = {},
             modifier = Modifier.padding(16.dp)
         )
@@ -61,10 +70,9 @@ fun PrestamosSolicitudesPreviewDark() {
 fun PrestamosVigentesPreviewLight() {
     CoopTheme {
         PrestamoScreen(
-            reqLoans = sampleReqLoans,
-            approvedLoans = sampleApprovedLoans,
-            selectedTabIndex = 1,
-            changeIndex = {},
+            state = dummyState.copy(selectedTabIndex = 1),
+            onTabSelected = {},
+            onSearchQueryChanged = {},
             onPendingLoanClick = {},
             modifier = Modifier.padding(16.dp)
         )
@@ -80,16 +88,14 @@ fun PrestamosVigentesPreviewLight() {
 fun PrestamosVigentesPreviewDark() {
     CoopTheme {
         PrestamoScreen(
-            reqLoans = sampleReqLoans,
-            approvedLoans = sampleApprovedLoans,
-            selectedTabIndex = 1,
-            changeIndex = {},
+            state = dummyState.copy(selectedTabIndex = 1),
+            onTabSelected = {},
+            onSearchQueryChanged = {},
             onPendingLoanClick = {},
             modifier = Modifier.padding(16.dp)
         )
     }
 }
-
 
 @Preview(
     name = "Completados Light Mode",
@@ -100,10 +106,9 @@ fun PrestamosVigentesPreviewDark() {
 fun PrestamosCompletadosPreviewLight() {
     CoopTheme {
         PrestamoScreen(
-            reqLoans = sampleReqLoans,
-            approvedLoans = sampleApprovedLoans,
-            selectedTabIndex = 2,
-            changeIndex = {},
+            state = dummyState.copy(selectedTabIndex = 2),
+            onTabSelected = {},
+            onSearchQueryChanged = {},
             onPendingLoanClick = {},
             modifier = Modifier.padding(16.dp)
         )
@@ -119,13 +124,11 @@ fun PrestamosCompletadosPreviewLight() {
 fun PrestamosCompletadosPreviewDark() {
     CoopTheme {
         PrestamoScreen(
-            reqLoans = sampleReqLoans,
-            approvedLoans = sampleApprovedLoans,
-            selectedTabIndex = 2,
-            changeIndex = {},
+            state = dummyState.copy(selectedTabIndex = 2),
+            onTabSelected = {},
+            onSearchQueryChanged = {},
             onPendingLoanClick = {},
             modifier = Modifier.padding(16.dp)
         )
     }
 }
-

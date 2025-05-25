@@ -9,10 +9,15 @@ import androidx.compose.ui.unit.dp
 import app.cooperativa.data.localdb.FineMockData
 import app.cooperativa.data.localdb.PaymentMockData
 import app.cooperativa.presentation.mainflow.directiva.pagos.pagosGeneral.DPaymentsScreen
+import app.cooperativa.presentation.mainflow.directiva.pagos.pagosGeneral.DPaymentsState
 import app.cooperativa.theme.CoopTheme
 
-private val samplePendientes = PaymentMockData.getAllPaymentsBasicInfo()
+// Datos de ejemplo
+private val samplePayments = PaymentMockData.getAllPaymentsBasicInfo()
 private val sampleFines = FineMockData.getAllFines()
+
+private val pendingPayments = samplePayments.filter { it.isPaymentPending }
+private val paidPayments = samplePayments.filter { !it.isPaymentPending }
 
 @Preview(
     name = "Pendientes Light Mode",
@@ -23,11 +28,16 @@ private val sampleFines = FineMockData.getAllFines()
 fun DPaymentsPendingPreviewLight() {
     CoopTheme {
         DPaymentsScreen(
-            fines = sampleFines,
-            payments = samplePendientes,
-            selectedTabIndex = 0,
-            modifier = Modifier.padding(16.dp),
-            onPaymentClick = {}
+            state = DPaymentsState(
+                selectedTabIndex = 0,
+                pendingPayments = pendingPayments,
+                paidPayments = paidPayments,
+                fines = sampleFines
+            ),
+            onTabSelected = {},
+            onSearchQueryChange = {},
+            onPaymentClick = {},
+            modifier = Modifier.padding(16.dp)
         )
     }
 }
@@ -41,11 +51,16 @@ fun DPaymentsPendingPreviewLight() {
 fun DPaymentsPendingPreviewDark() {
     CoopTheme {
         DPaymentsScreen(
-            fines = sampleFines,
-            payments = samplePendientes,
-            selectedTabIndex = 0,
-            modifier = Modifier.padding(16.dp),
-            onPaymentClick = {}
+            state = DPaymentsState(
+                selectedTabIndex = 0,
+                pendingPayments = pendingPayments,
+                paidPayments = paidPayments,
+                fines = sampleFines
+            ),
+            onTabSelected = {},
+            onSearchQueryChange = {},
+            onPaymentClick = {},
+            modifier = Modifier.padding(16.dp)
         )
     }
 }
@@ -56,14 +71,19 @@ fun DPaymentsPendingPreviewDark() {
     uiMode = Configuration.UI_MODE_NIGHT_NO
 )
 @Composable
-fun DPaymentsPayedPreviewLight() {
+fun DPaymentsPaidPreviewLight() {
     CoopTheme {
         DPaymentsScreen(
-            fines = sampleFines,
-            payments = samplePendientes,
-            selectedTabIndex = 1,
-            modifier = Modifier.padding(16.dp),
-            onPaymentClick = {}
+            state = DPaymentsState(
+                selectedTabIndex = 1,
+                pendingPayments = pendingPayments,
+                paidPayments = paidPayments,
+                fines = sampleFines
+            ),
+            onTabSelected = {},
+            onSearchQueryChange = {},
+            onPaymentClick = {},
+            modifier = Modifier.padding(16.dp)
         )
     }
 }
@@ -74,14 +94,19 @@ fun DPaymentsPayedPreviewLight() {
     uiMode = Configuration.UI_MODE_NIGHT_YES
 )
 @Composable
-fun DPaymentsPayedPreviewDark() {
+fun DPaymentsPaidPreviewDark() {
     CoopTheme {
         DPaymentsScreen(
-            fines = sampleFines,
-            payments = samplePendientes,
-            selectedTabIndex = 1,
-            modifier = Modifier.padding(16.dp),
-            onPaymentClick = {}
+            state = DPaymentsState(
+                selectedTabIndex = 1,
+                pendingPayments = pendingPayments,
+                paidPayments = paidPayments,
+                fines = sampleFines
+            ),
+            onTabSelected = {},
+            onSearchQueryChange = {},
+            onPaymentClick = {},
+            modifier = Modifier.padding(16.dp)
         )
     }
 }
@@ -95,11 +120,16 @@ fun DPaymentsPayedPreviewDark() {
 fun DPaymentsFinesPreviewLight() {
     CoopTheme {
         DPaymentsScreen(
-            fines = sampleFines,
-            payments = samplePendientes,
-            selectedTabIndex = 2,
-            modifier = Modifier.padding(16.dp),
-            onPaymentClick = {}
+            state = DPaymentsState(
+                selectedTabIndex = 2,
+                pendingPayments = pendingPayments,
+                paidPayments = paidPayments,
+                fines = sampleFines
+            ),
+            onTabSelected = {},
+            onSearchQueryChange = {},
+            onPaymentClick = {},
+            modifier = Modifier.padding(16.dp)
         )
     }
 }
@@ -113,11 +143,16 @@ fun DPaymentsFinesPreviewLight() {
 fun DPaymentsFinesPreviewDark() {
     CoopTheme {
         DPaymentsScreen(
-            fines = sampleFines,
-            payments = samplePendientes,
-            selectedTabIndex = 2,
-            modifier = Modifier.padding(16.dp),
-            onPaymentClick = {}
+            state = DPaymentsState(
+                selectedTabIndex = 2,
+                pendingPayments = pendingPayments,
+                paidPayments = paidPayments,
+                fines = sampleFines
+            ),
+            onTabSelected = {},
+            onSearchQueryChange = {},
+            onPaymentClick = {},
+            modifier = Modifier.padding(16.dp)
         )
     }
 }

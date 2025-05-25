@@ -21,17 +21,15 @@ import androidx.compose.material3.FilterChip
 import androidx.compose.material3.FilterChipDefaults
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.saveable.rememberSaveable
-import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import app.cooperativa.data.localdb.SolicitudPrestamoMockData
-import app.cooperativa.data.localdb.PrestamoMockData
-import app.cooperativa.data.model.dto.Estados
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import app.cooperativa.data.model.dto.Prestamo
 import app.cooperativa.data.model.ui.BasicInfoLoan
+import app.cooperativa.presentation.mainflow.directiva.prestamos.prestamosGeneral.DPrestamoState
 import app.cooperativa.theme.CoopTheme
 import app.cooperativa.theme.components.CoopIcon
 import app.cooperativa.theme.components.CoopOutlinedCard
@@ -39,30 +37,29 @@ import app.cooperativa.theme.components.CoopSearchBar
 import app.cooperativa.theme.components.CoopText
 import app.cooperativa.theme.components.CoopTopBar
 import app.cooperativa.utils.PrestamoUtils
+import app.cooperativa.utils.formatMoney
+import org.koin.compose.koinInject
 
 @Composable
 fun PrestamosRoute(
     onPendingLoanClick: (Int) -> Unit,
+    viewModel: DPrestamoViewModel = koinInject()
 ) {
-    val reqLoansState = rememberSaveable { mutableStateOf(SolicitudPrestamoMockData.getAllBasicInfo()) }
-    val approvedLoansState = rememberSaveable { mutableStateOf(PrestamoMockData.getAllPrestamos()) }
-    val selectedIndexState = rememberSaveable { mutableStateOf(0) }
+    val state by viewModel.uiState.collectAsStateWithLifecycle()
 
     PrestamoScreen(
-        reqLoans = reqLoansState.value,
-        approvedLoans = approvedLoansState.value,
-        selectedTabIndex = selectedIndexState.value,
-        changeIndex = { selectedIndexState.value = it },
+        state = state,
+        onTabSelected = viewModel::onTabSelected,
+        onSearchQueryChanged = viewModel::onSearchQueryChange,
         onPendingLoanClick = onPendingLoanClick
     )
 }
 
 @Composable
 fun PrestamoScreen(
-    reqLoans: List<BasicInfoLoan>,
-    approvedLoans: List<Prestamo>,
-    selectedTabIndex: Int,
-    changeIndex: (Int) -> Unit = {},
+    state: DPrestamoState,
+    onTabSelected: (Int) -> Unit,
+    onSearchQueryChanged: (String) -> Unit,
     onPendingLoanClick: (Int) -> Unit,
     prestamoUtils: PrestamoUtils = PrestamoUtils,
     modifier: Modifier = Modifier
@@ -78,19 +75,19 @@ fun PrestamoScreen(
                 .padding(vertical = 6.dp, horizontal = 24.dp)
         ) {
             FilterChipsRow(
-                selectedIndex = selectedTabIndex,
-                onSelect = changeIndex,
+                selectedIndex = state.selectedTabIndex,
+                onSelect = onTabSelected,
                 modifier = Modifier.padding(bottom = 12.dp)
             )
 
-            when (selectedTabIndex) {
+            when (state.selectedTabIndex) {
                 0 -> {
                     LazyColumn(
                         modifier = Modifier.fillMaxSize(),
                         contentPadding = PaddingValues(vertical = 8.dp),
                         verticalArrangement = Arrangement.spacedBy(8.dp)
                     ) {
-                        items(reqLoans) { basic ->
+                        items(state.reqLoans) { basic ->
                             SolicitudItem(
                                 idSolicitud = basic.id,
                                 solicitudName = basic.loanName,
@@ -105,8 +102,8 @@ fun PrestamoScreen(
                 }
                 1 -> {
                     CoopSearchBar(
-                        query = "",
-                        onQueryChanged = {},
+                        query = state.searchQuery,
+                        onQueryChanged = onSearchQueryChanged,
                         placeholder = "Buscar préstamo",
                         modifier = Modifier.padding(bottom = 8.dp)
                     )
@@ -116,13 +113,12 @@ fun PrestamoScreen(
                         contentPadding = PaddingValues(vertical = 8.dp),
                         verticalArrangement = Arrangement.spacedBy(8.dp)
                     ) {
-                        //TODO: Incluir nombre del solicitante
-                        items(approvedLoans) { prestamo ->
+                        items(state.prestamosVigentes) { prestamo ->
                             PrestamoVigenteItem(
                                 nombreSolicitante = prestamo.nombreSolicitante,
                                 prestamoName = prestamo.nombre,
                                 montoTotal = prestamo.montoTotal,
-                                cantCuotas = prestamo.mensualidadesPrestamo.count(),
+                                cantCuotas = prestamo.plazoMeses,
                                 cantPagadas = prestamoUtils.countPaidInstallments(prestamo),
                                 montoCancelado = prestamoUtils.totalPaidAmount(prestamo),
                                 montoPendiente = prestamoUtils.remainingAmount(prestamo),
@@ -134,10 +130,9 @@ fun PrestamoScreen(
                     }
                 }
                 2 -> {
-                    // TODO: Lista de préstamos completados, filtrar acorde
                     CoopSearchBar(
-                        query = "",
-                        onQueryChanged = {},
+                        query = state.searchQuery,
+                        onQueryChanged = onSearchQueryChanged,
                         placeholder = "Buscar préstamo",
                         modifier = Modifier.padding(bottom = 8.dp)
                     )
@@ -147,8 +142,7 @@ fun PrestamoScreen(
                         contentPadding = PaddingValues(vertical = 8.dp),
                         verticalArrangement = Arrangement.spacedBy(8.dp)
                     ) {
-                        //TODO: Incluir nombre del solicitante
-                        items(approvedLoans) { prestamo ->
+                        items(state.prestamosCompletados) { prestamo ->
                             PrestamoCompletadoItem(
                                 solicitanteName = prestamo.nombreSolicitante,
                                 prestamoName = prestamo.nombre,
@@ -245,7 +239,7 @@ fun PrestamoCompletadoItem(
             Spacer(modifier = Modifier.width(8.dp))
 
             CoopText(
-                text = "Q${montoTotal.toString()}",
+                text = formatMoney(montoTotal),
                 style = CoopTheme.typography.bodyMedium,
                 fontWeight = FontWeight.Bold
             )
@@ -254,7 +248,6 @@ fun PrestamoCompletadoItem(
     }
 }
 
-//TODO: NOMBRE DE SOLICITANTE METERLO EN EL MODEL
 @Composable
 fun PrestamoVigenteItem(
     nombreSolicitante: String,
@@ -282,7 +275,7 @@ fun PrestamoVigenteItem(
 
             //Aqui tengo que hacer el cambio
             CoopText(
-                text = "Bryan Martinez",
+                text = nombreSolicitante,
                 style = CoopTheme.typography.bodyMedium,
                 fontWeight = FontWeight.Bold,
                 color = CoopTheme.colorScheme.onSurface.copy(alpha = 0.5f)
@@ -297,19 +290,19 @@ fun PrestamoVigenteItem(
             )
 
             CoopText(
-                text = "Pagado: $montoCancelado",
+                text = "Pagado: ${formatMoney(montoCancelado)}",
                 style = CoopTheme.typography.bodyMedium,
                 color = CoopTheme.colorScheme.onSurface
             )
 
             CoopText(
-                text = "Pendiente: $montoPendiente",
+                text = "Pendiente: ${formatMoney(montoPendiente)}",
                 style = CoopTheme.typography.bodyMedium,
                 color = CoopTheme.colorScheme.onSurface
             )
 
             CoopText(
-                text = "Total: $montoTotal",
+                text = "Total: ${formatMoney(montoTotal)} ",
                 style = CoopTheme.typography.bodyMedium,
                 color = CoopTheme.colorScheme.onSurface
             )

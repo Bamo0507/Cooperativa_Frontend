@@ -20,6 +20,10 @@ fun DPendingPayScreenLightPreview() {
         PaymentMockData.getPaymentById(1)?.let {
             DPendingPayScreen(
                 payment = it,
+                commentInput = "",
+                onCommentChange = {},
+                onApprove = {},
+                onReject = {},
                 onBackClick = {}
             )
         }
@@ -38,6 +42,10 @@ fun DPendingPayScreenDarkPreview() {
         PaymentMockData.getPaymentById(1)?.let {
             DPendingPayScreen(
                 payment = it,
+                commentInput = "",
+                onCommentChange = {},
+                onApprove = {},
+                onReject = {},
                 onBackClick = {}
             )
         }
@@ -56,6 +64,10 @@ fun DPendingPayScreenLightFullPreview() {
         PaymentMockData.getPaymentById(8)?.let {
             DPendingPayScreen(
                 payment = it,
+                commentInput = "",
+                onCommentChange = {},
+                onApprove = {},
+                onReject = {},
                 onBackClick = {}
             )
         }
@@ -74,6 +86,10 @@ fun DPendingPayScreenDarkFullPreview() {
         PaymentMockData.getPaymentById(8)?.let {
             DPendingPayScreen(
                 payment = it,
+                commentInput = "",
+                onCommentChange = {},
+                onApprove = {},
+                onReject = {},
                 onBackClick = {}
             )
         }
