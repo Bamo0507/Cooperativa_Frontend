@@ -1,0 +1,12 @@
+package app.cooperativa.domain.directiva
+
+import app.cooperativa.data.localdb.PaymentMockData
+import app.cooperativa.data.model.dto.Payment
+
+interface DPaymentsDetailRepository {
+    suspend fun getPaymentById(id: Int): Payment
+}
+
+class MockPayjmentsDetailRepository : DPaymentsDetailRepository {
+    override suspend fun getPaymentById(id: Int): Payment = PaymentMockData.getPaymentById(id)!!
+}

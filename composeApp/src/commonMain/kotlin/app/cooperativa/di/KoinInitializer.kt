@@ -10,7 +10,8 @@ fun getKoinModules() = listOf(
     dsolicitudprestamomodule,
     dpagosmodule,
     dpendingpaymodule,
-    dsplashmodule
+    dsplashmodule,
+    dpaymentsdetailmodule
 )
 
 object KoinHelper {
