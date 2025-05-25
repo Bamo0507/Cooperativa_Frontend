@@ -3,6 +3,7 @@ package app.cooperativa.presentation.mainflow.directiva.pagos.pagosGeneral
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import app.cooperativa.domain.directiva.DPaymentsRepository
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
@@ -25,6 +26,10 @@ class DPaymentsViewModel(
     fun loadData() {
         viewModelScope.launch {
             _uiState.update { it.copy(isLoading = true, errorMessage = null) }
+
+            // delay time para mostrar loading y por buena practica
+            delay(1500)
+
             try {
                 val allPayments = repository.getAllPaymentsBasicInfo()
                 val allFines = repository.getAllFines()

@@ -32,6 +32,8 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import app.cooperativa.data.model.dto.Payment
 import app.cooperativa.presentation.mainflow.directiva.pagos.pendingPaymentDetail.DPendingPayViewModel
 import app.cooperativa.presentation.mainflow.directiva.pagos.pendingPaymentDetail.DPendingPayState
+import app.cooperativa.presentation.utils.ErrorScreen
+import app.cooperativa.presentation.utils.LoadingScreen
 import app.cooperativa.theme.CoopTheme
 import app.cooperativa.theme.components.CoopButton
 import app.cooperativa.theme.components.CoopIcon
@@ -52,15 +54,27 @@ fun DPendingPayRoute(
     viewModel: DPendingPayViewModel = koinInject { parametersOf(paymentId) }
 ) {
     val state by viewModel.uiState.collectAsStateWithLifecycle()
-    state.payment?.let { payment ->
-        DPendingPayScreen(
-            payment = payment,
-            commentInput = state.commentInput,
-            onCommentChange = viewModel::onCommentChange,
-            onApprove = viewModel::onApprove,
-            onReject = viewModel::onReject,
-            onBackClick = onBackClick
-        )
+
+    when {
+        state.isLoading -> {
+            LoadingScreen(message = "Cargando pago…")
+        }
+        state.errorMessage != null -> {
+            ErrorScreen(
+                message = state.errorMessage!!,
+                onRetry = { viewModel.loadPayment() }
+            )
+        }
+        state.payment != null -> {
+            DPendingPayScreen(
+                payment = state.payment!!,
+                commentInput = state.commentInput,
+                onCommentChange = viewModel::onCommentChange,
+                onApprove = viewModel::onApprove,
+                onReject = viewModel::onReject,
+                onBackClick = onBackClick
+            )
+        }
     }
 }
 

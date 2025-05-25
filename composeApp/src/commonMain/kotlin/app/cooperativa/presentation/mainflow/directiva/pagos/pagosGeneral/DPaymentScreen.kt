@@ -36,6 +36,8 @@ import app.cooperativa.data.model.dto.FineType
 import app.cooperativa.data.model.ui.BasicInfoPayment
 import app.cooperativa.presentation.mainflow.directiva.pagos.pagosGeneral.DPaymentsState
 import app.cooperativa.presentation.mainflow.directiva.pagos.pagosGeneral.DPaymentsViewModel
+import app.cooperativa.presentation.utils.ErrorScreen
+import app.cooperativa.presentation.utils.LoadingScreen
 import app.cooperativa.theme.CoopTheme
 import app.cooperativa.theme.components.CoopIcon
 import app.cooperativa.theme.components.CoopOutlinedCard
@@ -59,7 +61,8 @@ fun DPaymentsRoute(
         state = state,
         onTabSelected = viewModel::onTabSelected,
         onSearchQueryChange = viewModel::onSearchQueryChange,
-        onPaymentClick = onPaymentClick
+        onPaymentClick = onPaymentClick,
+        loadData = viewModel::loadData
     )
 }
 
@@ -72,96 +75,109 @@ fun DPaymentsScreen(
     onTabSelected: (Int) -> Unit,
     onSearchQueryChange: (String) -> Unit,
     onPaymentClick: (Int) -> Unit,
+    loadData: () -> Unit,
     modifier: Modifier = Modifier
 ) {
     Scaffold(
         topBar = { CoopTopBar(title = "Pagos") },
         containerColor = CoopTheme.colorScheme.surface
     ) { padding ->
-        Column(
-            modifier = modifier
-                .background(CoopTheme.colorScheme.surface)
-                .padding(padding)
-                .padding(vertical = 6.dp, horizontal = 24.dp)
-        ) {
-            // Chips para filtrar pestañas
-            FilterChipsRow(
-                selectedIndex = state.selectedTabIndex,
-                onSelect = onTabSelected,
-                modifier = Modifier.padding(bottom = 12.dp)
+        if (state.isLoading) {
+            LoadingScreen(
+                message = "Cargando pagos"
             )
+        } else if (state.errorMessage != null) {
+            ErrorScreen(
+                message = state.errorMessage,
+                onRetry = loadData
+            )
+        } else {
+            Column(
+                modifier = modifier
+                    .background(CoopTheme.colorScheme.surface)
+                    .padding(padding)
+                    .padding(vertical = 6.dp, horizontal = 24.dp)
+            ) {
+                // Chips para filtrar pestañas
+                FilterChipsRow(
+                    selectedIndex = state.selectedTabIndex,
+                    onSelect = onTabSelected,
+                    modifier = Modifier.padding(bottom = 12.dp)
+                )
 
-            when (state.selectedTabIndex) {
-                0 -> {
-                    // Pagos pendientes
-                    LazyColumn(
-                        modifier = Modifier.fillMaxSize(),
-                        contentPadding = PaddingValues(vertical = 8.dp),
-                        verticalArrangement = Arrangement.spacedBy(8.dp)
-                    ) {
-                        items(state.pendingPayments) { basic ->
-                            PaymentItem(
-                                idPayment = basic.id,
-                                paymentName = basic.paymentName,
-                                affiliatedName = basic.username,
-                                onPaymentClick = onPaymentClick,
-                                modifier = Modifier
-                                    .fillMaxWidth()
-                                    .padding(vertical = 2.dp)
-                            )
+                when (state.selectedTabIndex) {
+                    0 -> {
+                        // Pagos pendientes
+                        LazyColumn(
+                            modifier = Modifier.fillMaxSize(),
+                            contentPadding = PaddingValues(vertical = 8.dp),
+                            verticalArrangement = Arrangement.spacedBy(8.dp)
+                        ) {
+                            items(state.pendingPayments) { basic ->
+                                PaymentItem(
+                                    idPayment = basic.id,
+                                    paymentName = basic.paymentName,
+                                    affiliatedName = basic.username,
+                                    onPaymentClick = onPaymentClick,
+                                    modifier = Modifier
+                                        .fillMaxWidth()
+                                        .padding(vertical = 2.dp)
+                                )
+                            }
                         }
                     }
-                }
-                1 -> {
-                    CoopSearchBar(
-                        query = state.searchQuery,
-                        onQueryChanged = onSearchQueryChange,
-                        placeholder = "Buscar...",
-                        modifier = Modifier
-                            .padding(bottom = 8.dp)
-                    )
-                    LazyColumn(
-                        modifier = Modifier.fillMaxSize(),
-                        contentPadding = PaddingValues(vertical = 8.dp),
-                        verticalArrangement = Arrangement.spacedBy(8.dp)
-                    ) {
-                        items(state.paidPayments) { basic ->
-                            PaymentItem(
-                                idPayment = basic.id,
-                                paymentName = basic.paymentName,
-                                affiliatedName = basic.username,
-                                onPaymentClick = { /* TODO */},
-                                modifier = Modifier
-                                    .fillMaxWidth()
-                                    .padding(vertical = 2.dp)
-                            )
+                    1 -> {
+                        CoopSearchBar(
+                            query = state.searchQuery,
+                            onQueryChanged = onSearchQueryChange,
+                            placeholder = "Buscar...",
+                            modifier = Modifier
+                                .padding(bottom = 8.dp)
+                        )
+                        LazyColumn(
+                            modifier = Modifier.fillMaxSize(),
+                            contentPadding = PaddingValues(vertical = 8.dp),
+                            verticalArrangement = Arrangement.spacedBy(8.dp)
+                        ) {
+                            items(state.paidPayments) { basic ->
+                                PaymentItem(
+                                    idPayment = basic.id,
+                                    paymentName = basic.paymentName,
+                                    affiliatedName = basic.username,
+                                    onPaymentClick = { /* TODO */},
+                                    modifier = Modifier
+                                        .fillMaxWidth()
+                                        .padding(vertical = 2.dp)
+                                )
+                            }
                         }
                     }
-                }
-                2 -> {
-                    CoopSearchBar(
-                        query = state.searchQuery,
-                        onQueryChanged = onSearchQueryChange,
-                        placeholder = "Buscar...",
-                        modifier = Modifier
-                            .padding(bottom = 8.dp)
-                    )
-                    LazyColumn(
-                        modifier = Modifier.fillMaxSize(),
-                        contentPadding = PaddingValues(vertical = 8.dp),
-                        verticalArrangement = Arrangement.spacedBy(8.dp)
-                    ) {
-                        items(state.fines) { fine ->
-                            FineSection(
-                                fine = fine,
-                                modifier = Modifier
-                                    .fillMaxWidth()
-                                    .padding(vertical = 4.dp)
-                            )
+                    2 -> {
+                        CoopSearchBar(
+                            query = state.searchQuery,
+                            onQueryChanged = onSearchQueryChange,
+                            placeholder = "Buscar...",
+                            modifier = Modifier
+                                .padding(bottom = 8.dp)
+                        )
+                        LazyColumn(
+                            modifier = Modifier.fillMaxSize(),
+                            contentPadding = PaddingValues(vertical = 8.dp),
+                            verticalArrangement = Arrangement.spacedBy(8.dp)
+                        ) {
+                            items(state.fines) { fine ->
+                                FineSection(
+                                    fine = fine,
+                                    modifier = Modifier
+                                        .fillMaxWidth()
+                                        .padding(vertical = 4.dp)
+                                )
+                            }
                         }
                     }
                 }
             }
+
         }
     }
 }

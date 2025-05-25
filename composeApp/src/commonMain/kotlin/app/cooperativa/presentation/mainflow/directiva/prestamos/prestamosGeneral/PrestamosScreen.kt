@@ -30,6 +30,8 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import app.cooperativa.data.model.dto.Prestamo
 import app.cooperativa.data.model.ui.BasicInfoLoan
 import app.cooperativa.presentation.mainflow.directiva.prestamos.prestamosGeneral.DPrestamoState
+import app.cooperativa.presentation.utils.ErrorScreen
+import app.cooperativa.presentation.utils.LoadingScreen
 import app.cooperativa.theme.CoopTheme
 import app.cooperativa.theme.components.CoopIcon
 import app.cooperativa.theme.components.CoopOutlinedCard
@@ -51,7 +53,8 @@ fun PrestamosRoute(
         state = state,
         onTabSelected = viewModel::onTabSelected,
         onSearchQueryChanged = viewModel::onSearchQueryChange,
-        onPendingLoanClick = onPendingLoanClick
+        onPendingLoanClick = onPendingLoanClick,
+        loadData = viewModel::loadData
     )
 }
 
@@ -59,6 +62,7 @@ fun PrestamosRoute(
 fun PrestamoScreen(
     state: DPrestamoState,
     onTabSelected: (Int) -> Unit,
+    loadData: () -> Unit,
     onSearchQueryChanged: (String) -> Unit,
     onPendingLoanClick: (Int) -> Unit,
     prestamoUtils: PrestamoUtils = PrestamoUtils,
@@ -68,95 +72,107 @@ fun PrestamoScreen(
         topBar = { CoopTopBar(title = "Préstamos") },
         containerColor = CoopTheme.colorScheme.surface
     ) { padding ->
-        Column(
-            modifier = modifier
-                .background(CoopTheme.colorScheme.surface)
-                .padding(padding)
-                .padding(vertical = 6.dp, horizontal = 24.dp)
-        ) {
-            FilterChipsRow(
-                selectedIndex = state.selectedTabIndex,
-                onSelect = onTabSelected,
-                modifier = Modifier.padding(bottom = 12.dp)
+        if(state.isLoading){
+            LoadingScreen(
+                message = "Cargando préstamos"
             )
+        } else if(state.errorMessage != null){
+            ErrorScreen(
+                message = state.errorMessage,
+                onRetry = loadData
+            )
+        } else {
+            Column(
+                modifier = modifier
+                    .background(CoopTheme.colorScheme.surface)
+                    .padding(padding)
+                    .padding(vertical = 6.dp, horizontal = 24.dp)
+            ) {
+                FilterChipsRow(
+                    selectedIndex = state.selectedTabIndex,
+                    onSelect = onTabSelected,
+                    modifier = Modifier.padding(bottom = 12.dp)
+                )
 
-            when (state.selectedTabIndex) {
-                0 -> {
-                    LazyColumn(
-                        modifier = Modifier.fillMaxSize(),
-                        contentPadding = PaddingValues(vertical = 8.dp),
-                        verticalArrangement = Arrangement.spacedBy(8.dp)
-                    ) {
-                        items(state.reqLoans) { basic ->
-                            SolicitudItem(
-                                idSolicitud = basic.id,
-                                solicitudName = basic.loanName,
-                                affiliatedName = basic.username,
-                                onPendingLoanClick = { onPendingLoanClick(basic.id) },
-                                modifier = Modifier
-                                    .fillMaxWidth()
-                                    .padding(vertical = 2.dp)
-                            )
+                when (state.selectedTabIndex) {
+                    0 -> {
+                        LazyColumn(
+                            modifier = Modifier.fillMaxSize(),
+                            contentPadding = PaddingValues(vertical = 8.dp),
+                            verticalArrangement = Arrangement.spacedBy(8.dp)
+                        ) {
+                            items(state.reqLoans) { basic ->
+                                SolicitudItem(
+                                    idSolicitud = basic.id,
+                                    solicitudName = basic.loanName,
+                                    affiliatedName = basic.username,
+                                    onPendingLoanClick = { onPendingLoanClick(basic.id) },
+                                    modifier = Modifier
+                                        .fillMaxWidth()
+                                        .padding(vertical = 2.dp)
+                                )
+                            }
                         }
                     }
-                }
-                1 -> {
-                    CoopSearchBar(
-                        query = state.searchQuery,
-                        onQueryChanged = onSearchQueryChanged,
-                        placeholder = "Buscar préstamo",
-                        modifier = Modifier.padding(bottom = 8.dp)
-                    )
+                    1 -> {
+                        CoopSearchBar(
+                            query = state.searchQuery,
+                            onQueryChanged = onSearchQueryChanged,
+                            placeholder = "Buscar préstamo",
+                            modifier = Modifier.padding(bottom = 8.dp)
+                        )
 
-                    LazyColumn(
-                        modifier = Modifier.fillMaxSize(),
-                        contentPadding = PaddingValues(vertical = 8.dp),
-                        verticalArrangement = Arrangement.spacedBy(8.dp)
-                    ) {
-                        items(state.prestamosVigentes) { prestamo ->
-                            PrestamoVigenteItem(
-                                nombreSolicitante = prestamo.nombreSolicitante,
-                                prestamoName = prestamo.nombre,
-                                montoTotal = prestamo.montoTotal,
-                                cantCuotas = prestamo.plazoMeses,
-                                cantPagadas = prestamoUtils.countPaidInstallments(prestamo),
-                                montoCancelado = prestamoUtils.totalPaidAmount(prestamo),
-                                montoPendiente = prestamoUtils.remainingAmount(prestamo),
-                                modifier = Modifier
-                                    .fillMaxWidth()
-                                    .padding(vertical = 2.dp)
-                            )
+                        LazyColumn(
+                            modifier = Modifier.fillMaxSize(),
+                            contentPadding = PaddingValues(vertical = 8.dp),
+                            verticalArrangement = Arrangement.spacedBy(8.dp)
+                        ) {
+                            items(state.prestamosVigentes) { prestamo ->
+                                PrestamoVigenteItem(
+                                    nombreSolicitante = prestamo.nombreSolicitante,
+                                    prestamoName = prestamo.nombre,
+                                    montoTotal = prestamo.montoTotal,
+                                    cantCuotas = prestamo.plazoMeses,
+                                    cantPagadas = prestamoUtils.countPaidInstallments(prestamo),
+                                    montoCancelado = prestamoUtils.totalPaidAmount(prestamo),
+                                    montoPendiente = prestamoUtils.remainingAmount(prestamo),
+                                    modifier = Modifier
+                                        .fillMaxWidth()
+                                        .padding(vertical = 2.dp)
+                                )
+                            }
                         }
                     }
-                }
-                2 -> {
-                    CoopSearchBar(
-                        query = state.searchQuery,
-                        onQueryChanged = onSearchQueryChanged,
-                        placeholder = "Buscar préstamo",
-                        modifier = Modifier.padding(bottom = 8.dp)
-                    )
+                    2 -> {
+                        CoopSearchBar(
+                            query = state.searchQuery,
+                            onQueryChanged = onSearchQueryChanged,
+                            placeholder = "Buscar préstamo",
+                            modifier = Modifier.padding(bottom = 8.dp)
+                        )
 
-                    LazyColumn(
-                        modifier = Modifier.fillMaxSize(),
-                        contentPadding = PaddingValues(vertical = 8.dp),
-                        verticalArrangement = Arrangement.spacedBy(8.dp)
-                    ) {
-                        items(state.prestamosCompletados) { prestamo ->
-                            PrestamoCompletadoItem(
-                                solicitanteName = prestamo.nombreSolicitante,
-                                prestamoName = prestamo.nombre,
-                                montoTotal = prestamo.montoTotal,
-                                modifier = Modifier
-                                    .fillMaxWidth()
-                                    .padding(vertical = 2.dp)
-                            )
+                        LazyColumn(
+                            modifier = Modifier.fillMaxSize(),
+                            contentPadding = PaddingValues(vertical = 8.dp),
+                            verticalArrangement = Arrangement.spacedBy(8.dp)
+                        ) {
+                            items(state.prestamosCompletados) { prestamo ->
+                                PrestamoCompletadoItem(
+                                    solicitanteName = prestamo.nombreSolicitante,
+                                    prestamoName = prestamo.nombre,
+                                    montoTotal = prestamo.montoTotal,
+                                    modifier = Modifier
+                                        .fillMaxWidth()
+                                        .padding(vertical = 2.dp)
+                                )
+                            }
                         }
+
+
                     }
-
-
                 }
             }
+
         }
     }
 }

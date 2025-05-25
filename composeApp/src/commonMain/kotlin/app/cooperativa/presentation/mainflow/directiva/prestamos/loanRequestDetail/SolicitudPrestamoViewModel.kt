@@ -3,6 +3,7 @@ package app.cooperativa.presentation.mainflow.directiva.prestamos.loanRequestDet
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import app.cooperativa.domain.directiva.DSolicitudPrestamoRepository
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
@@ -32,6 +33,8 @@ class SolicitudPrestamoViewModel(
                     errorMessage = null
                 )
             }
+
+            delay(1500)
 
             try {
                 val solicitud = repository.getSolicitudById(id = solicitudId)

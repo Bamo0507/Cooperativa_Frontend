@@ -3,6 +3,7 @@ package app.cooperativa.presentation.mainflow.directiva.pagos.pendingPaymentDeta
 import app.cooperativa.domain.directiva.DPendingPayRepository
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
@@ -19,9 +20,11 @@ class DPendingPayViewModel(
         loadPayment()
     }
 
-    private fun loadPayment() {
+    fun loadPayment() {
         viewModelScope.launch {
             _uiState.update { it.copy(isLoading = true, errorMessage = null) }
+
+            delay(1500)
             try {
                 val p = repository.getPaymentById(paymentId)
                 _uiState.update { it.copy(payment = p, isLoading = false) }

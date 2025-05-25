@@ -19,6 +19,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.offset
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AccountBalance
@@ -173,10 +174,13 @@ fun SplashOption3() {
     )
     Box(Modifier.fillMaxSize().background(CoopTheme.colorScheme.surfaceVariant)) {
         // Shimmer brush
-        val brush = Brush.horizontalGradient(shimmerColors, startX = translateAnim, endX = translateAnim + 200f)
+        val brush = Brush.horizontalGradient(shimmerColors, startX = translateAnim, endX = translateAnim + 250f)
         CoopText(
-            text = "Cooperativa",
-            style = CoopTheme.typography.headlineLarge.copy(fontWeight = FontWeight.Bold),
+            text = "CSPI",
+            style = CoopTheme.typography.headlineLarge.copy(
+                fontWeight = FontWeight.Bold,
+                letterSpacing = 2.sp
+            ),
             modifier = Modifier
                 .align(Alignment.Center)
                 .drawWithCache {
@@ -185,11 +189,12 @@ fun SplashOption3() {
                         drawRect(brush = brush, blendMode = BlendMode.SrcAtop)
                     }
                 }
+                .padding(horizontal = 16.dp)
         )
         LinearProgressIndicator(
             modifier = Modifier
                 .fillMaxWidth()
-                .height(2.dp)
+                .height(8.dp)
                 .align(Alignment.BottomCenter),
             color = CoopTheme.colorScheme.primary
         )

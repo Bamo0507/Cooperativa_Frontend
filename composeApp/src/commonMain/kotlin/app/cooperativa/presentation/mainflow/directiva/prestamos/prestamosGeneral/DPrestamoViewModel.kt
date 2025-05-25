@@ -5,6 +5,7 @@ import androidx.lifecycle.viewModelScope
 import app.cooperativa.data.model.dto.Prestamo
 import app.cooperativa.domain.directiva.MockPrestamosRepository
 import app.cooperativa.utils.PrestamoUtils
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
@@ -43,6 +44,9 @@ class DPrestamoViewModel(
                     errorMessage = null
                 )
             }
+
+            // delay time para mostrar loading y por buena practica
+            delay(1500)
 
             try {
                 val solicitudes = repository.fetchSolicitudes()

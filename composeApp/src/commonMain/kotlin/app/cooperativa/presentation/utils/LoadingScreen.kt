@@ -26,7 +26,7 @@ fun LoadingScreen(modifier: Modifier = Modifier, message: String? = null) {
             CircularProgressIndicator(color = CoopTheme.colorScheme.primary)
             message?.let {
                 Spacer(Modifier.height(12.dp))
-                CoopText(text = it, style = CoopTheme.typography.bodyMedium, color = CoopTheme.colorScheme.onSurface)
+                CoopText(text = it, style = CoopTheme.typography.bodyLarge, color = CoopTheme.colorScheme.onSurface)
             }
         }
     }

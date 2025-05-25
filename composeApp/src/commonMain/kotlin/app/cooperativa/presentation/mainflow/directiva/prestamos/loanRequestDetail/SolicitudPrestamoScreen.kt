@@ -34,6 +34,8 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import app.cooperativa.data.localdb.SolicitudPrestamoMockData
 import app.cooperativa.data.model.dto.SolicitudPrestamo
+import app.cooperativa.presentation.utils.ErrorScreen
+import app.cooperativa.presentation.utils.LoadingScreen
 import app.cooperativa.theme.CoopTheme
 import app.cooperativa.theme.components.CoopButton
 import app.cooperativa.theme.components.CoopIcon
@@ -50,21 +52,32 @@ import org.koin.core.parameter.parametersOf
 fun SolicitudPrestamoRoute(
     solicitudId: Int,
     onBackClick: () -> Unit,
-    viewModel: SolicitudPrestamoViewModel = koinInject( parameters = { parametersOf(solicitudId) })
-){
+    viewModel: SolicitudPrestamoViewModel = koinInject(parameters = { parametersOf(solicitudId) })
+) {
     val state by viewModel.uiState.collectAsStateWithLifecycle()
 
-    state.prestamo?.let { prestamo ->
-        SolicitudPrestamoScreen(
-            prestamo = prestamo,
-            interestInput = state.interestInput,
-            commentsInput = state.commentsInput,
-            onInterestChange = viewModel::onInterestChange,
-            onCommentsChange = viewModel::onCommentsChange,
-            onApprove = viewModel::onApprove,
-            onReject = viewModel::onReject,
-            onBackClick = onBackClick
-        )
+    when {
+        state.isLoading -> {
+            LoadingScreen(message = "Cargando solicitud…")
+        }
+        state.errorMessage != null -> {
+            ErrorScreen(
+                message = state.errorMessage!!,
+                onRetry = { viewModel.loadSolicitud() }
+            )
+        }
+        state.prestamo != null -> {
+            SolicitudPrestamoScreen(
+                prestamo = state.prestamo!!,
+                interestInput = state.interestInput,
+                commentsInput = state.commentsInput,
+                onInterestChange = viewModel::onInterestChange,
+                onCommentsChange = viewModel::onCommentsChange,
+                onApprove = viewModel::onApprove,
+                onReject = viewModel::onReject,
+                onBackClick = onBackClick
+            )
+        }
     }
 }
 
