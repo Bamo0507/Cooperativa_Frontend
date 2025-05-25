@@ -10,6 +10,8 @@ import app.cooperativa.presentation.mainflow.directiva.DirectivaMainNavigation
 import app.cooperativa.presentation.mainflow.directiva.directivaMainNavigationGraph
 import app.cooperativa.presentation.mainflow.directiva.pagos.dPaymentNavGraph
 import app.cooperativa.presentation.mainflow.directiva.pagos.pagosGeneral.GeneralPaymentDestination
+import app.cooperativa.presentation.mainflow.directiva.splash.SplashDestination
+import app.cooperativa.presentation.mainflow.directiva.splash.directivasplashScreen
 
 @Composable
 fun AppNavigation(
@@ -17,9 +19,11 @@ fun AppNavigation(
 ){
     NavHost(
         navController = navController,
-        startDestination = LoginDestination
+        startDestination = SplashDestination
     ){
-        //TODO: HACER LA SPLASH SCREEN, Y OTRA DEFAULT DE RELOAD
+        directivasplashScreen(
+            navController = navController
+        )
 
         //TODO: MANEJAR HACIA QUE MAINFLOW LO MANDO SI ES SOCIO O DIRECTIVA
         loginScreen(
