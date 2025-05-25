@@ -9,8 +9,10 @@ import androidx.compose.ui.unit.dp
 import app.cooperativa.data.localdb.SolicitudPrestamoMockData
 import app.cooperativa.data.localdb.PrestamoMockData
 import app.cooperativa.presentation.mainflow.directiva.prestamos.prestamosGeneral.PrestamoScreen
+import app.cooperativa.presentation.mainflow.directiva.prestamos.prestamosGeneral.DPrestamoState
 import app.cooperativa.theme.CoopTheme
 
+// Datos de ejemplo (mock)
 private val sampleReqLoans = SolicitudPrestamoMockData.getAllBasicInfo()
 private val sampleApprovedLoans = PrestamoMockData.getAllPrestamos()
 
@@ -23,10 +25,13 @@ private val sampleApprovedLoans = PrestamoMockData.getAllPrestamos()
 fun PrestamosSolicitudesPreviewLight() {
     CoopTheme {
         PrestamoScreen(
-            reqLoans = sampleReqLoans,
-            approvedLoans = sampleApprovedLoans,
-            selectedTabIndex = 0,
-            changeIndex = {},
+            state = DPrestamoState(
+                selectedTabIndex = 0,
+                reqLoans = sampleReqLoans,
+                approvedLoans = sampleApprovedLoans
+            ),
+            onTabSelected = {},
+            onSearchQueryChanged = {},
             onPendingLoanClick = {},
             modifier = Modifier.padding(16.dp)
         )
@@ -42,10 +47,13 @@ fun PrestamosSolicitudesPreviewLight() {
 fun PrestamosSolicitudesPreviewDark() {
     CoopTheme {
         PrestamoScreen(
-            reqLoans = sampleReqLoans,
-            approvedLoans = sampleApprovedLoans,
-            selectedTabIndex = 0,
-            changeIndex = {},
+            state = DPrestamoState(
+                selectedTabIndex = 0,
+                reqLoans = sampleReqLoans,
+                approvedLoans = sampleApprovedLoans
+            ),
+            onTabSelected = {},
+            onSearchQueryChanged = {},
             onPendingLoanClick = {},
             modifier = Modifier.padding(16.dp)
         )
@@ -61,10 +69,13 @@ fun PrestamosSolicitudesPreviewDark() {
 fun PrestamosVigentesPreviewLight() {
     CoopTheme {
         PrestamoScreen(
-            reqLoans = sampleReqLoans,
-            approvedLoans = sampleApprovedLoans,
-            selectedTabIndex = 1,
-            changeIndex = {},
+            state = DPrestamoState(
+                selectedTabIndex = 1,
+                reqLoans = sampleReqLoans,
+                approvedLoans = sampleApprovedLoans
+            ),
+            onTabSelected = {},
+            onSearchQueryChanged = {},
             onPendingLoanClick = {},
             modifier = Modifier.padding(16.dp)
         )
@@ -80,16 +91,18 @@ fun PrestamosVigentesPreviewLight() {
 fun PrestamosVigentesPreviewDark() {
     CoopTheme {
         PrestamoScreen(
-            reqLoans = sampleReqLoans,
-            approvedLoans = sampleApprovedLoans,
-            selectedTabIndex = 1,
-            changeIndex = {},
+            state = DPrestamoState(
+                selectedTabIndex = 1,
+                reqLoans = sampleReqLoans,
+                approvedLoans = sampleApprovedLoans
+            ),
+            onTabSelected = {},
+            onSearchQueryChanged = {},
             onPendingLoanClick = {},
             modifier = Modifier.padding(16.dp)
         )
     }
 }
-
 
 @Preview(
     name = "Completados Light Mode",
@@ -100,10 +113,13 @@ fun PrestamosVigentesPreviewDark() {
 fun PrestamosCompletadosPreviewLight() {
     CoopTheme {
         PrestamoScreen(
-            reqLoans = sampleReqLoans,
-            approvedLoans = sampleApprovedLoans,
-            selectedTabIndex = 2,
-            changeIndex = {},
+            state = DPrestamoState(
+                selectedTabIndex = 2,
+                reqLoans = sampleReqLoans,
+                approvedLoans = sampleApprovedLoans
+            ),
+            onTabSelected = {},
+            onSearchQueryChanged = {},
             onPendingLoanClick = {},
             modifier = Modifier.padding(16.dp)
         )
@@ -119,13 +135,15 @@ fun PrestamosCompletadosPreviewLight() {
 fun PrestamosCompletadosPreviewDark() {
     CoopTheme {
         PrestamoScreen(
-            reqLoans = sampleReqLoans,
-            approvedLoans = sampleApprovedLoans,
-            selectedTabIndex = 2,
-            changeIndex = {},
+            state = DPrestamoState(
+                selectedTabIndex = 2,
+                reqLoans = sampleReqLoans,
+                approvedLoans = sampleApprovedLoans
+            ),
+            onTabSelected = {},
+            onSearchQueryChanged = {},
             onPendingLoanClick = {},
             modifier = Modifier.padding(16.dp)
         )
     }
 }
-
