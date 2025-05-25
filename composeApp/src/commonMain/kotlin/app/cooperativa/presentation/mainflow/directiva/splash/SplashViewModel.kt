@@ -17,7 +17,7 @@ class SplashViewModel : ViewModel() {
         // todo: persistir sesion con data store y en base a eso hacer el cambio
         viewModelScope.launch {
             _uiState.update { it.copy(isLoading = true) }
-            delay(3000)
+            delay(5000)
             _uiState.update { it.copy(isLoading = false) }
         }
     }
