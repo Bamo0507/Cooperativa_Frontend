@@ -4,17 +4,15 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import app.cooperativa.domain.directiva.DPaymentsRepository
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
 class DPaymentsViewModel(
     private val repository: DPaymentsRepository
-): ViewModel() {
-    private val _uiState: MutableStateFlow<DPaymentsScreen> = MutableStateFlow(DPaymentsScreen(
-        isLoading = true
-    ))
+) : ViewModel() {
+
+    private val _uiState = MutableStateFlow(DPaymentsState(isLoading = true))
     val uiState = _uiState.asStateFlow()
 
     init {
@@ -22,7 +20,7 @@ class DPaymentsViewModel(
     }
 
     /**
-     * Carga todos los datos iniciales desde el repositorio.
+     * Carga las listas de pagos y moras desde el repositorio.
      */
     fun loadData() {
         viewModelScope.launch {
@@ -39,49 +37,50 @@ class DPaymentsViewModel(
                         isLoading = false,
                         pendingPayments = pending,
                         paidPayments = paid,
-                        fines = allFines
+                        fines = allFines,
+                        allPaidPayments = paid,
+                        allFinesList = allFines
                     )
                 }
             } catch (e: Exception) {
-                _uiState.update {
-                    it.copy(isLoading = false, errorMessage = e.message)
-                }
+                _uiState.update { it.copy(isLoading = false, errorMessage = e.message) }
             }
         }
     }
 
     /**
-     * Cambia la pestaña activa (0,1 o 2) y limpia la búsqueda.
+     * Cambia la pestaña activa y resetea búsqueda y contenidos filtrados.
      */
     fun onTabSelected(index: Int) {
-        _uiState.update {
-            it.copy(
-                selectedTabIndex = index,
-                searchQuery = ""
-            )
+        _uiState.update { it.copy(selectedTabIndex = index, searchQuery = "") }
+        when (index) {
+            1 -> _uiState.update { it.copy(paidPayments = it.allPaidPayments) }
+            2 -> _uiState.update { it.copy(fines = it.allFinesList) }
         }
     }
 
     /**
-     * Actualiza el texto de búsqueda y filtra las listas de Pagados o Moras.
+     * Actualiza el texto de búsqueda y filtra las listas correspondientes.
      */
     fun onSearchQueryChange(query: String) {
         _uiState.update { it.copy(searchQuery = query) }
-        _uiState.value.let { state ->
-            val search = query.trim().lowercase()
-            if (state.selectedTabIndex == 1) {
-                val filteredPaid = state.paidPayments
-                    .filter {
-                        it.paymentName.lowercase().contains(search)
-                                || it.username.lowercase().contains(search)
-                    }
-                _uiState.update { it.copy(paidPayments = filteredPaid) }
-            } else if (state.selectedTabIndex == 2) {
-                val filteredFines = state.fines
-                    .filter { fine ->
-                        fine.userName.lowercase().contains(search)
-                    }
-                _uiState.update { it.copy(fines = filteredFines) }
+        val q = query.trim().lowercase()
+        val state = _uiState.value
+        when (state.selectedTabIndex) {
+            1 -> {
+                val filtered = if (q.isEmpty()) state.allPaidPayments
+                else state.allPaidPayments.filter {
+                    it.paymentName.lowercase().contains(q)
+                            || it.username.lowercase().contains(q)
+                }
+                _uiState.update { it.copy(paidPayments = filtered) }
+            }
+            2 -> {
+                val filtered = if (q.isEmpty()) state.allFinesList
+                else state.allFinesList.filter {
+                    it.userName.lowercase().contains(q)
+                }
+                _uiState.update { it.copy(fines = filtered) }
             }
         }
     }

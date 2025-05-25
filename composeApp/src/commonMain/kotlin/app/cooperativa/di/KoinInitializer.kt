@@ -7,7 +7,8 @@ import org.koin.core.KoinApplication
 // Aqui se deberan declarar todos los modulos de Koin
 fun getKoinModules() = listOf(
     dprestamosmodule,
-    dsolicitudprestamomodule
+    dsolicitudprestamomodule,
+    dpagosmodule
 )
 
 object KoinHelper {
