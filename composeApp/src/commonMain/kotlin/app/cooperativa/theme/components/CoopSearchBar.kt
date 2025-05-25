@@ -1,6 +1,7 @@
 package app.cooperativa.theme.components
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
@@ -41,10 +42,11 @@ fun CoopSearchBar(
         },
         leadingIcon = leadingIcon,
         modifier = modifier
+            .shadow(4.dp, shape = RoundedCornerShape(50))
             .clip(RoundedCornerShape(50))
-            .background(CoopTheme.colorScheme.primary.copy(alpha = 0.4f))
-            .fillMaxWidth()
-            .shadow(1.dp, shape = RoundedCornerShape(50)),
+            .background(CoopTheme.colorScheme.surface)
+            .border(1.dp, CoopTheme.colorScheme.primary, shape = RoundedCornerShape(50))
+            .fillMaxWidth(),
         colors = TextFieldDefaults.colors(
             focusedTextColor = CoopTheme.colorScheme.onSurface,
             unfocusedTextColor = CoopTheme.colorScheme.onSurface,

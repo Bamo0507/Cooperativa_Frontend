@@ -129,7 +129,6 @@ fun PrestamoScreen(
                     }
                 }
                 2 -> {
-                    // TODO: Lista de préstamos completados, filtrar acorde
                     CoopSearchBar(
                         query = state.searchQuery,
                         onQueryChanged = onSearchQueryChanged,
