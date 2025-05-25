@@ -163,7 +163,8 @@ fun DPendingPayScreen(
             CoopText(
                 text = "Comentarios",
                 fontWeight = FontWeight.Bold,
-                modifier = Modifier.padding(vertical = 8.dp, horizontal = 16.dp)
+                modifier = Modifier.padding(vertical = 8.dp, horizontal = 16.dp),
+                color = CoopTheme.colorScheme.onSurface
             )
             CoopOutlinedTextField(
                 value = commentInput,
@@ -186,7 +187,7 @@ fun DPendingPayScreen(
                     CoopText("Negar")
                 }
                 CoopButton(onClick = onApprove, shape = RoundedCornerShape(16.dp), colors = ButtonDefaults.buttonColors(containerColor = CoopTheme.colorScheme.primary)) {
-                    CoopIcon(Icons.Default.Check, "Aprobar")
+                    CoopIcon(Icons.Default.Check, "Aprobar", tint = CoopTheme.colorScheme.onPrimary)
                     Spacer(Modifier.width(4.dp))
                     CoopText("Aprobar", color = CoopTheme.colorScheme.onPrimary)
                 }
