@@ -7,6 +7,6 @@ interface DPaymentsDetailRepository {
     suspend fun getPaymentById(id: Int): Payment
 }
 
-class MockPayjmentsDetailRepository : DPaymentsDetailRepository {
+class MockPaymentsDetailRepository : DPaymentsDetailRepository {
     override suspend fun getPaymentById(id: Int): Payment = PaymentMockData.getPaymentById(id)!!
 }

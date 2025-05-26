@@ -8,11 +8,13 @@ import kotlinx.serialization.Serializable
 data object GeneralPaymentDestination
 
 fun NavGraphBuilder.boardGeneralPayment(
-    onPaymentClick: (Int) -> Unit
+    onPendingPaymentClick: (Int) -> Unit,
+    onPaidPaymentClick: (Int) -> Unit
 ) {
     composable<GeneralPaymentDestination> {
         DPaymentsRoute(
-            onPaymentClick = onPaymentClick
+            onPendingPaymentClick = onPendingPaymentClick,
+            onPaidPaymentClick = onPaidPaymentClick
         )
     }
 }

@@ -118,6 +118,25 @@ fun DPaidPayScreen(
                     modifier = Modifier.size(100.dp)
                 )
             }
+
+            // Boton de ver boleta
+            CoopButton(
+                onClick = {
+                    /* TODO */
+                },
+                modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp),
+                shape = RoundedCornerShape(16.dp),
+                colors = ButtonDefaults.buttonColors(
+                    containerColor = CoopTheme.colorScheme.primary,
+                )
+            ){
+                CoopText(
+                    text = "Ver Boleta",
+                    style = CoopTheme.typography.bodyLarge,
+                    color = CoopTheme.colorScheme.onPrimary,
+                    fontWeight = FontWeight.Bold
+                )
+            }
         }
     }
 }

@@ -52,7 +52,8 @@ import app.cooperativa.utils.formatMoney
  */
 @Composable
 fun DPaymentsRoute(
-    onPaymentClick: (Int) -> Unit,
+    onPendingPaymentClick: (Int) -> Unit,
+    onPaidPaymentClick: (Int) -> Unit,
     viewModel: DPaymentsViewModel = koinInject()
 ) {
     val state by viewModel.uiState.collectAsStateWithLifecycle()
@@ -61,7 +62,8 @@ fun DPaymentsRoute(
         state = state,
         onTabSelected = viewModel::onTabSelected,
         onSearchQueryChange = viewModel::onSearchQueryChange,
-        onPaymentClick = onPaymentClick,
+        onPendingPaymentClick = onPendingPaymentClick,
+        onPaidPaymentClick = onPaidPaymentClick,
         loadData = viewModel::loadData
     )
 }
@@ -74,7 +76,8 @@ fun DPaymentsScreen(
     state: DPaymentsState,
     onTabSelected: (Int) -> Unit,
     onSearchQueryChange: (String) -> Unit,
-    onPaymentClick: (Int) -> Unit,
+    onPendingPaymentClick: (Int) -> Unit,
+    onPaidPaymentClick: (Int) -> Unit,
     loadData: () -> Unit,
     modifier: Modifier = Modifier
 ) {
@@ -118,7 +121,7 @@ fun DPaymentsScreen(
                                     idPayment = basic.id,
                                     paymentName = basic.paymentName,
                                     affiliatedName = basic.username,
-                                    onPaymentClick = onPaymentClick,
+                                    onPaymentClick = onPendingPaymentClick,
                                     modifier = Modifier
                                         .fillMaxWidth()
                                         .padding(vertical = 2.dp)
@@ -144,7 +147,7 @@ fun DPaymentsScreen(
                                     idPayment = basic.id,
                                     paymentName = basic.paymentName,
                                     affiliatedName = basic.username,
-                                    onPaymentClick = { /* TODO */},
+                                    onPaymentClick = onPaidPaymentClick,
                                     modifier = Modifier
                                         .fillMaxWidth()
                                         .padding(vertical = 2.dp)

@@ -36,7 +36,8 @@ fun DPaymentsPendingPreviewLight() {
             ),
             onTabSelected = {},
             onSearchQueryChange = {},
-            onPaymentClick = {},
+            onPendingPaymentClick = {},
+            onPaidPaymentClick = {},
             modifier = Modifier.padding(16.dp),
             loadData = {}
         )
@@ -60,7 +61,8 @@ fun DPaymentsPendingPreviewDark() {
             ),
             onTabSelected = {},
             onSearchQueryChange = {},
-            onPaymentClick = {},
+            onPendingPaymentClick = {},
+            onPaidPaymentClick = {},
             modifier = Modifier.padding(16.dp),
             loadData = {}
         )
@@ -84,7 +86,8 @@ fun DPaymentsPaidPreviewLight() {
             ),
             onTabSelected = {},
             onSearchQueryChange = {},
-            onPaymentClick = {},
+            onPendingPaymentClick = {},
+            onPaidPaymentClick = {},
             modifier = Modifier.padding(16.dp),
             loadData = {}
         )
@@ -108,7 +111,8 @@ fun DPaymentsPaidPreviewDark() {
             ),
             onTabSelected = {},
             onSearchQueryChange = {},
-            onPaymentClick = {},
+            onPendingPaymentClick = {},
+            onPaidPaymentClick = {},
             modifier = Modifier.padding(16.dp),
             loadData = {}
         )
@@ -132,7 +136,8 @@ fun DPaymentsFinesPreviewLight() {
             ),
             onTabSelected = {},
             onSearchQueryChange = {},
-            onPaymentClick = {},
+            onPendingPaymentClick = {},
+            onPaidPaymentClick = {},
             modifier = Modifier.padding(16.dp),
             loadData = {}
         )
@@ -156,7 +161,8 @@ fun DPaymentsFinesPreviewDark() {
             ),
             onTabSelected = {},
             onSearchQueryChange = {},
-            onPaymentClick = {},
+            onPendingPaymentClick = {},
+            onPaidPaymentClick = {},
             modifier = Modifier.padding(16.dp),
             loadData = {}
         )
