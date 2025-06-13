@@ -27,9 +27,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import app.cooperativa.data.model.dto.Prestamo
-import app.cooperativa.data.model.ui.BasicInfoLoan
-import app.cooperativa.presentation.mainflow.directiva.prestamos.prestamosGeneral.DPrestamoState
 import app.cooperativa.presentation.utils.ErrorScreen
 import app.cooperativa.presentation.utils.LoadingScreen
 import app.cooperativa.theme.CoopTheme
@@ -45,6 +42,7 @@ import org.koin.compose.koinInject
 @Composable
 fun PrestamosRoute(
     onPendingLoanClick: (Int) -> Unit,
+    onPagareClick: (Int) -> Unit,
     viewModel: DPrestamoViewModel = koinInject()
 ) {
     val state by viewModel.uiState.collectAsStateWithLifecycle()
@@ -53,6 +51,7 @@ fun PrestamosRoute(
         state = state,
         onTabSelected = viewModel::onTabSelected,
         onSearchQueryChanged = viewModel::onSearchQueryChange,
+        onPagareClick = onPagareClick,
         onPendingLoanClick = onPendingLoanClick,
         loadData = viewModel::loadData
     )
@@ -65,6 +64,7 @@ fun PrestamoScreen(
     loadData: () -> Unit,
     onSearchQueryChanged: (String) -> Unit,
     onPendingLoanClick: (Int) -> Unit,
+    onPagareClick: (Int) -> Unit,
     prestamoUtils: PrestamoUtils = PrestamoUtils,
     modifier: Modifier = Modifier
 ) {
@@ -104,9 +104,9 @@ fun PrestamoScreen(
                             items(state.reqLoans) { basic ->
                                 SolicitudItem(
                                     idSolicitud = basic.id,
-                                    solicitudName = basic.loanName,
+                                    name = basic.loanName,
                                     affiliatedName = basic.username,
-                                    onPendingLoanClick = { onPendingLoanClick(basic.id) },
+                                    click = { onPendingLoanClick(basic.id) },
                                     modifier = Modifier
                                         .fillMaxWidth()
                                         .padding(vertical = 2.dp)
@@ -167,8 +167,26 @@ fun PrestamoScreen(
                                 )
                             }
                         }
+                    }
+                    3 -> {
+                        LazyColumn(
+                            modifier = Modifier.fillMaxSize(),
+                            contentPadding = PaddingValues(vertical = 8.dp),
+                            verticalArrangement = Arrangement.spacedBy(8.dp)
+                        ){
+                            items(state.pagares) { pagare ->
+                                SolicitudItem(
+                                    idSolicitud = pagare.idPagare,
+                                    name = pagare.nombrePrestamo,
+                                    affiliatedName = pagare.solicitante,
+                                    click = { onPendingLoanClick(pagare.idPagare) },
+                                    modifier = Modifier
+                                        .fillMaxWidth()
+                                        .padding(vertical = 2.dp)
+                                )
+                            }
 
-
+                        }
                     }
                 }
             }
@@ -180,13 +198,13 @@ fun PrestamoScreen(
 @Composable
 fun SolicitudItem(
     idSolicitud: Int,
-    solicitudName: String,
+    name: String,
     affiliatedName: String,
-    onPendingLoanClick: (Int) -> Unit,
+    click: (Int) -> Unit,
     modifier: Modifier = Modifier
 ) {
     CoopOutlinedCard(
-        onClick = { onPendingLoanClick(idSolicitud) },
+        onClick = { click(idSolicitud) },
         modifier = modifier.padding(vertical = 2.dp)
     ) {
         Row(
@@ -198,7 +216,7 @@ fun SolicitudItem(
         ) {
             Column {
                 CoopText(
-                    text = solicitudName,
+                    text = name,
                     fontWeight = FontWeight.Bold
                 )
 
@@ -332,7 +350,7 @@ fun FilterChipsRow(
     onSelect: (Int) -> Unit,
     modifier: Modifier = Modifier
 ) {
-    val chipOptions = listOf("Solicitud", "Vigentes", "Completados")
+    val chipOptions = listOf("Solicitud", "Vigentes", "Completados", "Pagarés")
 
     Row(
         modifier = modifier

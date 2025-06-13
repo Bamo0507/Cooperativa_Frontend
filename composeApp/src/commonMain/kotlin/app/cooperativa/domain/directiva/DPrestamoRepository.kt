@@ -1,7 +1,9 @@
 package app.cooperativa.domain.directiva
 
+import app.cooperativa.data.localdb.PagaresMockData
 import app.cooperativa.data.localdb.PrestamoMockData
 import app.cooperativa.data.localdb.SolicitudPrestamoMockData
+import app.cooperativa.data.model.dto.Pagare
 import app.cooperativa.data.model.dto.Prestamo
 import app.cooperativa.data.model.ui.BasicInfoLoan
 
@@ -9,6 +11,7 @@ import app.cooperativa.data.model.ui.BasicInfoLoan
 interface DPrestamoRepository {
     suspend fun fetchSolicitudes(): List<BasicInfoLoan>
     suspend fun fetchPrestamosAprobados(): List<Prestamo>
+    suspend fun fetchPagares(): List<Pagare>
 }
 
 // Implementacion del repositorio
@@ -19,4 +22,7 @@ class MockPrestamosRepository : DPrestamoRepository {
 
     override suspend fun fetchPrestamosAprobados(): List<Prestamo> =
         PrestamoMockData.getAllPrestamos()
+
+    override suspend fun fetchPagares(): List<Pagare> =
+        PagaresMockData.getAllPagares()
 }

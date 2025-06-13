@@ -4,7 +4,6 @@ import kotlinx.datetime.LocalDate
 import app.cooperativa.data.model.dto.Prestamo
 import app.cooperativa.data.model.dto.Codeudor
 import app.cooperativa.data.model.dto.PrestamoDetalle
-import app.cooperativa.data.model.dto.Pagare
 import app.cooperativa.data.model.dto.Estados
 
 object PrestamoMockData {
@@ -39,14 +38,7 @@ object PrestamoMockData {
                     montoPagado = 833.33f,
                     multa = 0.0f
                 )
-            },
-            pagare = listOf(
-                Pagare(
-                    pagare = "POR-2024-0001",
-                    estado = Estados.APROBADO,
-                    comentariosRechazo = null
-                )
-            )
+            }
         ),
         Prestamo(
             idPrestamo = 2,
@@ -86,14 +78,7 @@ object PrestamoMockData {
                     montoPagado = if (month <= 6) 208.33f else 0.0f,
                     multa = if (month == 7) 10.0f else 0.0f
                 )
-            },
-            pagare = listOf(
-                Pagare(
-                    pagare = "POR-2024-0002",
-                    estado = Estados.APROBADO,
-                    comentariosRechazo = null
-                )
-            )
+            }
         ),
         Prestamo(
             idPrestamo = 3,
@@ -116,14 +101,7 @@ object PrestamoMockData {
                     montoPagado = 0.0f,
                     multa = 0.0f
                 )
-            },
-            pagare = listOf(
-                Pagare(
-                    pagare = "POR-2025-0003",
-                    estado = Estados.PENDIENTE,
-                    comentariosRechazo = null
-                )
-            )
+            }
         ),
         Prestamo(
             idPrestamo = 4,
@@ -147,14 +125,7 @@ object PrestamoMockData {
                     telefono = "55533445"
                 )
             ),
-            mensualidadesPrestamo = emptyList(),
-            pagare = listOf(
-                Pagare(
-                    pagare = "POR-2025-0004",
-                    estado = Estados.RECHAZADO,
-                    comentariosRechazo = "Ingresos insuficientes"
-                )
-            )
+            mensualidadesPrestamo = emptyList()
         )
     )
 

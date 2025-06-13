@@ -24,7 +24,8 @@ fun NavGraphBuilder.dLoanNavGraph(
                         solicitudId = prestamoId
                     )
                 )
-            }
+            },
+            onPagareClick = {}
         )
         solicitudPrestamoScreen (
             onBackClick = {

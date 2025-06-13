@@ -51,6 +51,8 @@ class DPrestamoViewModel(
             try {
                 val solicitudes = repository.fetchSolicitudes()
                 val prestamos = repository.fetchPrestamosAprobados()
+                val pagares = repository.fetchPagares()
+
                 val vigentes = prestamos.filter {
                     PrestamoUtils.countPaidInstallments(it) < it.plazoMeses
                 }
@@ -63,6 +65,7 @@ class DPrestamoViewModel(
                         isLoading = false,
                         reqLoans = solicitudes,
                         allLoans = prestamos,
+                        pagares = pagares,
                         prestamosVigentes = vigentes,
                         prestamosCompletados = completados
                     )

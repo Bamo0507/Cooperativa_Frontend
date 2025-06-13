@@ -16,7 +16,7 @@ data class Prestamo(
     val mesesCancelados: Int,
     val codeudores: List<Codeudor>,
     val mensualidadesPrestamo: List<PrestamoDetalle>,
-    val pagare: List<Pagare>
+
     // Pueden ser varios si el primero no sale bien,
     //siempre el importtante sera el que este en [-1]
     // tambien podriamos sacarlo del estado del Pagare

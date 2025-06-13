@@ -39,7 +39,8 @@ fun PrestamosSolicitudesPreviewLight() {
             onSearchQueryChanged = {},
             onPendingLoanClick = {},
             modifier = Modifier.padding(16.dp),
-            loadData = {}
+            loadData = {},
+            onPagareClick = {}
         )
     }
 }
@@ -58,7 +59,8 @@ fun PrestamosSolicitudesPreviewDark() {
             onSearchQueryChanged = {},
             onPendingLoanClick = {},
             modifier = Modifier.padding(16.dp),
-            loadData = {}
+            loadData = {},
+            onPagareClick = {}
         )
     }
 }
@@ -77,7 +79,8 @@ fun PrestamosVigentesPreviewLight() {
             onSearchQueryChanged = {},
             onPendingLoanClick = {},
             modifier = Modifier.padding(16.dp),
-            loadData = {}
+            loadData = {},
+            onPagareClick = {}
         )
     }
 }
@@ -96,7 +99,8 @@ fun PrestamosVigentesPreviewDark() {
             onSearchQueryChanged = {},
             onPendingLoanClick = {},
             modifier = Modifier.padding(16.dp),
-            loadData = {}
+            loadData = {},
+            onPagareClick = {}
         )
     }
 }
@@ -115,7 +119,8 @@ fun PrestamosCompletadosPreviewLight() {
             onSearchQueryChanged = {},
             onPendingLoanClick = {},
             modifier = Modifier.padding(16.dp),
-            loadData = {}
+            loadData = {},
+            onPagareClick = {}
         )
     }
 }
@@ -134,7 +139,8 @@ fun PrestamosCompletadosPreviewDark() {
             onSearchQueryChanged = {},
             onPendingLoanClick = {},
             modifier = Modifier.padding(16.dp),
-            loadData = {}
+            loadData = {},
+            onPagareClick = {}
         )
     }
 }

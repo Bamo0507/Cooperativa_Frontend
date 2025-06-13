@@ -8,11 +8,13 @@ import kotlinx.serialization.Serializable
 data object PrestamoNavigationDestination
 
 fun NavGraphBuilder.boardPrestamos(
-    onPrestamoClick: (Int) -> Unit
+    onPrestamoClick: (Int) -> Unit,
+    onPagareClick: (Int) -> Unit
 ){
     composable<PrestamoNavigationDestination> {
         PrestamosRoute(
-            onPendingLoanClick = onPrestamoClick
+            onPendingLoanClick = onPrestamoClick,
+            onPagareClick = onPagareClick
         )
     }
 }
