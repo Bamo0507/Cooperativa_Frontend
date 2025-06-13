@@ -39,6 +39,7 @@ fun DPaymentsPendingPreviewLight() {
             onPendingPaymentClick = {},
             onPaidPaymentClick = {},
             modifier = Modifier.padding(16.dp),
+            onFineClick = {},
             loadData = {}
         )
     }
@@ -64,6 +65,7 @@ fun DPaymentsPendingPreviewDark() {
             onPendingPaymentClick = {},
             onPaidPaymentClick = {},
             modifier = Modifier.padding(16.dp),
+            onFineClick = {},
             loadData = {}
         )
     }
@@ -89,6 +91,7 @@ fun DPaymentsPaidPreviewLight() {
             onPendingPaymentClick = {},
             onPaidPaymentClick = {},
             modifier = Modifier.padding(16.dp),
+            onFineClick = {},
             loadData = {}
         )
     }
@@ -114,6 +117,7 @@ fun DPaymentsPaidPreviewDark() {
             onPendingPaymentClick = {},
             onPaidPaymentClick = {},
             modifier = Modifier.padding(16.dp),
+            onFineClick = {},
             loadData = {}
         )
     }
@@ -139,6 +143,7 @@ fun DPaymentsFinesPreviewLight() {
             onPendingPaymentClick = {},
             onPaidPaymentClick = {},
             modifier = Modifier.padding(16.dp),
+            onFineClick = {},
             loadData = {}
         )
     }
@@ -164,7 +169,8 @@ fun DPaymentsFinesPreviewDark() {
             onPendingPaymentClick = {},
             onPaidPaymentClick = {},
             modifier = Modifier.padding(16.dp),
-            loadData = {}
+            loadData = {},
+            onFineClick = {}
         )
     }
 }

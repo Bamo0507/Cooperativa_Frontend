@@ -3,6 +3,7 @@ package app.cooperativa.presentation.mainflow.directiva.pagos.pagosGeneral
 import androidx.compose.foundation.background
 import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
@@ -12,10 +13,12 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Edit
+import androidx.compose.material3.IconButton
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.rememberScrollState
-import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowForward
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FilterChip
@@ -54,6 +57,7 @@ import app.cooperativa.utils.formatMoney
 fun DPaymentsRoute(
     onPendingPaymentClick: (Int) -> Unit,
     onPaidPaymentClick: (Int) -> Unit,
+    onFineClick: (Int) -> Unit,
     viewModel: DPaymentsViewModel = koinInject()
 ) {
     val state by viewModel.uiState.collectAsStateWithLifecycle()
@@ -63,6 +67,7 @@ fun DPaymentsRoute(
         onTabSelected = viewModel::onTabSelected,
         onSearchQueryChange = viewModel::onSearchQueryChange,
         onPendingPaymentClick = onPendingPaymentClick,
+        onFineClick = onFineClick,
         onPaidPaymentClick = onPaidPaymentClick,
         loadData = viewModel::loadData
     )
@@ -78,6 +83,7 @@ fun DPaymentsScreen(
     onSearchQueryChange: (String) -> Unit,
     onPendingPaymentClick: (Int) -> Unit,
     onPaidPaymentClick: (Int) -> Unit,
+    onFineClick: (Int) -> Unit,
     loadData: () -> Unit,
     modifier: Modifier = Modifier
 ) {
@@ -173,7 +179,8 @@ fun DPaymentsScreen(
                                     fine = fine,
                                     modifier = Modifier
                                         .fillMaxWidth()
-                                        .padding(vertical = 4.dp)
+                                        .padding(vertical = 4.dp),
+                                    onFineClick = onFineClick
                                 )
                             }
                         }
@@ -282,19 +289,41 @@ fun FilterChipsRow(
 @Composable
 fun FineSection(
     fine: Fine,
+    onFineClick: (Int) -> Unit,
     modifier: Modifier = Modifier
 ){
     val hasQuotaFines = fine.fineDetails.any { it.type == FineType.QUOTA }
     val hasLoanFines = fine.fineDetails.any { it.type == FineType.LOAN }
 
     Column(modifier = modifier.fillMaxWidth()) {
-        CoopText(
-            text = fine.userName,
-            fontWeight = FontWeight.Bold,
-            textAlign = TextAlign.Start,
-            style = CoopTheme.typography.bodyLarge,
-            color = CoopTheme.colorScheme.onSecondary
-        )
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(vertical = 4.dp),
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.SpaceBetween
+        ) {
+            CoopText(
+                text = fine.userName,
+                fontWeight = FontWeight.Bold,
+                textAlign = TextAlign.Start,
+                style = CoopTheme.typography.bodyLarge,
+                color = CoopTheme.colorScheme.onSecondary,
+            )
+            Box(
+                contentAlignment = Alignment.CenterEnd
+            ){
+                IconButton(onClick = { onFineClick(fine.userId) }) {
+                    CoopIcon(
+                        imageVector = Icons.Filled.Edit,
+                        contentDescription = "Editar mora",
+                        tint = CoopTheme.colorScheme.tertiary,
+                        modifier = Modifier.fillMaxWidth()
+                    )
+                }
+
+            }
+        }
 
         if (hasQuotaFines) {
             CoopOutlinedCard(

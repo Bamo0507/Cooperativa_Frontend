@@ -9,12 +9,14 @@ data object GeneralPaymentDestination
 
 fun NavGraphBuilder.boardGeneralPayment(
     onPendingPaymentClick: (Int) -> Unit,
-    onPaidPaymentClick: (Int) -> Unit
+    onPaidPaymentClick: (Int) -> Unit,
+    onFineClick: (Int) -> Unit
 ) {
     composable<GeneralPaymentDestination> {
         DPaymentsRoute(
             onPendingPaymentClick = onPendingPaymentClick,
-            onPaidPaymentClick = onPaidPaymentClick
+            onPaidPaymentClick = onPaidPaymentClick,
+            onFineClick = onFineClick
         )
     }
 }

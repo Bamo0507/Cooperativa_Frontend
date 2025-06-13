@@ -3,6 +3,9 @@ package app.cooperativa.presentation.mainflow.directiva.pagos
 import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.navigation
+import app.cooperativa.presentation.mainflow.directiva.pagos.fineSelection.EditFineDestination
+import app.cooperativa.presentation.mainflow.directiva.pagos.fineSelection.editFineScreen
+import app.cooperativa.presentation.mainflow.directiva.pagos.fineSelection.navigateToEditFineScreen
 import app.cooperativa.presentation.mainflow.directiva.pagos.pagosGeneral.GeneralPaymentDestination
 import app.cooperativa.presentation.mainflow.directiva.pagos.pagosGeneral.boardGeneralPayment
 import app.cooperativa.presentation.mainflow.directiva.pagos.paymentDetail.DPaidPayDestination
@@ -36,6 +39,14 @@ fun NavGraphBuilder.dPaymentNavGraph(
                         paymentId = payment
                     )
                 )
+            },
+
+            onFineClick = { fine ->
+                navController.navigateToEditFineScreen(
+                    destination = EditFineDestination(
+                        userId = fine
+                    )
+                )
             }
         )
 
@@ -49,6 +60,16 @@ fun NavGraphBuilder.dPaymentNavGraph(
         //Pantalla de detalle de pago realizado
         paidPaymentScreen(
             onBackClick = {
+                navController.navigateUp()
+            }
+        )
+
+        //Pantalla de edicion de mora
+        editFineScreen(
+            onBackClick = {
+                navController.navigateUp()
+            },
+            onConfirmClick = {
                 navController.navigateUp()
             }
         )

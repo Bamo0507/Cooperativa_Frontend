@@ -66,6 +66,7 @@ fun SplashScreen(
     navController: NavController,
     modifier: Modifier = Modifier
 ){
+    //TODO: recognize if the user has been logged or not, and determine if he should be sent to affiliate or not
     LaunchedEffect(state.isLoading){
         if(!state.isLoading){
             navController.navigate(DirectivaMainNavigation) {
@@ -75,90 +76,12 @@ fun SplashScreen(
     }
 
     if(state.isLoading){
-        SplashOption3()
+        SplashScreen()
     }
 }
 
 @Composable
-fun SplashOption1() {
-    // animación de pulso
-    val pulse by rememberInfiniteTransition().animateFloat(
-        initialValue = 0.9f, targetValue = 1.1f,
-        animationSpec = infiniteRepeatable(
-            tween(800, easing = FastOutSlowInEasing),
-            RepeatMode.Reverse
-        )
-    )
-
-    Box(
-        Modifier
-            .fillMaxSize()
-            .background(
-                Brush.verticalGradient(
-                    colors = listOf(
-                        CoopTheme.colorScheme.primary,
-                        CoopTheme.colorScheme.secondary
-                    )
-                )
-            )
-    ) {
-        Column(Modifier.align(Alignment.Center), horizontalAlignment = Alignment.CenterHorizontally) {
-            CoopText(
-                text = "COOPERATIVA",
-                style = CoopTheme.typography.headlineMedium.copy(
-                    color = CoopTheme.colorScheme.onPrimary,
-                    letterSpacing = 2.sp,
-                    fontWeight = FontWeight.Bold
-                )
-            )
-            Spacer(Modifier.height(24.dp))
-            Icon(
-                imageVector = Icons.Default.AccountBalance,
-                contentDescription = null,
-                tint = CoopTheme.colorScheme.onPrimary,
-                modifier = Modifier
-                    .size(64.dp)
-                    .graphicsLayer { this.scaleX = pulse; scaleY = pulse }
-            )
-        }
-    }
-}
-
-@Composable
-fun SplashOption2() {
-    val transition = rememberInfiniteTransition()
-    val offsets = List(3) { idx ->
-        transition.animateFloat(
-            initialValue = 300f, targetValue = 0f,
-            animationSpec = infiniteRepeatable(
-                animation = tween(600, delayMillis = idx * 200, easing = LinearOutSlowInEasing),
-                repeatMode = RepeatMode.Restart
-            )
-        )
-    }
-    val color = CoopTheme.colorScheme.onPrimary
-    Box(Modifier.fillMaxSize().background(CoopTheme.colorScheme.surface)) {
-        offsets.forEachIndexed { idx, anim ->
-            Canvas(
-                Modifier
-                    .size(50.dp + (idx * 20).dp)
-                    .offset { IntOffset(x = idx * 60, y = anim.value.toInt()) }
-                    .alpha(0.3f)
-            ) {
-                drawCircle(color = color)
-            }
-        }
-        CoopText(
-            text = "Cooperativa",
-            style = CoopTheme.typography.headlineLarge.copy(fontWeight = FontWeight.ExtraBold),
-            color = CoopTheme.colorScheme.onSurface,
-            modifier = Modifier.align(Alignment.Center)
-        )
-    }
-}
-
-@Composable
-fun SplashOption3() {
+fun SplashScreen() {
     val shimmerColors = listOf(
         CoopTheme.colorScheme.primary.copy(alpha = 0.2f),
         CoopTheme.colorScheme.primary,
