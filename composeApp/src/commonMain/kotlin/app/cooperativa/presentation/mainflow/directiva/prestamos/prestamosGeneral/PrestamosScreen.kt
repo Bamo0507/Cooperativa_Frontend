@@ -179,7 +179,7 @@ fun PrestamoScreen(
                                     idSolicitud = pagare.idPagare,
                                     name = pagare.nombrePrestamo,
                                     affiliatedName = pagare.solicitante,
-                                    click = { onPendingLoanClick(pagare.idPagare) },
+                                    click = { onPagareClick(pagare.idPagare) },
                                     modifier = Modifier
                                         .fillMaxWidth()
                                         .padding(vertical = 2.dp)

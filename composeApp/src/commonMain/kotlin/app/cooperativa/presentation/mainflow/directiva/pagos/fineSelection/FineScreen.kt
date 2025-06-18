@@ -98,6 +98,7 @@ fun FineSelectionScreen(
                             fontWeight = FontWeight.SemiBold,
                             style = MaterialTheme.typography.bodyMedium
                         )
+                        Spacer(modifier = Modifier.height(4.dp))
                         CoopText(
                             text = detail.name,
                             style = MaterialTheme.typography.bodyMedium,

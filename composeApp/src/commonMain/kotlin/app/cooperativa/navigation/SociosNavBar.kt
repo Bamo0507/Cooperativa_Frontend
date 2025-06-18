@@ -26,28 +26,21 @@ import app.cooperativa.theme.components.CoopText
 import androidx.compose.ui.text.font.FontWeight
 
 @Composable
-fun SociosNavigationBar(
-    selectedIndex: Int,
-    onItemSelected: (Int) -> Unit
+fun SociosBottomNavBar(
+    checkItemSelected: (Any) -> Boolean,
+    onNavItemClick: (Any) -> Unit
 ) {
-    val items = listOf(
-        Icons.Default.AttachMoney to "Historial",
-        Icons.Default.Folder      to "Préstamos",
-        Icons.Default.Archive     to "FAQs",
-        Icons.Default.Person      to "Cuenta"
-    )
-
     NavigationBar(
         containerColor = CoopTheme.colorScheme.primary,
         tonalElevation = 4.dp
     ) {
-        items.forEachIndexed { index, (icon, label) ->
-            val isSelected = index == selectedIndex
+        navigationItemsSocios.forEach { navItem ->
+            val isSelected = checkItemSelected(navItem.destination)
 
             NavigationBarItem(
                 selected = isSelected,
-                onClick  = { onItemSelected(index) },
-                colors   = NavigationBarItemDefaults.colors(
+                onClick = { onNavItemClick(navItem.destination) },
+                colors = NavigationBarItemDefaults.colors(
                     indicatorColor      = CoopTheme.colorScheme.surface,
                     selectedIconColor   = CoopTheme.colorScheme.onPrimary,
                     unselectedIconColor = CoopTheme.colorScheme.secondary,
@@ -56,26 +49,22 @@ fun SociosNavigationBar(
                 ),
                 alwaysShowLabel = true,
                 icon = {
-                    if (isSelected) {
-                        CoopIcon(
-                            imageVector      = icon,
-                            contentDescription = label,
-                            tint             = CoopTheme.colorScheme.onSecondary,
-                            modifier         = Modifier.size(24.dp)
-                        )
-
-                    } else {
-                        CoopIcon(
-                            imageVector        = icon,
-                            contentDescription = label,
-                            tint               = CoopTheme.colorScheme.onPrimary,
-                            modifier           = Modifier.size(24.dp)
-                        )
-                    }
+                    CoopIcon(
+                        imageVector        = if (isSelected) navItem.selectedIcon else navItem.unselectedIcon,
+                        contentDescription = navItem.title,
+                        tint               = (
+                                if (isSelected)
+                                    CoopTheme.colorScheme.onSecondary
+                                else
+                                    CoopTheme.colorScheme.secondary
+                                ),
+                        modifier = Modifier
+                            .size(24.dp)
+                    )
                 },
                 label = {
                     CoopText(
-                        text       = label,
+                        text = navItem.title,
                         color      = CoopTheme.colorScheme.onPrimary,
                         fontSize   = 12.sp,
                         fontWeight = FontWeight.Medium

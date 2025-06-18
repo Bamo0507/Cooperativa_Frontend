@@ -7,6 +7,9 @@ import androidx.navigation.navigation
 import app.cooperativa.presentation.mainflow.directiva.prestamos.loanRequestDetail.SolicitudPrestamoDestination
 import app.cooperativa.presentation.mainflow.directiva.prestamos.loanRequestDetail.navigateToSolicitudPrestamoScreen
 import app.cooperativa.presentation.mainflow.directiva.prestamos.loanRequestDetail.solicitudPrestamoScreen
+import app.cooperativa.presentation.mainflow.directiva.prestamos.pagaresDetail.DPagaresDestination
+import app.cooperativa.presentation.mainflow.directiva.prestamos.pagaresDetail.navigateToDPagareScreen
+import app.cooperativa.presentation.mainflow.directiva.prestamos.pagaresDetail.pagareDetailScreen
 import app.cooperativa.presentation.mainflow.directiva.prestamos.prestamosGeneral.PrestamoNavigationDestination
 import app.cooperativa.presentation.mainflow.directiva.prestamos.prestamosGeneral.boardPrestamos
 
@@ -25,10 +28,25 @@ fun NavGraphBuilder.dLoanNavGraph(
                     )
                 )
             },
-            onPagareClick = {}
+            onPagareClick = { pagareId ->
+                navController.navigateToDPagareScreen(
+                    destination = DPagaresDestination(
+                        pagareId = pagareId
+                    )
+                )
+            }
         )
         solicitudPrestamoScreen (
             onBackClick = {
+                navController.navigateUp()
+            }
+        )
+
+        pagareDetailScreen(
+            onBackClick = {
+                navController.navigateUp()
+            },
+            onConfirmClick = {
                 navController.navigateUp()
             }
         )

@@ -1,4 +1,4 @@
-package app.cooperativa.presentation.mainflow.directiva
+package app.cooperativa.presentation.mainflow.socios
 
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
@@ -6,14 +6,14 @@ import androidx.navigation.compose.rememberNavController
 import kotlinx.serialization.Serializable
 
 @Serializable
-data object DirectivaMainNavigation
+data object SociosMainNavigation
 
-fun NavGraphBuilder.directivaMainNavigationGraph(
-    onLogOutClick: ()->Unit,
+fun NavGraphBuilder.sociosMainNavigationGraph(
+    onLogOutClick: () -> Unit
 ){
-    composable<DirectivaMainNavigation> {
+    composable<SociosMainNavigation> {
         val nestedNavController = rememberNavController()
-        DirectivaMainFlowScreen(
+        SociosMainFlowScreen(
             navController = nestedNavController,
             onLogOutClick = onLogOutClick
         )
