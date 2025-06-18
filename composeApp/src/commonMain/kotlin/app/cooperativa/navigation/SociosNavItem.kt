@@ -10,6 +10,8 @@ import app.cooperativa.presentation.mainflow.directiva.account.mainAccount.Direc
 import app.cooperativa.presentation.mainflow.directiva.pagos.DPaymentNavGraph
 import app.cooperativa.presentation.mainflow.directiva.pagos.pagosGeneral.GeneralPaymentDestination
 import app.cooperativa.presentation.mainflow.directiva.prestamos.prestamosGeneral.PrestamoNavigationDestination
+import app.cooperativa.presentation.mainflow.socios.historial.SHistorialNavGraph
+import app.cooperativa.presentation.mainflow.socios.historial.mainHistorial.SHistorialDestination
 
 //Lista de items para socios
 //TODO: Reemplazar destination x los NavGraph correspondientes
@@ -18,25 +20,23 @@ val navigationItemsSocios = listOf(
         title = "Historial",
         selectedIcon = Icons.Default.AttachMoney,
         unselectedIcon = Icons.Outlined.AttachMoney,
-        destination = DPaymentNavGraph
+        destination = SHistorialNavGraph
     ),
-    NavBarItem(
-        title = "Préstamos",
-        selectedIcon = Icons.Filled.Payments,
-        unselectedIcon = Icons.Filled.Payments,
-        destination = DPaymentNavGraph
-    ),
-    NavBarItem(
-        title = "Cuenta",
-        selectedIcon = Icons.Filled.Person,
-        unselectedIcon = Icons.Outlined.Person,
-        destination = DPaymentNavGraph
-    )
+//    NavBarItem(
+//        title = "Préstamos",
+//        selectedIcon = Icons.Filled.Payments,
+//        unselectedIcon = Icons.Filled.Payments,
+//        destination =
+//    ),
+//    NavBarItem(
+//        title = "Cuenta",
+//        selectedIcon = Icons.Filled.Person,
+//        unselectedIcon = Icons.Outlined.Person,
+//        destination =
+//    )
 )
 
 // Top-level destinations, serializable objects de pantallas que pueden mostrar nav bar
 val topLevelDestinationsSocios = listOf(
-    GeneralPaymentDestination::class,
-    PrestamoNavigationDestination::class,
-    DirectivaAccountDestination::class
+    SHistorialDestination::class,
 )

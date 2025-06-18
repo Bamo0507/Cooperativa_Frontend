@@ -20,7 +20,9 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import app.cooperativa.navigation.DirectivaBottomNavBar
+import app.cooperativa.navigation.SociosBottomNavBar
 import app.cooperativa.navigation.topLevelDestinationsDirectiva
+import app.cooperativa.navigation.topLevelDestinationsSocios
 import app.cooperativa.presentation.mainflow.directiva.account.dAccountNavGraph
 import app.cooperativa.presentation.mainflow.directiva.pagos.DPaymentNavGraph
 import app.cooperativa.presentation.mainflow.directiva.pagos.dPaymentNavGraph
@@ -31,13 +33,17 @@ fun DirectivaMainFlowScreen(
     navController: NavHostController = rememberNavController(),
     onLogOutClick: () -> Unit,
 ){
-    var bottomBarVisible by rememberSaveable {
+    var bottomBarVisibleDirectiva by rememberSaveable {
+        mutableStateOf(false)
+    }
+
+    var bottomBarVisibleSocios by rememberSaveable {
         mutableStateOf(false)
     }
 
     val currentDestination = navController.currentBackStackEntryAsState().value?.destination
 
-    bottomBarVisible = if (currentDestination != null){
+    bottomBarVisibleDirectiva = if (currentDestination != null){
         topLevelDestinationsDirectiva.any { destination ->
             currentDestination.hasRoute(destination)
         }
@@ -45,29 +51,58 @@ fun DirectivaMainFlowScreen(
         false
     }
 
+    bottomBarVisibleSocios = if (currentDestination != null){
+        topLevelDestinationsSocios.any { destination ->
+            currentDestination.hasRoute(destination)
+        }
+    } else {
+        false
+    }
+
+    val showAnyBottomBar = bottomBarVisibleDirectiva || bottomBarVisibleSocios
+
     Scaffold(
         modifier = Modifier.fillMaxSize(),
         bottomBar = {
             AnimatedVisibility(
-                visible = bottomBarVisible,
-                enter = slideInVertically(initialOffsetY = {it}),
-                exit = slideOutVertically(targetOffsetY = {it})
-            ){
-                DirectivaBottomNavBar(
-                    checkItemSelected = { destination ->
-                        currentDestination?.hierarchy?.any { it.hasRoute(destination::class) } ?: false
-                    },
-                    onNavItemClick = { destination ->
-                        navController.navigate(destination) {
-                            popUpTo(navController.graph.findStartDestination().id) {
-                                saveState = true
+                visible = showAnyBottomBar,
+                enter = slideInVertically(initialOffsetY = { it }),
+                exit = slideOutVertically(targetOffsetY = { it })
+            ) {
+                when {
+                    bottomBarVisibleDirectiva -> {
+                        DirectivaBottomNavBar(
+                            checkItemSelected = { destination ->
+                                currentDestination?.hierarchy?.any { it.hasRoute(destination::class) } ?: false
+                            },
+                            onNavItemClick = { destination ->
+                                navController.navigate(destination) {
+                                    popUpTo(navController.graph.findStartDestination().id) {
+                                        saveState = true
+                                    }
+                                    launchSingleTop = true
+                                    restoreState = true
+                                }
                             }
-                            launchSingleTop = true
-                            restoreState = true
-                        }
+                        )
                     }
-                )
-
+                    bottomBarVisibleSocios -> {
+                        SociosBottomNavBar(
+                            checkItemSelected = { destination ->
+                                currentDestination?.hierarchy?.any { it.hasRoute(destination::class) } ?: false
+                            },
+                            onNavItemClick = { destination ->
+                                navController.navigate(destination) {
+                                    popUpTo(navController.graph.findStartDestination().id) {
+                                        saveState = true
+                                    }
+                                    launchSingleTop = true
+                                    restoreState = true
+                                }
+                            }
+                        )
+                    }
+                }
             }
         }
     ){ padding ->

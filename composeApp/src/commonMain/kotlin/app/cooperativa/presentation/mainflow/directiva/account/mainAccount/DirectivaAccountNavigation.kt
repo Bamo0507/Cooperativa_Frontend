@@ -9,7 +9,7 @@ data object DirectivaAccountDestination
 
 fun NavGraphBuilder.directivaAccountScreen(
     onLogOutClick: ()->Unit,
-    onChangeToMember: ()->Unit = {}, //TODO: IMPLEMENTAR
+    onChangeToMember: ()->Unit,
 ){
     composable<DirectivaAccountDestination> {
         DirectivaAccountRoute(
