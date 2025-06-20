@@ -1,12 +1,12 @@
-package app.cooperativa.data.localdb
+package app.cooperativa.data.localdb.socios
 
-import kotlinx.datetime.LocalDate
-import app.cooperativa.data.model.dto.Prestamo
 import app.cooperativa.data.model.dto.Codeudor
-import app.cooperativa.data.model.dto.PrestamoDetalle
 import app.cooperativa.data.model.dto.Estados
+import app.cooperativa.data.model.dto.Prestamo
+import app.cooperativa.data.model.dto.PrestamoDetalle
+import kotlinx.datetime.LocalDate
 
-object PrestamoMockData {
+object SPrestamoMockData {
     private val mockPrestamos = listOf(
         Prestamo(
             idPrestamo = 1,
@@ -42,7 +42,7 @@ object PrestamoMockData {
         ),
         Prestamo(
             idPrestamo = 2,
-            nombreSolicitante = "Miguel Rodríguez",
+            nombreSolicitante = "Laura Martínez",
             nombre = "Préstamo Vehículo",
             montoTotal = 5000.0f,
             montoCancelado = 1500.0f,
@@ -70,64 +70,12 @@ object PrestamoMockData {
                     telefono = "55587654"
                 )
             ),
-            mensualidadesPrestamo = (1..24).map { month ->
-                PrestamoDetalle(
-                    numeroCuota = month,
-                    montoCuota = 208.33f,
-                    fechaVencimiento = LocalDate(2024, (month % 12).let { if (it == 0) 12 else it }, 10),
-                    montoPagado = if (month <= 6) 208.33f else 0.0f,
-                    multa = if (month == 7) 10.0f else 0.0f
-                )
-            }
-        ),
-        Prestamo(
-            idPrestamo = 3,
-            nombreSolicitante = "Pedro Rodríguez",
-            nombre = "Préstamo Estudiantil",
-            montoTotal = 8000.0f,
-            montoCancelado = 0.0f,
-            motivo = "Matrícula Universitaria",
-            estado = Estados.PENDIENTE,
-            tasaInteres = 4.0f,
-            fechaSolicitud = LocalDate(2025, 2, 1),
-            plazoMeses = 10,
-            mesesCancelados = 0,
-            codeudores = emptyList(),
-            mensualidadesPrestamo = (1..10).map { month ->
-                PrestamoDetalle(
-                    numeroCuota = month,
-                    montoCuota = 800.0f,
-                    fechaVencimiento = LocalDate(2025, month, 1),
-                    montoPagado = 0.0f,
-                    multa = 0.0f
-                )
-            }
-        ),
-        Prestamo(
-            idPrestamo = 4,
-            nombreSolicitante = "Luis Rodríguez",
-            nombre = "Préstamo Emergencia",
-            montoTotal = 2000.0f,
-            montoCancelado = 0.0f,
-            motivo = "Emergencia Médica",
-            estado = Estados.RECHAZADO,
-            tasaInteres = 6.0f,
-            fechaSolicitud = LocalDate(2025, 1, 5),
-            plazoMeses = 6,
-            mesesCancelados = 0,
-            codeudores = listOf(
-                Codeudor(
-                    nombre = "Ana Ruiz",
-                    correo = "ana.ruiz@mail.com",
-                    dpi = "1122334455667",
-                    nit = "1122-334455-667-8",
-                    direccion = "Zona 3",
-                    telefono = "55533445"
-                )
-            ),
             mensualidadesPrestamo = emptyList()
         )
     )
 
-    fun getAllPrestamos(): List<Prestamo> = mockPrestamos
+    //userId not used, will be when using backend
+    fun getPrestamosByUser(userId: Int): List<Prestamo> {
+        return mockPrestamos
+    }
 }

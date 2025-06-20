@@ -1,4 +1,4 @@
-package app.cooperativa.di
+package app.cooperativa.di.directiva
 
 import app.cooperativa.domain.directiva.DPendingPayRepository
 import app.cooperativa.domain.directiva.MockPendingPayRepository

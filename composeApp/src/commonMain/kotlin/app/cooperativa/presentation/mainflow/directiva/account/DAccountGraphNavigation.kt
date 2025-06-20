@@ -6,7 +6,6 @@ import androidx.navigation.navigation
 import app.cooperativa.presentation.mainflow.directiva.account.mainAccount.DirectivaAccountDestination
 import app.cooperativa.presentation.mainflow.directiva.account.mainAccount.directivaAccountScreen
 import app.cooperativa.presentation.mainflow.socios.historial.mainHistorial.SHistorialDestination
-import app.cooperativa.presentation.mainflow.socios.historial.mainHistorial.navigateToSHistorialScreen
 import app.cooperativa.presentation.mainflow.socios.historial.mainHistorial.sociosHistorialScreen
 import kotlinx.serialization.Serializable
 
@@ -21,10 +20,8 @@ fun NavGraphBuilder.dAccountNavGraph(
         directivaAccountScreen(
             onLogOutClick = onLogOutClick,
             onChangeToMember = {
-                navController.navigateToSHistorialScreen(
-                    destination = SHistorialDestination(
-                        userId = 1 //TODO: retrieve ID from datastore
-                    )
+                navController.navigate(
+                    SHistorialDestination
                 )
             }
         )

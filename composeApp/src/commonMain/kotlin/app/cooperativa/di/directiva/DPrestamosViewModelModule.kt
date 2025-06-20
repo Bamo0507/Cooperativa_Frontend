@@ -1,4 +1,4 @@
-package app.cooperativa.di
+package app.cooperativa.di.directiva
 
 import app.cooperativa.domain.directiva.MockPrestamosRepository
 import app.cooperativa.presentation.mainflow.directiva.prestamos.prestamosGeneral.DPrestamoViewModel

@@ -1,4 +1,4 @@
-package app.cooperativa.data.localdb
+package app.cooperativa.data.localdb.directiva
 
 import kotlinx.datetime.LocalDate
 import app.cooperativa.data.model.dto.Payment

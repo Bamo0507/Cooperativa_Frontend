@@ -1,6 +1,6 @@
 package app.cooperativa.domain.directiva
 
-import app.cooperativa.data.localdb.PaymentMockData
+import app.cooperativa.data.localdb.directiva.PaymentMockData
 import app.cooperativa.data.model.dto.Payment
 
 interface DPendingPayRepository {

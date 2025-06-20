@@ -1,6 +1,6 @@
 package app.cooperativa.domain.directiva
 
-import app.cooperativa.data.localdb.PagaresMockData
+import app.cooperativa.data.localdb.directiva.PagaresMockData
 import app.cooperativa.data.model.dto.Pagare
 
 interface DPagaresRepository {

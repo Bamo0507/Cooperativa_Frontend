@@ -1,4 +1,4 @@
-package app.cooperativa.data.localdb
+package app.cooperativa.data.localdb.directiva
 
 import app.cooperativa.data.model.dto.Estados
 import app.cooperativa.data.model.dto.Pagare

@@ -74,7 +74,7 @@ fun PrestamoScreen(
     ) { padding ->
         if(state.isLoading){
             LoadingScreen(
-                message = "Cargando préstamos"
+                message = "Cargando préstamos..."
             )
         } else if(state.errorMessage != null){
             ErrorScreen(
@@ -307,7 +307,6 @@ fun PrestamoVigenteItem(
 
             Spacer(modifier = Modifier.height(4.dp))
 
-            //Aqui tengo que hacer el cambio
             CoopText(
                 text = nombreSolicitante,
                 style = CoopTheme.typography.bodyMedium,

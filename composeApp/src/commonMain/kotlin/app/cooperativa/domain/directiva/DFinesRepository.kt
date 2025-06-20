@@ -1,6 +1,6 @@
 package app.cooperativa.domain.directiva
 
-import app.cooperativa.data.localdb.FineMockData
+import app.cooperativa.data.localdb.directiva.FineMockData
 import app.cooperativa.data.model.dto.Fine
 
 interface DFinesRepository {

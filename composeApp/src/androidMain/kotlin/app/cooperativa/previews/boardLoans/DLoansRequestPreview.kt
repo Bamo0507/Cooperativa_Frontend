@@ -4,7 +4,7 @@ import android.content.res.Configuration
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
-import app.cooperativa.data.localdb.SolicitudPrestamoMockData
+import app.cooperativa.data.localdb.directiva.SolicitudPrestamoMockData
 import app.cooperativa.presentation.mainflow.directiva.prestamos.loanRequestDetail.SolicitudPrestamoScreen
 import app.cooperativa.theme.CoopTheme
 

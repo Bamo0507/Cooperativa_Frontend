@@ -1,6 +1,13 @@
 package app.cooperativa.di
 
-import org.koin.compose.getKoin
+import app.cooperativa.di.directiva.dfinesmodule
+import app.cooperativa.di.directiva.dpagaresmodule
+import app.cooperativa.di.directiva.dpagosmodule
+import app.cooperativa.di.directiva.dpaymentsdetailmodule
+import app.cooperativa.di.directiva.dpendingpaymodule
+import app.cooperativa.di.directiva.dprestamosmodule
+import app.cooperativa.di.directiva.dsolicitudprestamomodule
+import app.cooperativa.di.socios.shistorialmodule
 import org.koin.core.context.startKoin
 import org.koin.core.KoinApplication
 
@@ -13,7 +20,9 @@ fun getKoinModules() = listOf(
     dsplashmodule,
     dpaymentsdetailmodule,
     dfinesmodule,
-    dpagaresmodule
+    dpagaresmodule,
+
+    shistorialmodule,
 )
 
 object KoinHelper {

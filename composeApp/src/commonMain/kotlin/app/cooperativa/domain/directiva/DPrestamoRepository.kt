@@ -1,8 +1,8 @@
 package app.cooperativa.domain.directiva
 
-import app.cooperativa.data.localdb.PagaresMockData
-import app.cooperativa.data.localdb.PrestamoMockData
-import app.cooperativa.data.localdb.SolicitudPrestamoMockData
+import app.cooperativa.data.localdb.directiva.PagaresMockData
+import app.cooperativa.data.localdb.directiva.PrestamoMockData
+import app.cooperativa.data.localdb.directiva.SolicitudPrestamoMockData
 import app.cooperativa.data.model.dto.Pagare
 import app.cooperativa.data.model.dto.Prestamo
 import app.cooperativa.data.model.ui.BasicInfoLoan

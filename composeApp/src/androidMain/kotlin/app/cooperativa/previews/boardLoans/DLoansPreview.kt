@@ -6,8 +6,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import app.cooperativa.data.localdb.SolicitudPrestamoMockData
-import app.cooperativa.data.localdb.PrestamoMockData
+import app.cooperativa.data.localdb.directiva.SolicitudPrestamoMockData
+import app.cooperativa.data.localdb.directiva.PrestamoMockData
 import app.cooperativa.presentation.mainflow.directiva.prestamos.prestamosGeneral.PrestamoScreen
 import app.cooperativa.presentation.mainflow.directiva.prestamos.prestamosGeneral.DPrestamoState
 import app.cooperativa.theme.CoopTheme

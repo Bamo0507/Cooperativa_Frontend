@@ -1,9 +1,7 @@
-package app.cooperativa.di
+package app.cooperativa.di.directiva
 
 import app.cooperativa.domain.directiva.DPaymentsDetailRepository
-import app.cooperativa.domain.directiva.DPaymentsRepository
 import app.cooperativa.domain.directiva.MockPaymentsDetailRepository
-import app.cooperativa.domain.directiva.MockPaymentsRepository
 import app.cooperativa.presentation.mainflow.directiva.pagos.paymentDetail.DPaidPayViewModel
 import org.koin.dsl.module
 

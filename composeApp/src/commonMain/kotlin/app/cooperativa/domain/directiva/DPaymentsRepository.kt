@@ -1,7 +1,7 @@
 package app.cooperativa.domain.directiva
 
-import app.cooperativa.data.localdb.FineMockData
-import app.cooperativa.data.localdb.PaymentMockData
+import app.cooperativa.data.localdb.directiva.FineMockData
+import app.cooperativa.data.localdb.directiva.PaymentMockData
 import app.cooperativa.data.model.dto.Fine
 import app.cooperativa.data.model.ui.BasicInfoPayment
 

@@ -6,8 +6,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import app.cooperativa.data.localdb.FineMockData
-import app.cooperativa.data.localdb.PaymentMockData
+import app.cooperativa.data.localdb.directiva.FineMockData
+import app.cooperativa.data.localdb.directiva.PaymentMockData
 import app.cooperativa.presentation.mainflow.directiva.pagos.pagosGeneral.DPaymentsScreen
 import app.cooperativa.presentation.mainflow.directiva.pagos.pagosGeneral.DPaymentsState
 import app.cooperativa.theme.CoopTheme

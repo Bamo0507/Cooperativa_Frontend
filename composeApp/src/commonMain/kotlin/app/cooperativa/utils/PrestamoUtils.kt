@@ -1,6 +1,6 @@
 package app.cooperativa.utils
 
-import app.cooperativa.data.localdb.PrestamoMockData
+import app.cooperativa.data.localdb.directiva.PrestamoMockData
 import app.cooperativa.data.model.dto.Prestamo
 
 object PrestamoUtils {

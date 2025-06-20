@@ -1,6 +1,5 @@
-package app.cooperativa.data.localdb
+package app.cooperativa.data.localdb.directiva
 
-import kotlinx.datetime.LocalDate
 import app.cooperativa.data.model.dto.SolicitudPrestamo
 import app.cooperativa.data.model.dto.Codeudor
 import app.cooperativa.data.model.ui.BasicInfoLoan

@@ -1,6 +1,6 @@
 package app.cooperativa.domain.directiva
 
-import app.cooperativa.data.localdb.SolicitudPrestamoMockData
+import app.cooperativa.data.localdb.directiva.SolicitudPrestamoMockData
 import app.cooperativa.data.model.dto.SolicitudPrestamo
 
 interface DSolicitudPrestamoRepository {
