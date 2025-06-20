@@ -12,6 +12,8 @@ import app.cooperativa.presentation.mainflow.directiva.pagos.pagosGeneral.Genera
 import app.cooperativa.presentation.mainflow.directiva.prestamos.prestamosGeneral.PrestamoNavigationDestination
 import app.cooperativa.presentation.mainflow.socios.historial.SHistorialNavGraph
 import app.cooperativa.presentation.mainflow.socios.historial.mainHistorial.SHistorialDestination
+import app.cooperativa.presentation.mainflow.socios.prestamos.SPrestamoNavGraph
+import app.cooperativa.presentation.mainflow.socios.prestamos.mainPrestamos.SPrestamoDestination
 
 //Lista de items para socios
 //TODO: Reemplazar destination x los NavGraph correspondientes
@@ -22,12 +24,12 @@ val navigationItemsSocios = listOf(
         unselectedIcon = Icons.Outlined.AttachMoney,
         destination = SHistorialNavGraph
     ),
-//    NavBarItem(
-//        title = "Préstamos",
-//        selectedIcon = Icons.Filled.Payments,
-//        unselectedIcon = Icons.Filled.Payments,
-//        destination =
-//    ),
+    NavBarItem(
+        title = "Préstamos",
+        selectedIcon = Icons.Filled.Payments,
+        unselectedIcon = Icons.Filled.Payments,
+        destination = SPrestamoNavGraph
+    ),
 //    NavBarItem(
 //        title = "Cuenta",
 //        selectedIcon = Icons.Filled.Person,
@@ -39,4 +41,5 @@ val navigationItemsSocios = listOf(
 // Top-level destinations, serializable objects de pantallas que pueden mostrar nav bar
 val topLevelDestinationsSocios = listOf(
     SHistorialDestination::class,
+    SPrestamoDestination::class
 )

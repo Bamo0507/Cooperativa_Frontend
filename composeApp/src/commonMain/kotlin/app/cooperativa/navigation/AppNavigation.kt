@@ -12,6 +12,8 @@ import app.cooperativa.presentation.mainflow.directiva.pagos.dPaymentNavGraph
 import app.cooperativa.presentation.mainflow.directiva.pagos.pagosGeneral.GeneralPaymentDestination
 import app.cooperativa.presentation.mainflow.directiva.splash.SplashDestination
 import app.cooperativa.presentation.mainflow.directiva.splash.directivasplashScreen
+import app.cooperativa.presentation.mainflow.socios.SociosMainNavigation
+import app.cooperativa.presentation.mainflow.socios.sociosMainNavigationGraph
 
 @Composable
 fun AppNavigation(
@@ -39,6 +41,17 @@ fun AppNavigation(
         directivaMainNavigationGraph(
             onLogOutClick = {
                 navController.navigate(LoginDestination){
+                    popUpTo(0)
+                }
+            },
+            onChangeToSocios = {
+                navController.navigate(SociosMainNavigation)
+            }
+        )
+
+        sociosMainNavigationGraph(
+            onLogOutClick = {
+                navController.navigate(LoginDestination) {
                     popUpTo(0)
                 }
             }

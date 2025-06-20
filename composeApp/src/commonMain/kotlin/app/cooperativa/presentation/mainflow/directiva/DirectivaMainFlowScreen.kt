@@ -32,6 +32,7 @@ import app.cooperativa.presentation.mainflow.directiva.prestamos.dLoanNavGraph
 fun DirectivaMainFlowScreen(
     navController: NavHostController = rememberNavController(),
     onLogOutClick: () -> Unit,
+    onChangeToSocios: () -> Unit
 ){
     var bottomBarVisibleDirectiva by rememberSaveable {
         mutableStateOf(false)
@@ -115,7 +116,7 @@ fun DirectivaMainFlowScreen(
 
             dLoanNavGraph(navController)
 
-            dAccountNavGraph(navController, onLogOutClick)
+            dAccountNavGraph(navController, onLogOutClick, onChangeToSocios)
 
         }
 

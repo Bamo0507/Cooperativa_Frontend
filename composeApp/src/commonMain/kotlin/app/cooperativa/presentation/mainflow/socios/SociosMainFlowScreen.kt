@@ -21,8 +21,10 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import app.cooperativa.navigation.SociosBottomNavBar
 import app.cooperativa.navigation.topLevelDestinationsSocios
+import app.cooperativa.presentation.mainflow.socios.historial.SHistorialNavGraph
 import app.cooperativa.presentation.mainflow.socios.historial.mainHistorial.SHistorialDestination
 import app.cooperativa.presentation.mainflow.socios.historial.sHistorialNavGraph
+import app.cooperativa.presentation.mainflow.socios.prestamos.sPrestamosNavGraph
 
 @Composable
 fun SociosMainFlowScreen(
@@ -70,11 +72,13 @@ fun SociosMainFlowScreen(
     ){ padding ->
         NavHost(
             navController = navController,
-            startDestination = SHistorialDestination,
+            startDestination = SHistorialNavGraph,
             modifier = Modifier.padding(padding)
         ){
             //Declare all the navigation graphs for Affiliates
             sHistorialNavGraph()
+
+            sPrestamosNavGraph()
         }
 
     }
