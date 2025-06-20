@@ -13,7 +13,11 @@ val LightColorScheme = CoopColorScheme(
     tertiary   = Color(0xFF043259),
     onTertiary = Color(0xFFE1F3FF),
     surfaceVariant = Color(0xFFF5F5F5),
-    error = Color(0xFFB00020)
+    error = Color(0xFFB00020),
+
+    approved = Color(0xFF4CAF50),   // verde
+    pending = Color(0xFFFFC107),   // amarillo
+    rejected  = Color(0xFFF44336)    // rojo
 )
 
 val DarkColorScheme = CoopColorScheme(
@@ -26,5 +30,9 @@ val DarkColorScheme = CoopColorScheme(
     onSecondary = Color(0xFFCBE5FF),
     onTertiary = Color(0xFFD3ECEC),
     surfaceVariant = Color(0xFF1e1e1e),
-    error = Color(0xFFCF6679)
+    error = Color(0xFFCF6679),
+
+    approved = Color(0xFF81C784),   // verde más claro
+    pending = Color(0xFFFFD54F),   // amarillo más suave
+    rejected  = Color(0xFFE57373)    // rojo más suave
 )
