@@ -48,6 +48,7 @@ fun DirectivaAccountRoute(
     )
 }
 
+//TODO: Implementar logica de mostrar boton de cambio a directiva
 @Composable
 fun DirectivaAccountScreen(
     onChangeToMember: () -> Unit,

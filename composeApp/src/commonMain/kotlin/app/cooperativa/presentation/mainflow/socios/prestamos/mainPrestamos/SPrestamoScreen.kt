@@ -11,11 +11,14 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.AttachFile
 import androidx.compose.material.icons.filled.Download
 import androidx.compose.material.icons.filled.Face
 import androidx.compose.material.icons.filled.Refresh
 import androidx.compose.material3.FilterChip
 import androidx.compose.material3.FilterChipDefaults
+import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButtonDefaults
 import androidx.compose.material3.MaterialTheme
@@ -41,6 +44,8 @@ import org.koin.compose.koinInject
 
 @Composable
 fun SPrestamoRoute(
+    onLoadPagareClick: () -> Unit,
+    onSolicitudClick: () -> Unit,
     viewModel: SPrestamoViewModel = koinInject()
 ){
     val state by viewModel.uiState.collectAsStateWithLifecycle()
@@ -48,20 +53,54 @@ fun SPrestamoRoute(
     SPrestamoScreen(
         state = state,
         loadData = viewModel::loadData,
-        onTabSelected = viewModel::onTabSelected
+        onTabSelected = viewModel::onTabSelected,
+        onLoadPagareClick = onLoadPagareClick,
+        onSolicitudClick = onSolicitudClick
     )
 }
 
 @Composable
 fun SPrestamoScreen(
     state: SPrestamoState,
+    onLoadPagareClick: () -> Unit,
+    onSolicitudClick: () -> Unit,
     loadData: () -> Unit,
     onTabSelected: (Int) -> Unit,
     modifier: Modifier = Modifier
 ){
     Scaffold(
         topBar = { CoopTopBar(title = "Préstamos") },
-        containerColor = CoopTheme.colorScheme.surface
+        containerColor = CoopTheme.colorScheme.surface,
+        floatingActionButton = {
+            if (!state.isLoading){
+                if (state.selectedTabIndex == 0) {
+                    FloatingActionButton(
+                        containerColor = CoopTheme.colorScheme.secondary,
+                        contentColor = CoopTheme.colorScheme.onSecondary,
+                        onClick = onSolicitudClick, //TODO: Agregar solicitud
+                        content = {
+                            CoopIcon(
+                                imageVector = Icons.Filled.Add,
+                                contentDescription = "Solicitar préstamo"
+                            )
+                        }
+                    )
+                } else {
+                    FloatingActionButton(
+                        containerColor = CoopTheme.colorScheme.secondary,
+                        contentColor = CoopTheme.colorScheme.onSecondary,
+                        onClick = onLoadPagareClick, //TODO: Cargar pagare
+                        content = {
+                            CoopIcon(
+                                imageVector = Icons.Filled.AttachFile,
+                                contentDescription = "Cargar pagare"
+                            )
+                        }
+                    )
+                }
+
+            }
+        }
     ){ padding ->
         if(state.isLoading){
             LoadingScreen(
@@ -110,7 +149,7 @@ fun SPrestamoScreen(
                                 PagareStatusCard(
                                     nombrePrestamo = state.pagares[idx].prestamoNombre,
                                     estado = state.pagares[idx].estadoPagare,
-                                    navToPagareSelection = {} //TODO: Agregar navegación
+                                    navToPagareSelection = onLoadPagareClick
                                 )
                             }
 

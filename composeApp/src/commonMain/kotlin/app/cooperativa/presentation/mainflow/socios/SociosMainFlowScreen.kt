@@ -80,7 +80,9 @@ fun SociosMainFlowScreen(
             //Declare all the navigation graphs for Affiliates
             sHistorialNavGraph()
 
-            sPrestamosNavGraph()
+            sPrestamosNavGraph(
+                navController = navController
+            )
 
             sAccountNavGraph(
                 onLogOutClick = onLogOutClick,

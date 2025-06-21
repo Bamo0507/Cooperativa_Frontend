@@ -36,6 +36,7 @@ fun NavGraphBuilder.dLoanNavGraph(
                 )
             }
         )
+
         solicitudPrestamoScreen (
             onBackClick = {
                 navController.navigateUp()

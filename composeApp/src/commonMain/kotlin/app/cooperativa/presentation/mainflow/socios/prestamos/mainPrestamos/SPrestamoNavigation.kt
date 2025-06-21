@@ -7,8 +7,14 @@ import kotlinx.serialization.Serializable
 @Serializable
 data object SPrestamoDestination
 
-fun NavGraphBuilder.sociosPrestamosScreen(){
+fun NavGraphBuilder.sociosPrestamosScreen(
+    onLoadPagareClick: () -> Unit,
+    onSolicitudClick: () -> Unit
+){
     composable<SPrestamoDestination> {
-        SPrestamoRoute()
+        SPrestamoRoute(
+            onLoadPagareClick = onLoadPagareClick,
+            onSolicitudClick = onSolicitudClick
+        )
     }
 }
