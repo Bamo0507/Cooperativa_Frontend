@@ -62,7 +62,7 @@ fun DirectivaAccountScreen(
             contentDescription = null,
             modifier = Modifier
                 .fillMaxWidth()
-                .height(240.dp),
+                .height(200.dp),
             contentScale = ContentScale.Crop
         )
 
@@ -73,28 +73,28 @@ fun DirectivaAccountScreen(
             verticalArrangement = Arrangement.Top,
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            Spacer(modifier = Modifier.height(120.dp))
-
-            // Ícono de perfil
-            Box(
-                modifier = Modifier
-                    .size(150.dp)
-                    .clip(CircleShape)
-                    .background(CoopTheme.colorScheme.primary),
-                contentAlignment = Alignment.Center
-            ) {
-                // TODO: Cargar imagen desde la galeria, se tendra que hacer un expect y actual para manejar en android e ios
-                Icon(
-                    imageVector = Icons.Default.AccountCircle,
-                    contentDescription = null,
-                    tint = CoopTheme.colorScheme.tertiary,
-                    modifier = Modifier
-                        .fillMaxSize(1.25f) // Agranda para que sobresalga y tape los bordes internos
-                )
-            }
-
-
-            Spacer(modifier = Modifier.height(40.dp))
+            Spacer(modifier = Modifier.height(210.dp))
+//
+//            // Ícono de perfil
+//            Box(
+//                modifier = Modifier
+//                    .size(150.dp)
+//                    .clip(CircleShape)
+//                    .background(CoopTheme.colorScheme.primary),
+//                contentAlignment = Alignment.Center
+//            ) {
+//                // TODO: Cargar imagen desde la galeria, se tendra que hacer un expect y actual para manejar en android e ios
+//                Icon(
+//                    imageVector = Icons.Default.AccountCircle,
+//                    contentDescription = null,
+//                    tint = CoopTheme.colorScheme.tertiary,
+//                    modifier = Modifier
+//                        .fillMaxSize(1.25f) // Agranda para que sobresalga y tape los bordes internos
+//                )
+//            }
+//
+//
+//            Spacer(modifier = Modifier.height(40.dp))
 
             // Botón "Cambiar a Socio"
             CoopIconButton(
