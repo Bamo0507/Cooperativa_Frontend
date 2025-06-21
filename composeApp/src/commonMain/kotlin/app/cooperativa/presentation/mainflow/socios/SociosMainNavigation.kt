@@ -9,13 +9,15 @@ import kotlinx.serialization.Serializable
 data object SociosMainNavigation
 
 fun NavGraphBuilder.sociosMainNavigationGraph(
-    onLogOutClick: () -> Unit
+    onLogOutClick: () -> Unit,
+    onChangeToDirectiva: () -> Unit
 ){
     composable<SociosMainNavigation> {
         val nestedNavController = rememberNavController()
         SociosMainFlowScreen(
             navController = nestedNavController,
-            onLogOutClick = onLogOutClick
+            onLogOutClick = onLogOutClick,
+            onChangeToDirectiva = onChangeToDirectiva
         )
     }
 }

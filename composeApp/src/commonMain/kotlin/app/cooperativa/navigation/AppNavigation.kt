@@ -54,6 +54,9 @@ fun AppNavigation(
                 navController.navigate(LoginDestination) {
                     popUpTo(0)
                 }
+            },
+            onChangeToDirectiva = {
+                navController.navigate(DirectivaMainNavigation)
             }
         )
 

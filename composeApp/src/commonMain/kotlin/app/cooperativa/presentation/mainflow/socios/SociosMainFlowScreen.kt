@@ -21,6 +21,7 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import app.cooperativa.navigation.SociosBottomNavBar
 import app.cooperativa.navigation.topLevelDestinationsSocios
+import app.cooperativa.presentation.mainflow.socios.account.sAccountNavGraph
 import app.cooperativa.presentation.mainflow.socios.historial.SHistorialNavGraph
 import app.cooperativa.presentation.mainflow.socios.historial.mainHistorial.SHistorialDestination
 import app.cooperativa.presentation.mainflow.socios.historial.sHistorialNavGraph
@@ -29,7 +30,8 @@ import app.cooperativa.presentation.mainflow.socios.prestamos.sPrestamosNavGraph
 @Composable
 fun SociosMainFlowScreen(
     navController: NavHostController = rememberNavController(),
-    onLogOutClick: () -> Unit
+    onLogOutClick: () -> Unit,
+    onChangeToDirectiva: () -> Unit
 ) {
     var bottomBarVisible by rememberSaveable {
         mutableStateOf(false)
@@ -79,6 +81,11 @@ fun SociosMainFlowScreen(
             sHistorialNavGraph()
 
             sPrestamosNavGraph()
+
+            sAccountNavGraph(
+                onLogOutClick = onLogOutClick,
+                onChangeToDirectiva = onChangeToDirectiva
+            )
         }
 
     }
