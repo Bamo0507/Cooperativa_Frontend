@@ -25,6 +25,7 @@ import app.cooperativa.presentation.mainflow.socios.account.sAccountNavGraph
 import app.cooperativa.presentation.mainflow.socios.historial.SHistorialNavGraph
 import app.cooperativa.presentation.mainflow.socios.historial.mainHistorial.SHistorialDestination
 import app.cooperativa.presentation.mainflow.socios.historial.sHistorialNavGraph
+import app.cooperativa.presentation.mainflow.socios.pagos.sPagosNavGraph
 import app.cooperativa.presentation.mainflow.socios.prestamos.sPrestamosNavGraph
 
 @Composable
@@ -88,6 +89,8 @@ fun SociosMainFlowScreen(
                 onLogOutClick = onLogOutClick,
                 onChangeToDirectiva = onChangeToDirectiva
             )
+
+            sPagosNavGraph()
         }
 
     }
