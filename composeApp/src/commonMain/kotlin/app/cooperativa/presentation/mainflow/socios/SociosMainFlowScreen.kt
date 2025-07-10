@@ -90,7 +90,9 @@ fun SociosMainFlowScreen(
                 onChangeToDirectiva = onChangeToDirectiva
             )
 
-            sPagosNavGraph()
+            sPagosNavGraph(
+                navController = navController
+            )
         }
 
     }

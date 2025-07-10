@@ -28,14 +28,17 @@ import app.cooperativa.theme.components.CoopTopBar
 
 @Composable
 fun SPagosStatusRoute(
-
+    onAddPaymentClick: () -> Unit
 ){
 
-    SPagosStatusScreen()
+    SPagosStatusScreen(
+        onAddPaymentClick = onAddPaymentClick
+    )
 }
 
 @Composable
 fun SPagosStatusScreen(
+    onAddPaymentClick: () -> Unit,
     modifier: Modifier = Modifier
 ){
     Scaffold(
@@ -48,7 +51,7 @@ fun SPagosStatusScreen(
             FloatingActionButton(
                 containerColor = CoopTheme.colorScheme.secondary,
                 contentColor = CoopTheme.colorScheme.onSecondary,
-                onClick = { /*TODO*/ },
+                onClick = { onAddPaymentClick() },
                 content = {
                     CoopIcon(
                         imageVector = Icons.Filled.Add,
