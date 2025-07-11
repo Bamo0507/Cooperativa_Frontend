@@ -35,6 +35,7 @@ fun SPagoEnviarScreen(
         LazyColumn(
             modifier = modfiier.padding(padding)
         ) {
+            
 
         }
     }
