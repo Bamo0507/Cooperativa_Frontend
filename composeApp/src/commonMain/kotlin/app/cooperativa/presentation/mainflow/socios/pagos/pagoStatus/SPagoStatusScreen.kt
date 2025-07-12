@@ -20,6 +20,8 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import app.cooperativa.data.model.dto.Estados
 import app.cooperativa.data.model.dto.PagosStatus
+import app.cooperativa.presentation.utils.ErrorScreen
+import app.cooperativa.presentation.utils.LoadingScreen
 import app.cooperativa.presentation.utils.getStatusColor
 import app.cooperativa.presentation.utils.getStatusText
 import app.cooperativa.theme.CoopTheme
@@ -38,6 +40,7 @@ fun SPagosStatusRoute(
 
     SPagosStatusScreen(
         state = state,
+        onRetry = viewModel::loadData,
         onAddPaymentClick = onAddPaymentClick
     )
 }
@@ -46,6 +49,7 @@ fun SPagosStatusRoute(
 fun SPagosStatusScreen(
     state: SPagosStatusState,
     onAddPaymentClick: () -> Unit,
+    onRetry: () -> Unit,
     modifier: Modifier = Modifier
 ){
     val payments = state.pagosStatus
@@ -72,22 +76,36 @@ fun SPagosStatusScreen(
     ){ padding ->
         //TODO: ADD loading and error screens
         // Manage condicionts for error fetching or loading screen
-        LazyColumn(
-            modifier = modifier
-                .fillMaxSize()
-                .background(CoopTheme.colorScheme.surface)
-                .padding(padding)
-                .padding(vertical = 6.dp, horizontal = 24.dp)
-                .padding(top=14.dp),
-            verticalArrangement = Arrangement.spacedBy(16.dp)
-        ) {
-            // replace with state
-            items(payments.size){idx ->
-                PagoStatusCard(
-                    nombrePago = payments[idx].nombrePago,
-                    estado = payments[idx].estado
-                )
+        if(state.isLoading){
+            LoadingScreen(
+                message = "Cargando pagos..."
+            )
+        } else if(state.errorMessage != null){
+            ErrorScreen(
+                message = "Error cargando pagos",
+                onRetry = onRetry
+            )
+        } else {
+            LazyColumn(
+                modifier = modifier
+                    .fillMaxSize()
+                    .background(CoopTheme.colorScheme.surface)
+                    .padding(padding)
+                    .padding(vertical = 6.dp, horizontal = 24.dp)
+                    .padding(top=14.dp),
+                verticalArrangement = Arrangement.spacedBy(16.dp)
+            ) {
+                // replace with state
+                items(payments.size){idx ->
+                    PagoStatusCard(
+                        nombrePago = payments[idx].nombrePago,
+                        estado = payments[idx].estado
+                    )
+
+
+                }
             }
+
         }
     }
 
