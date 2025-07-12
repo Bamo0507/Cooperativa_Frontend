@@ -8,6 +8,7 @@ import app.cooperativa.di.directiva.dpendingpaymodule
 import app.cooperativa.di.directiva.dprestamosmodule
 import app.cooperativa.di.directiva.dsolicitudprestamomodule
 import app.cooperativa.di.socios.shistorialmodule
+import app.cooperativa.di.socios.spagosStatusModule
 import app.cooperativa.di.socios.sprestamomodule
 import org.koin.core.context.startKoin
 import org.koin.core.KoinApplication
@@ -24,7 +25,8 @@ fun getKoinModules() = listOf(
     dpagaresmodule,
 
     shistorialmodule,
-    sprestamomodule
+    sprestamomodule,
+    spagosStatusModule
 )
 
 object KoinHelper {

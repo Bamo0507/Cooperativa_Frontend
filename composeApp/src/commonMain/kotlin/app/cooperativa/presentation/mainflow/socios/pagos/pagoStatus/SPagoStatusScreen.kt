@@ -12,10 +12,12 @@ import androidx.compose.material.icons.filled.Add
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import app.cooperativa.data.model.dto.Estados
 import app.cooperativa.data.model.dto.PagosStatus
 import app.cooperativa.presentation.utils.getStatusColor
@@ -25,59 +27,50 @@ import app.cooperativa.theme.components.CoopIcon
 import app.cooperativa.theme.components.CoopOutlinedCard
 import app.cooperativa.theme.components.CoopText
 import app.cooperativa.theme.components.CoopTopBar
+import org.koin.compose.koinInject
 
 @Composable
 fun SPagosStatusRoute(
-    onAddPaymentClick: () -> Unit
+    onAddPaymentClick: () -> Unit,
+    viewModel: SPagosStatusViewModel = koinInject()
 ){
+    val state by viewModel.uiState.collectAsStateWithLifecycle()
 
     SPagosStatusScreen(
+        state = state,
         onAddPaymentClick = onAddPaymentClick
     )
 }
 
 @Composable
 fun SPagosStatusScreen(
+    state: SPagosStatusState,
     onAddPaymentClick: () -> Unit,
     modifier: Modifier = Modifier
 ){
+    val payments = state.pagosStatus
     Scaffold(
         topBar = {
             CoopTopBar(title="Pagos")
         },
         containerColor = CoopTheme.colorScheme.surface,
         floatingActionButton = {
-            //TODO: Wrap in if(!sate.isLoading) when VM is managed
-            FloatingActionButton(
-                containerColor = CoopTheme.colorScheme.secondary,
-                contentColor = CoopTheme.colorScheme.onSecondary,
-                onClick = { onAddPaymentClick() },
-                content = {
-                    CoopIcon(
-                        imageVector = Icons.Filled.Add,
-                        contentDescription = "Presentar Pago"
-                    )
-                }
-            )
+            if(!state.isLoading) {
+                FloatingActionButton(
+                    containerColor = CoopTheme.colorScheme.secondary,
+                    contentColor = CoopTheme.colorScheme.onSecondary,
+                    onClick = { onAddPaymentClick() },
+                    content = {
+                        CoopIcon(
+                            imageVector = Icons.Filled.Add,
+                            contentDescription = "Presentar Pago"
+                        )
+                    }
+                )
+            }
         }
     ){ padding ->
-        val payments = listOf(
-            PagosStatus(
-                pagoId = 1,
-                nombrePago = "Pago 1",
-                estado = Estados.PENDIENTE
-            ),
-            PagosStatus(
-                pagoId = 2,
-                nombrePago = "Pago 2",
-                estado = Estados.APROBADO
-            ),
-            PagosStatus(
-                pagoId = 3,
-                nombrePago = "Pago 3",
-                estado = Estados.RECHAZADO
-            )
-        )
+        //TODO: ADD loading and error screens
         // Manage condicionts for error fetching or loading screen
         LazyColumn(
             modifier = modifier
