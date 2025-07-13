@@ -78,6 +78,27 @@ class SPagoEnviarViewModel(
         )
     }
 
+    fun removeCuota(cuota: QuotaAffiliate) {
+        _uiState.value = _uiState.value.copy(
+            selectedCuotas = _uiState.value.selectedCuotas - cuota
+        )
+    }
+    fun removeLoanQuota(loan: LoanQuota) {
+        _uiState.value = _uiState.value.copy(
+            selectedLoanQuotas = _uiState.value.selectedLoanQuotas - loan
+        )
+    }
+    fun removeFine(fine: FinePayAffiliate) {
+        _uiState.value = _uiState.value.copy(
+            selectedFines = _uiState.value.selectedFines - fine
+        )
+    }
+    fun removeCapitalContribution(aporte: CapitalContribution) {
+        _uiState.value = _uiState.value.copy(
+            aportesCapital = _uiState.value.aportesCapital - aporte
+        )
+    }
+
     private fun loadData() {
         viewModelScope.launch {
             // Indica que se está cargando

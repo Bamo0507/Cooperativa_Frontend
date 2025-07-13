@@ -42,6 +42,7 @@ fun CoopOutlinedTextField(
     focusedBorderColor: Color = CoopTheme.colorScheme.primary,
     unfocusedBorderColor: Color = CoopTheme.colorScheme.surfaceVariant,
     errorBorderColor: Color = CoopTheme.colorScheme.error,
+    borderColor: Color? = null,
     textStyle: TextStyle = CoopTheme.typography.bodyLarge,
     contentPadding: Dp = 16.dp
 ) {
@@ -77,9 +78,9 @@ fun CoopOutlinedTextField(
             cursorColor = cursorColor,
             errorCursorColor = CoopTheme.colorScheme.error,
 
-            focusedIndicatorColor = focusedBorderColor,
-            unfocusedIndicatorColor = unfocusedBorderColor,
-            disabledIndicatorColor = unfocusedBorderColor.copy(alpha = 0.3f),
+            focusedIndicatorColor = borderColor ?: focusedBorderColor,
+            unfocusedIndicatorColor = borderColor ?: unfocusedBorderColor,
+            disabledIndicatorColor = (borderColor ?: unfocusedBorderColor).copy(alpha = 0.3f),
             errorIndicatorColor = errorBorderColor,
 
             focusedLeadingIconColor = contentColor,
