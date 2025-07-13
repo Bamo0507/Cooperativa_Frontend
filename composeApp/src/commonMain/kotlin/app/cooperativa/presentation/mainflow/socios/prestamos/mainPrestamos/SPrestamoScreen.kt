@@ -34,6 +34,8 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import app.cooperativa.data.model.dto.Estados
 import app.cooperativa.presentation.utils.ErrorScreen
 import app.cooperativa.presentation.utils.LoadingScreen
+import app.cooperativa.presentation.utils.getStatusColor
+import app.cooperativa.presentation.utils.getStatusText
 import app.cooperativa.theme.CoopTheme
 import app.cooperativa.theme.components.CoopIcon
 import app.cooperativa.theme.components.CoopIconButton
@@ -188,7 +190,7 @@ fun PrestamoStatusCard(
                 )
 
                 CoopText(
-                    text = getPrestamoStatusText(estado),
+                    text = getStatusText(estado),
                     style = CoopTheme.typography.bodyMedium,
                     fontWeight = FontWeight.Bold,
                     color = getStatusColor(estado)
@@ -271,14 +273,6 @@ fun PagareStatusCard(
 
 }
 
-fun getPrestamoStatusText(estado: Estados): String{
-    return when(estado){
-        Estados.APROBADO -> "Aprobado"
-        Estados.PENDIENTE -> "En Revisión"
-        Estados.RECHAZADO -> "Rechazado"
-    }
-}
-
 fun getPagareStatusText(estado: Estados): String{
     return when(estado){
         Estados.APROBADO -> "Aprobado"
@@ -287,14 +281,6 @@ fun getPagareStatusText(estado: Estados): String{
     }
 }
 
-@Composable
-fun getStatusColor(estado: Estados): Color{
-    return when(estado){
-        Estados.APROBADO -> CoopTheme.colorScheme.approved
-        Estados.PENDIENTE -> CoopTheme.colorScheme.pending
-        Estados.RECHAZADO -> CoopTheme.colorScheme.rejected
-    }
-}
 
 @Composable
 fun StatusChipsRow(
