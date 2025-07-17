@@ -33,7 +33,8 @@ class SPagoEnviarViewModel(
 
     fun updateMontoPago(monto: Float) {
         _uiState.value = _uiState.value.copy(
-            montoPago = monto
+            montoPago = monto,
+            montoActualDeclarado = monto
         )
     }
 

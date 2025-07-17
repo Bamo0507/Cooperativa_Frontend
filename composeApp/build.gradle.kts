@@ -59,6 +59,8 @@ kotlin {
             implementation(libs.kotlin.test)
             implementation(kotlin("test-annotations-common"))
             implementation(libs.assertk)
+            implementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.6.4")
+            implementation("app.cash.turbine:turbine:1.2.1")
         }
     }
 }
@@ -94,4 +96,3 @@ dependencies {
     implementation(libs.androidx.foundation.layout.android)
     debugImplementation(compose.uiTooling)
 }
-
