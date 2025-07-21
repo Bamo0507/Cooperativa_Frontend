@@ -465,6 +465,8 @@ fun SPagoEnviarScreen(
             // Sección Imagen
             if (state.bytesImagen != null) {
                 item {
+                    Spacer(modifier = Modifier.height(12.dp))
+
                     ImagePreview(
                         image = state.bytesImagen,
                         onSwitchImage = { picker.launch() },
@@ -526,6 +528,7 @@ fun ImagePreview(
         modifier = modifier
             .aspectRatio(16f/9f)
             .clip(RoundedCornerShape(16.dp))
+            .padding(vertical = 8.dp)
     ){
         AsyncImage(
             model = image,

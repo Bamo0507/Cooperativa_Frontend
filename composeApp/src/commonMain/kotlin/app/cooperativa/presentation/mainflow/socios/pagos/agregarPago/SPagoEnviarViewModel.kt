@@ -11,8 +11,10 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import app.cooperativa.data.model.dto.CapitalContribution
+import app.cooperativa.domain.share.convertHeicToJpeg
 import com.mohamedrejeb.calf.core.PlatformContext
 import com.mohamedrejeb.calf.io.KmpFile
+import com.mohamedrejeb.calf.io.getPath
 import com.mohamedrejeb.calf.io.readByteArray
 import kotlinx.coroutines.flow.update
 
@@ -138,10 +140,20 @@ class SPagoEnviarViewModel(
 
     fun handleImagePicked(ctx: PlatformContext, image: KmpFile) {
         viewModelScope.launch {
-            val bytes = image.readByteArray(ctx)
+            val path = image.getPath(ctx) ?: ""
+            val isHeic = path.endsWith(".heic", ignoreCase = true) || path.endsWith(".heif", ignoreCase = true)
+
+            val originalBytes = image.readByteArray(ctx)
+
+            val processedBytes = if (isHeic) {
+                convertHeicToJpeg(originalBytes)
+            } else {
+                originalBytes
+            }
+
             _uiState.update {
                 it.copy(
-                    bytesImagen = bytes
+                    bytesImagen = processedBytes
                 )
             }
         }
