@@ -28,7 +28,8 @@ fun getKoinModules() = listOf(
     shistorialmodule,
     sprestamomodule,
     spagosStatusModule,
-    spagoEnviarModule
+    spagoEnviarModule,
+
 )
 
 object KoinHelper {

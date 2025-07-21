@@ -20,6 +20,8 @@ data class SPagoEnviarState(
 
     val montoActualDeclarado: Float = 0.0f,
 
+    val bytesImagen: ByteArray? = null,
+
     val isLoading: Boolean = false,
     val errorMessage: String? = null,
     val errorMontoPago: Boolean = false,

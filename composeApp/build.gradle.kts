@@ -54,6 +54,10 @@ kotlin {
             implementation(libs.datastore)
             implementation(libs.datastore.preferences)
             implementation(libs.compose.material.icons.extended)
+
+            implementation(libs.calf.file.picker)
+            implementation(libs.calf.file.picker.coil)
+            implementation(libs.coil.compose)
         }
         commonTest.dependencies {
             implementation(libs.kotlin.test)

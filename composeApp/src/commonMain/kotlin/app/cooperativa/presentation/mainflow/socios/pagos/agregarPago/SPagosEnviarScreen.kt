@@ -26,9 +26,12 @@ import app.cooperativa.theme.components.CoopOutlinedTextField
 import app.cooperativa.theme.components.CoopTopBar
 import org.koin.compose.koinInject
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.ui.unit.dp
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.aspectRatio
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -48,9 +51,17 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import app.cooperativa.theme.components.CoopDropdown
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.layout.ContentScale
 import app.cooperativa.theme.components.CoopText
 import app.cooperativa.data.model.dto.CapitalContribution
 import app.cooperativa.utils.formatMoney
+import coil3.compose.AsyncImage
+import com.mohamedrejeb.calf.core.LocalPlatformContext
+import com.mohamedrejeb.calf.io.KmpFile
+import com.mohamedrejeb.calf.picker.FilePickerFileType
+import com.mohamedrejeb.calf.picker.FilePickerSelectionMode
+import com.mohamedrejeb.calf.picker.rememberFilePickerLauncher
 
 @Composable
 fun SPagoEnviarRoute(
@@ -58,6 +69,7 @@ fun SPagoEnviarRoute(
     viewModel: SPagoEnviarViewModel = koinInject()
 ){
     val state by viewModel.uiState.collectAsStateWithLifecycle()
+    val context = LocalPlatformContext.current
 
     SPagoEnviarScreen(
         state = state,
@@ -65,6 +77,9 @@ fun SPagoEnviarRoute(
         onNombreChange = viewModel::updateNombrePago,
         onMontoChange = { text ->
             text.toFloatOrNull()?.let { viewModel.updateMontoPago(it) }
+        },
+        onPickImage = { image ->
+            viewModel.handleImagePicked(context, image)
         },
         onCuentaChange = viewModel::updateNumeroCuenta,
         onBoletaChange = viewModel::updateNumeroBoleta,
@@ -84,6 +99,7 @@ fun SPagoEnviarRoute(
 fun SPagoEnviarScreen(
     state: SPagoEnviarState,
     onBackClick: () -> Unit,
+    onPickImage: (KmpFile) -> Unit,
     onNombreChange: (String) -> Unit,
     onMontoChange: (String) -> Unit,
     onCuentaChange: (String) -> Unit,
@@ -99,6 +115,15 @@ fun SPagoEnviarScreen(
     onRemoveCapitalContribution: (CapitalContribution) -> Unit,
     modifier: Modifier = Modifier
 ) {
+    // File picker for selecting or changing the proof‑of‑payment image
+    val picker = rememberFilePickerLauncher(
+        type = FilePickerFileType.Image,
+        selectionMode = FilePickerSelectionMode.Single
+    ) { files ->
+        files.firstOrNull()?.let { file ->
+            onPickImage(file)
+        }
+    }
     Scaffold(
         topBar = {
             CoopTopBar(
@@ -437,10 +462,22 @@ fun SPagoEnviarScreen(
                 }
             }
 
+            // Sección Imagen
+            if (state.bytesImagen != null) {
+                item {
+                    ImagePreview(
+                        image = state.bytesImagen,
+                        onSwitchImage = { picker.launch() },
+                        modifier = Modifier
+                            .fillMaxWidth()
+                    )
+                }
+            }
+
             // Carga de Imagen
             item {
                 CoopOutlinedButton(
-                    onClick = { /* TODO: implementar carga de imagen */ },
+                    onClick = { picker.launch() },
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(vertical = 12.dp),
@@ -448,10 +485,13 @@ fun SPagoEnviarScreen(
                 ) {
                     Icon(
                         imageVector = Icons.Default.CloudUpload,
-                        contentDescription = "Cargar imagen"
+                        contentDescription = if (state.bytesImagen == null) "Cargar imagen" else "Cambiar imagen"
                     )
                     Spacer(modifier = Modifier.width(8.dp))
-                    CoopText("Cargar imagen", style = CoopTheme.typography.bodyLarge)
+                    CoopText(
+                        text = if (state.bytesImagen == null) "Cargar imagen" else "Cambiar imagen",
+                        style = CoopTheme.typography.bodyLarge
+                    )
                 }
             }
 
@@ -473,5 +513,25 @@ fun SPagoEnviarScreen(
                 Spacer(modifier = Modifier.height(56.dp))
             }
         }
+    }
+}
+
+@Composable
+fun ImagePreview(
+    image: ByteArray,
+    onSwitchImage: () -> Unit,
+    modifier: Modifier = Modifier
+) {
+    Box(
+        modifier = modifier
+            .aspectRatio(16f/9f)
+            .clip(RoundedCornerShape(16.dp))
+    ){
+        AsyncImage(
+            model = image,
+            modifier = Modifier.fillMaxSize(),
+            contentScale = ContentScale.Crop,
+            contentDescription = null
+        )
     }
 }

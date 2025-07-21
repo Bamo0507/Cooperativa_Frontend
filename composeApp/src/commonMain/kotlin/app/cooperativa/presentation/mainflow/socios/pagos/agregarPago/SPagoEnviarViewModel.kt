@@ -11,6 +11,10 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import app.cooperativa.data.model.dto.CapitalContribution
+import com.mohamedrejeb.calf.core.PlatformContext
+import com.mohamedrejeb.calf.io.KmpFile
+import com.mohamedrejeb.calf.io.readByteArray
+import kotlinx.coroutines.flow.update
 
 class SPagoEnviarViewModel(
     private val repository: SPagoEnviarRepository,
@@ -131,6 +135,18 @@ class SPagoEnviarViewModel(
             }
         }
     }
+
+    fun handleImagePicked(ctx: PlatformContext, image: KmpFile) {
+        viewModelScope.launch {
+            val bytes = image.readByteArray(ctx)
+            _uiState.update {
+                it.copy(
+                    bytesImagen = bytes
+                )
+            }
+        }
+    }
+
     /**
      * Valida que la suma de todos los montos seleccionados coincida con el monto declarado.
      * Retorna true si coinciden, false en caso contrario y actualiza errorMontoPago.
