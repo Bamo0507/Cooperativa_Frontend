@@ -191,4 +191,61 @@ class SPagoEnviarViewModelTest {
             Dispatchers.resetMain()
         }
     }
+    // ------------------------------------------------------------------
+    // Tests de flujo completo de validación de monto declarado
+    // ------------------------------------------------------------------
+    @Test
+    fun `full flow validation fails when declared amount mismatches`() = runTest {
+        setMainDispatcherForTest(testScheduler)
+        try {
+            val vm = SPagoEnviarViewModel(MockSociosPagoEnviarRepository(), userId = 1)
+            advanceUntilIdle()
+
+            // Agregamos una sola cuota pero declaramos un monto incorrecto
+            val cuota = vm.uiState.value.cuotasDisponibles.first()
+            vm.addCuota(cuota)
+            vm.updateMontoPago(cuota.montoCuota + 500f) // mismatch
+
+            // Ejecutamos validación completa
+            val isValid = vm.validateDeclaredAmount()
+            val state = vm.uiState.value
+
+            assertFalse(isValid)
+            assertTrue(state.errorMontoPago)
+        } finally {
+            Dispatchers.resetMain()
+        }
+    }
+
+    @Test
+    fun `full flow validation succeeds when amounts match`() = runTest {
+        setMainDispatcherForTest(testScheduler)
+        try {
+            val vm = SPagoEnviarViewModel(MockSociosPagoEnviarRepository(), userId = 1)
+            advanceUntilIdle()
+
+            // Construimos un pago válido
+            val cuota = vm.uiState.value.cuotasDisponibles.first()
+            val prestamo = vm.uiState.value.prestamosDisponibles.first()
+            val multa = vm.uiState.value.multasDisponibles.first()
+            val user = vm.uiState.value.usuariosDisponibles.first()
+
+            vm.addCuota(cuota)
+            vm.addLoanQuota(prestamo)
+            vm.addFine(multa)
+            vm.addCapitalContribution(user = user, amount = 50f)
+
+            val total = cuota.montoCuota + prestamo.monto + multa.fineAmount + 50f
+            vm.updateMontoPago(total)
+
+            // Ejecutamos validación completa
+            val isValid = vm.validateDeclaredAmount()
+            val state = vm.uiState.value
+
+            assertTrue(isValid)
+            assertFalse(state.errorMontoPago)
+        } finally {
+            Dispatchers.resetMain()
+        }
+    }
 }

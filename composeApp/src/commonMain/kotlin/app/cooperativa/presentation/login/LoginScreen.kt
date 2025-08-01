@@ -77,7 +77,6 @@ fun LoginScreen(
             contentScale = ContentScale.Crop,
             modifier = Modifier.fillMaxWidth()
         )
-
         // Capa blanca redondeada encima
         Column(
             modifier = Modifier
