@@ -1,4 +1,3 @@
-import org.jetbrains.compose.desktop.application.dsl.TargetFormat
 import org.jetbrains.kotlin.gradle.ExperimentalKotlinGradlePluginApi
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 
@@ -8,6 +7,7 @@ plugins {
     alias(libs.plugins.composeMultiplatform)
     alias(libs.plugins.composeCompiler)
     alias(libs.plugins.jetbrains.kotlin.serialization)
+    alias(libs.plugins.apollo3)
 }
 
 kotlin {
@@ -58,6 +58,8 @@ kotlin {
             implementation(libs.calf.file.picker)
             implementation(libs.calf.file.picker.coil)
             implementation(libs.coil.compose)
+
+            implementation(libs.apollo.runtime)
         }
         commonTest.dependencies {
             implementation(libs.kotlin.test)
@@ -66,6 +68,12 @@ kotlin {
             implementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.6.4")
             implementation("app.cash.turbine:turbine:1.2.1")
         }
+    }
+}
+
+apollo {
+    service("cooperativa") {
+        packageName.set("app.cooperativa.graphql")
     }
 }
 

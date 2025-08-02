@@ -1,0 +1,6 @@
+query getHistory($accessToken: String!) {
+  getHistory(accessToken: $accessToken) {
+    owedCapital
+    payedToCapital
+  }
+}

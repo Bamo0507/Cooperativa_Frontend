@@ -24,23 +24,15 @@ class SHistorialViewModel(
 
     fun loadData(){
         viewModelScope.launch {
-            _uiState.update { state ->
-                state.copy(
-                    isLoading = true,
-                    errorMessage = null
-                )
-            }
-
-            // delay time 1.5s
-            delay(1500)
+            _uiState.update { it.copy(isLoading = true, errorMessage = null) }
 
             try {
                 val prestamosUser = repository.getPrestamosByUser(userId)
                 val totalAportes = repository.getTotalAportesByUser(userId)
                 val totalCapitalPorPagar = repository.getTotalCapitalPorPagar(userId)
 
-                _uiState.update { state ->
-                    state.copy(
+                _uiState.update {
+                    it.copy(
                         isLoading = false,
                         totalAportado = totalAportes,
                         prestamos = prestamosUser,
@@ -48,10 +40,10 @@ class SHistorialViewModel(
                     )
                 }
             } catch (e: Exception) {
-                _uiState.update { state ->
-                    state.copy(
+                _uiState.update {
+                    it.copy(
                         isLoading = false,
-                        errorMessage = e.message
+                        errorMessage = e.message ?: "Error desconocido"
                     )
                 }
             }
@@ -65,7 +57,4 @@ class SHistorialViewModel(
             )
         }
     }
-
-
-
 }

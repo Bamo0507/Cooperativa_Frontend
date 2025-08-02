@@ -1,0 +1,8 @@
+type Query {
+  getHistory(accessToken: String!): History
+}
+
+type History {
+  owedCapital: Float
+  payedToCapital: Float
+}
