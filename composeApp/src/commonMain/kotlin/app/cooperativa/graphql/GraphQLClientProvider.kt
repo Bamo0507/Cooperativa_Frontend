@@ -1,23 +1,21 @@
 package app.cooperativa.graphql
 
 import com.apollographql.apollo3.ApolloClient
+import app.cooperativa.graphql.GetHistoryQuery
+import com.apollographql.apollo3.api.ApolloResponse
 
 class GraphQLClientProvider(
-    private val endpoint: String,
-    private val accessTokenProvider: suspend () -> String
+    private val endpoint: String
 ) {
-    // No cacheamos el token aquí porque podría cambiar; reconstruimos por llamada ligera
-    suspend fun getClient(): ApolloClient {
-        return ApolloClient.Builder()
+    private val client: ApolloClient by lazy {
+        ApolloClient.Builder()
             .serverUrl(endpoint)
             .build()
     }
 
-    suspend fun getHistoryResponse(): com.apollographql.apollo3.api.ApolloResponse<GetHistoryQuery.Data> {
-        val client = getClient()
-        val token = accessTokenProvider()
+    suspend fun getHistoryResponse(accessToken: String): ApolloResponse<GetHistoryQuery.Data> {
         return client.query(
-            GetHistoryQuery(accessToken = token)
+            GetHistoryQuery(accessToken = accessToken)
         ).execute()
     }
 }

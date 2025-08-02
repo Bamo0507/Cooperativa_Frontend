@@ -9,9 +9,7 @@ import org.koin.dsl.module
 val shistorialmodule = module {
     single {
         GraphQLClientProvider(
-            endpoint = "https://dev.cooperativa-isp.cc/graphql/payment",
-            accessTokenProvider = { "77656D82A042ABA5AE02293A880479D3DACA6609331486E01F351285990F6235" }
-            //TODO: Inyectar de datastore el accesstoken
+            endpoint = "https://dev.cooperativa-isp.cc/graphql/payment"
         )
     }
 
