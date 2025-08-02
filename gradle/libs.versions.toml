@@ -18,6 +18,7 @@ foundationLayoutAndroid = "1.7.8"
 calf-file-picker = "0.5.3"
 calf-file-picker-coil = "0.5.1"
 coil = "3.0.0"
+apollo = "3.8.5"
 
 [libraries]
 kotlin-test = { module = "org.jetbrains.kotlin:kotlin-test", version.ref = "kotlin" }
@@ -44,6 +45,9 @@ calf-file-picker = { module = "com.mohamedrejeb.calf:calf-file-picker", version.
 calf-file-picker-coil = { module = "com.mohamedrejeb.calf:calf-file-picker-coil", version.ref = "calf-file-picker-coil"}
 coil-compose = { module = "io.coil-kt.coil3:coil-compose", version.ref = "coil" }
 
+apollo-runtime = { module = "com.apollographql.apollo3:apollo-runtime", version.ref = "apollo" }
+apollo-normalized-cache = { module = "com.apollographql.apollo3:apollo-normalized-cache-sqlite", version.ref = "apollo" }
+
 [plugins]
 androidApplication = { id = "com.android.application", version.ref = "agp" }
 androidLibrary = { id = "com.android.library", version.ref = "agp" }
@@ -51,3 +55,4 @@ composeMultiplatform = { id = "org.jetbrains.compose", version.ref = "compose-mu
 composeCompiler = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }
 kotlinMultiplatform = { id = "org.jetbrains.kotlin.multiplatform", version.ref = "kotlin" }
 jetbrains-kotlin-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin" }
+apollo3 = { id = "com.apollographql.apollo3", version.ref = "apollo" }

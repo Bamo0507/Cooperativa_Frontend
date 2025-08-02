@@ -3,7 +3,6 @@ package app.cooperativa.presentation.mainflow.socios.historial.mainHistorial
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import app.cooperativa.domain.socios.SHistorialRepository
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
@@ -11,7 +10,7 @@ import kotlinx.coroutines.launch
 
 class SHistorialViewModel(
     private val repository: SHistorialRepository,
-    private val userId: Int = 1 //TODO: remove default value, make an on resume action that triggers splash, and refetches user id
+    private val accessToken: String = "77656D82A042ABA5AE02293A880479D3DACA6609331486E01F351285990F6235"
 ): ViewModel() {
     private val _uiState: MutableStateFlow<SHistorialState> = MutableStateFlow(
         SHistorialState()
@@ -22,36 +21,29 @@ class SHistorialViewModel(
         loadData()
     }
 
-    fun loadData(){
+    fun loadData() {
         viewModelScope.launch {
-            _uiState.update { state ->
-                state.copy(
-                    isLoading = true,
-                    errorMessage = null
-                )
-            }
-
-            // delay time 1.5s
-            delay(1500)
+            _uiState.update { it.copy(isLoading = true, errorMessage = null) }
 
             try {
-                val prestamosUser = repository.getPrestamosByUser(userId)
-                val totalAportes = repository.getTotalAportesByUser(userId)
-                val totalCapitalPorPagar = repository.getTotalCapitalPorPagar(userId)
+                val token = accessToken
 
-                _uiState.update { state ->
-                    state.copy(
+                val history = repository.fetchHistory(token)
+                val prestamosUser = repository.getPrestamosByUser(token)
+
+                _uiState.update {
+                    it.copy(
                         isLoading = false,
-                        totalAportado = totalAportes,
-                        prestamos = prestamosUser,
-                        capitalPorPagar = totalCapitalPorPagar
+                        totalAportado = history.payedToCapital,
+                        capitalPorPagar = history.owedCapital,
+                        prestamos = prestamosUser
                     )
                 }
             } catch (e: Exception) {
-                _uiState.update { state ->
-                    state.copy(
+                _uiState.update {
+                    it.copy(
                         isLoading = false,
-                        errorMessage = e.message
+                        errorMessage = e.message ?: "Error desconocido"
                     )
                 }
             }
@@ -65,7 +57,4 @@ class SHistorialViewModel(
             )
         }
     }
-
-
-
 }
