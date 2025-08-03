@@ -23,15 +23,20 @@ class DirectiveFineManagerRepository(
     }
 
     override suspend fun getAllAffiliates(): List<Member> {
-        val response: ApolloResponse<GettingAffiliatesQuery.Data> = clientProvider.getAllAffiliates()
+        val response = clientProvider.getAllAffiliates()
 
-        val members = response.data?.getAllMembers
+        if (response.hasErrors()) {
+            val msg = response.errors?.joinToString { it.message } ?: "Error de GraphQL"
+            throw Exception(msg)
+        }
+
+        val members = response.data?.getAllMemembers
             ?: throw Exception("Ooops, no se pudo obtener los socios!")
 
         return members.map {
             Member(
-                it?.usuarioId ?: 0,
-                it?.name ?: ""
+                usuarioId = it.usuarioId,
+                name = it.name
             )
         }
     }
