@@ -26,7 +26,21 @@ class LoginViewModel(
         _state.update { it.copy(password = new, error = null) }
     }
 
-    fun submitLogin(onSuccess: (userType: String) -> Unit) {
+    // pública: valida y lanza login
+    fun submitLoginIfValid(onSuccess: (userType: String) -> Unit) {
+        val username = _state.value.username
+        val password = _state.value.password
+        if (username.isBlank() || password.isBlank()) {
+            _state.update {
+                it.copy(error = "Usuario y contraseña son requeridos")
+            }
+            return
+        }
+        submitLogin(onSuccess)
+    }
+
+    // interna: asume que ya fue validado
+    private fun submitLogin(onSuccess: (userType: String) -> Unit) {
         viewModelScope.launch {
             _state.update { it.copy(isLoading = true, error = null) }
 
@@ -52,7 +66,7 @@ class LoginViewModel(
 
                 is LoginResult.Failure -> {
                     _state.update {
-                        it.copy(isLoading = false, error = result.message)
+                        it.copy(isLoading = false, error = "Usuario o contraseña incorrectos")
                     }
                 }
             }

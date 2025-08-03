@@ -9,7 +9,7 @@ data object LoginDestination
 
 //Función para dejar el cuento como composable
 fun NavGraphBuilder.loginScreen(
-    onLogin: () -> Unit
+    onLogin: (user_type: String) -> Unit
 ){
     composable<LoginDestination>{
         LoginRoute(

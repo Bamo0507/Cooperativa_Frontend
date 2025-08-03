@@ -1,17 +1,23 @@
 package app.cooperativa.di.auth
 
+import app.cooperativa.domain.login.CoopLoginRepository
 import app.cooperativa.domain.login.LoginRepository
 import app.cooperativa.presentation.login.LoginViewModel
-import app.cooperativa.domain.localstorage.PreferencesLocalStorage
-import app.cooperativa.domain.login.CoopLoginRepository
-import app.cooperativa.graphql.GraphQLClientProvider
+import io.ktor.client.HttpClient
+import io.ktor.client.engine.cio.CIO
+import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
+import io.ktor.serialization.kotlinx.json.json
+import kotlinx.serialization.json.Json
 import org.koin.dsl.module
 
 val authModule = module {
     single {
-        GraphQLClientProvider(
-            endpoint = "https://dev.cooperativa-isp.cc/general/login"
-        )
+        HttpClient(CIO) {
+            install(ContentNegotiation) {
+                json(Json { ignoreUnknownKeys = true })
+            }
+            expectSuccess = false
+        }
     }
 
     single<LoginRepository> {

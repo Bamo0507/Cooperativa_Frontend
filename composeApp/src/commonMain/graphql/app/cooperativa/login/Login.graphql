@@ -1,5 +1,5 @@
-mutation login($input: LoginInput!) {
-    login(input: $input) {
+query login($user_name: String!, $pass_code: String!) {
+    login(user_name: $user_name, pass_code: $pass_code) {
         Ok {
             access_token
             user_type

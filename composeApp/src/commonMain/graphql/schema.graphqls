@@ -1,15 +1,11 @@
 type Query {
+  login(user_name: String!, pass_code: String!): LoginPayload
   getHistory(accessToken: String!): History
 }
 
 type History {
   owedCapital: Float
   payedToCapital: Float
-}
-
-input LoginInput {
-  user_name: String!
-  pass_code: String!
 }
 
 type LoginOk {
@@ -24,8 +20,4 @@ type LoginErr {
 type LoginPayload {
   Ok: LoginOk
   Err: LoginErr
-}
-
-type Mutation {
-  login(input: LoginInput!): LoginPayload
 }

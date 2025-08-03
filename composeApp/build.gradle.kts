@@ -63,6 +63,11 @@ kotlin {
             implementation(libs.coil.compose)
 
             implementation(libs.apollo.runtime)
+
+            implementation(libs.ktor.client.core)
+            implementation(libs.ktor.client.cio)
+            implementation(libs.ktor.client.content.negotiation)
+            implementation(libs.ktor.serialization.kotlinx.json)
         }
         commonTest.dependencies {
             implementation(libs.kotlin.test)

@@ -16,8 +16,11 @@ import androidx.compose.material.icons.filled.VisibilityOff
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
@@ -26,6 +29,7 @@ import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import app.cooperativa.theme.CoopTheme
 import app.cooperativa.theme.components.CoopButton
 import app.cooperativa.theme.components.CoopIcon
@@ -34,28 +38,35 @@ import app.cooperativa.theme.components.CoopText
 import cooperativa.composeapp.generated.resources.Res
 import cooperativa.composeapp.generated.resources.login_background
 import org.jetbrains.compose.resources.painterResource
+import org.koin.compose.koinInject
 
 @Composable
 fun LoginRoute(
-    onLogin: () -> Unit
+    viewModel: LoginViewModel = koinInject(),
+    onLogin: (user_type: String) -> Unit,
 ) {
-    // Cambiar mas adelante por el STATE y un VIEWMODEL y declarar como EVENTS del screen
-    var username = rememberSaveable { mutableStateOf("") }
-    var onTextChange = { text: String -> username.value = text }
-    var password = rememberSaveable { mutableStateOf("") }
-    var onTextChangePassword = { text: String -> password.value = text }
-    var passwordVisible = rememberSaveable { mutableStateOf(false) }
-    var onPasswordVisible = { passwordVisible.value = !passwordVisible.value }
+    val state by viewModel.state.collectAsStateWithLifecycle()
 
-    //LOGIN TODO QUE SE ESCUCHE EL FLOW PARA SABER A DONDE MANDARLO
+    var passwordVisible by rememberSaveable { mutableStateOf(false) }
+
+    LaunchedEffect(state.isLoggedIn, state.userType) {
+        if (state.isLoggedIn && state.userType != null) {
+            onLogin(state.userType ?: "affiliate")
+        }
+    }
+
     LoginScreen(
-        username = username.value,
-        onTextChange = onTextChange,
-        password = password.value,
-        onTextChangePassword = onTextChangePassword,
-        onLogin = onLogin,
-        passwordVisible = passwordVisible.value,
-        onPasswordVisibleToggle = onPasswordVisible
+        username = state.username,
+        onTextChange = viewModel::onUsernameChange,
+        password = state.password,
+        onTextChangePassword = viewModel::onPasswordChange,
+        passwordVisible = passwordVisible,
+        onPasswordVisibleToggle = { passwordVisible = !passwordVisible },
+        onLogin = {
+            viewModel.submitLoginIfValid { userType -> onLogin(userType) }
+        },
+        isLoading = state.isLoading,
+        errorMessage = state.error
     )
 }
 
@@ -67,7 +78,9 @@ fun LoginScreen(
     onTextChangePassword: (String) -> Unit,
     onLogin: () -> Unit,
     passwordVisible: Boolean,
-    onPasswordVisibleToggle: () -> Unit
+    onPasswordVisibleToggle: () -> Unit,
+    isLoading: Boolean,
+    errorMessage: String?
 ) {
     Column (modifier = Modifier.fillMaxSize().background(CoopTheme.colorScheme.surface)) {
         // Imagen de fondo
@@ -189,12 +202,22 @@ fun LoginScreen(
             CoopButton(
                 onClick = onLogin,
                 shape = RoundedCornerShape(50),
+                enabled = !isLoading,
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(50.dp)
                     .padding(horizontal = 16.dp)
             ) {
                 CoopText("Iniciar Sesión", fontWeight = FontWeight.Bold)
+            }
+
+            if (errorMessage != null) {
+                CoopText(
+                    text = errorMessage,
+                    color = CoopTheme.colorScheme.error,
+                    style = CoopTheme.typography.bodySmall,
+                    modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp)
+                )
             }
 
             Spacer(modifier = Modifier.height(16.dp))

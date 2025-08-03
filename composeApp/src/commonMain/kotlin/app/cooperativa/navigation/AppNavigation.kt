@@ -24,12 +24,15 @@ fun AppNavigation(
             navController = navController
         )
 
-        //TODO: MANEJAR HACIA QUE MAINFLOW LO MANDO SI ES SOCIO O DIRECTIVA
         loginScreen(
-            onLogin = {
-                navController.navigate(DirectivaMainNavigation){
-                    popUpTo(LoginDestination){
-                        inclusive = true
+            onLogin = { userType ->
+                if (userType == "directive") {
+                    navController.navigate(DirectivaMainNavigation) {
+                        popUpTo(LoginDestination) { inclusive = true }
+                    }
+                } else {
+                    navController.navigate(SociosMainNavigation) {
+                        popUpTo(LoginDestination) { inclusive = true }
                     }
                 }
             }
