@@ -36,15 +36,18 @@ import app.cooperativa.theme.components.CoopText
 import cooperativa.composeapp.generated.resources.Res
 import cooperativa.composeapp.generated.resources.account_background
 import org.jetbrains.compose.resources.painterResource
+import org.koin.compose.koinInject
 
 @Composable
 fun DirectivaAccountRoute(
     onChangeToMember: () -> Unit,
-    onLogout: () -> Unit
+    onLogout: () -> Unit,
+    viewModel: DirectivaAccountViewModel = koinInject()
 ) {
     DirectivaAccountScreen(
         onChangeToMember = onChangeToMember,
-        onLogout = onLogout
+        onLogout = onLogout,
+        clearPrefs = viewModel::logout
     )
 }
 
@@ -52,7 +55,8 @@ fun DirectivaAccountRoute(
 @Composable
 fun DirectivaAccountScreen(
     onChangeToMember: () -> Unit,
-    onLogout: () -> Unit
+    onLogout: () -> Unit,
+    clearPrefs: () -> Unit
 ) {
     Box(
         modifier = Modifier
@@ -131,7 +135,10 @@ fun DirectivaAccountScreen(
 
             // Botón "Cerrar Sesión"
             CoopIconButton(
-                onClick = onLogout,
+                onClick = {
+                    onLogout()
+                    clearPrefs()
+                },
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(56.dp)

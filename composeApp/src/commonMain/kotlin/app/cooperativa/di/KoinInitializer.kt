@@ -3,6 +3,7 @@ package app.cooperativa.di
 import app.cooperativa.di.auth.authModule
 import app.cooperativa.di.dataStore.dataStoreModule
 import app.cooperativa.di.dataStore.preferencesModule
+import app.cooperativa.di.directiva.daccountmodule
 import app.cooperativa.di.directiva.dfinesmodule
 import app.cooperativa.di.directiva.dpagaresmodule
 import app.cooperativa.di.directiva.dpagosmodule
@@ -39,7 +40,8 @@ fun getKoinModules() = listOf(
 
     authModule,
 
-    saccountmodule
+    saccountmodule,
+    daccountmodule
 )
 
 object KoinHelper {
