@@ -2,6 +2,7 @@ package app.cooperativa.presentation.mainflow.socios.historial.mainHistorial
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import app.cooperativa.domain.localstorage.PreferencesLocalStorage
 import app.cooperativa.domain.socios.SHistorialRepository
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -10,7 +11,7 @@ import kotlinx.coroutines.launch
 
 class SHistorialViewModel(
     private val repository: SHistorialRepository,
-    private val accessToken: String = "77656D82A042ABA5AE02293A880479D3DACA6609331486E01F351285990F6235"
+    private val preferences: PreferencesLocalStorage
 ): ViewModel() {
     private val _uiState: MutableStateFlow<SHistorialState> = MutableStateFlow(
         SHistorialState()
@@ -26,7 +27,7 @@ class SHistorialViewModel(
             _uiState.update { it.copy(isLoading = true, errorMessage = null) }
 
             try {
-                val token = accessToken
+                val token = preferences.getAccessToken()
 
                 val history = repository.fetchHistory(token)
                 val prestamosUser = repository.getPrestamosByUser(token)

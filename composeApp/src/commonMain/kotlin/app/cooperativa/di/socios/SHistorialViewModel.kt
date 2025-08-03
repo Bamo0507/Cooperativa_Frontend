@@ -18,6 +18,6 @@ val shistorialmodule = module {
     }
 
     factory {
-        SHistorialViewModel(get())
+        SHistorialViewModel(get(), get())
     }
 }

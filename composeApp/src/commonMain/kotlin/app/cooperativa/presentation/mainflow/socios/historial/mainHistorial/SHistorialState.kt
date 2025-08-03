@@ -10,5 +10,7 @@ data class SHistorialState(
     var prestamos: List<Prestamo> = emptyList(),
 
     var isLoading: Boolean = false,
-    var errorMessage: String? = null
+    var errorMessage: String? = null,
+
+    var accessToken: String = ""
 )
