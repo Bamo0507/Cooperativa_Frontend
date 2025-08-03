@@ -1,5 +1,7 @@
 package app.cooperativa.di
 
+import app.cooperativa.di.dataStore.dataStoreModule
+import app.cooperativa.di.dataStore.preferencesModule
 import app.cooperativa.di.directiva.dfinesmodule
 import app.cooperativa.di.directiva.dpagaresmodule
 import app.cooperativa.di.directiva.dpagosmodule
@@ -30,6 +32,8 @@ fun getKoinModules() = listOf(
     spagosStatusModule,
     spagoEnviarModule,
 
+    dataStoreModule,
+    preferencesModule
 )
 
 object KoinHelper {
