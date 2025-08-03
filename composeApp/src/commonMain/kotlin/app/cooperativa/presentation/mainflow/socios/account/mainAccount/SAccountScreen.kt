@@ -26,29 +26,34 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.ViewModel
 import app.cooperativa.theme.CoopTheme
 import app.cooperativa.theme.components.CoopIconButton
 import app.cooperativa.theme.components.CoopText
 import cooperativa.composeapp.generated.resources.Res
 import cooperativa.composeapp.generated.resources.account_background
 import org.jetbrains.compose.resources.painterResource
+import org.koin.compose.koinInject
 
 @Composable
 fun SAccountRoute(
     onLogOutClick: () -> Unit,
-    onChangeToDirectiva: () -> Unit
+    onChangeToDirectiva: () -> Unit,
+    viewModel: SAccountViewModel = koinInject()
 ){
 
     SAccountScreen(
         onLogOutClick = onLogOutClick,
-        onChangeToDirectiva = onChangeToDirectiva
+        onChangeToDirectiva = onChangeToDirectiva,
+        clearPrefs = viewModel::logout
     )
 }
 
 @Composable
 fun SAccountScreen(
     onLogOutClick: () -> Unit,
-    onChangeToDirectiva: () -> Unit
+    onChangeToDirectiva: () -> Unit,
+    clearPrefs: () -> Unit
 ){
     Box(
         modifier = Modifier
@@ -159,7 +164,10 @@ fun SAccountScreen(
 
             // Botón "Cerrar Sesión"
             CoopIconButton(
-                onClick = onLogOutClick,
+                onClick = {
+                    onLogOutClick()
+                    clearPrefs()
+                },
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(56.dp)

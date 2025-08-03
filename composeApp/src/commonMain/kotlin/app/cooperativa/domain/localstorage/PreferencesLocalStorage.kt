@@ -12,4 +12,6 @@ interface PreferencesLocalStorage {
     suspend fun getUser_name(): String
     suspend fun getPass_code(): String
     suspend fun getUser_type(): String
+
+    suspend fun clear()
 }

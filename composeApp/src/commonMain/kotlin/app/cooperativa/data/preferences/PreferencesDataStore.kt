@@ -70,4 +70,10 @@ class PreferencesDataStore(
         val preferences = dataStore.data.first()
         return preferences[user_typeKey] ?: "affiliate"
     }
+
+    override suspend fun clear() {
+        dataStore.edit { preferences ->
+            preferences.clear()
+        }
+    }
 }
