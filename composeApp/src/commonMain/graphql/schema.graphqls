@@ -1,12 +1,12 @@
 type Query {
   login(user_name: String!, pass_code: String!): LoginPayload
   getHistory(accessToken: String!): History
-  getAllMembers: [Member]!
+  getAllMemembers: [Member!]!
 }
 
 type Member {
-  usuarioId: Int,
-  name: String
+  usuarioId: Int!
+  name: String!
 }
 
 type History {
