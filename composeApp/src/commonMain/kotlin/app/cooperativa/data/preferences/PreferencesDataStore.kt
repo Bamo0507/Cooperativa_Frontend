@@ -14,6 +14,7 @@ class PreferencesDataStore(
     private val hasLoggedInKey = stringPreferencesKey("hasLoggedIn")
     private val user_nameKey = stringPreferencesKey("user_name")
     private val pass_codeKey = stringPreferencesKey("pass_code")
+    private val user_typeKey = stringPreferencesKey("user_type")
 
     override suspend fun setAccessToken(accessToken: String) {
         dataStore.edit { preferences ->
@@ -39,6 +40,12 @@ class PreferencesDataStore(
         }
     }
 
+    override suspend fun setUser_type(user_type: String) {
+        dataStore.edit { preferences ->
+            preferences[user_typeKey] = user_type
+        }
+    }
+
     override suspend fun getAccessToken(): String {
         val preferences = dataStore.data.first()
         return preferences[accessTokenKey] ?: ""
@@ -59,5 +66,8 @@ class PreferencesDataStore(
         return preferences[pass_codeKey] ?: ""
     }
 
-
+    override suspend fun getUser_type(): String {
+        val preferences = dataStore.data.first()
+        return preferences[user_typeKey] ?: "affiliate"
+    }
 }

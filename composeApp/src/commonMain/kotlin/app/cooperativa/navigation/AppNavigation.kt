@@ -1,17 +1,14 @@
 package app.cooperativa.navigation
 
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import app.cooperativa.presentation.login.LoginDestination
 import app.cooperativa.presentation.login.loginScreen
 import app.cooperativa.presentation.mainflow.directiva.DirectivaMainNavigation
 import app.cooperativa.presentation.mainflow.directiva.directivaMainNavigationGraph
-import app.cooperativa.presentation.mainflow.directiva.pagos.dPaymentNavGraph
-import app.cooperativa.presentation.mainflow.directiva.pagos.pagosGeneral.GeneralPaymentDestination
-import app.cooperativa.presentation.mainflow.directiva.splash.SplashDestination
-import app.cooperativa.presentation.mainflow.directiva.splash.directivasplashScreen
+import app.cooperativa.presentation.mainflow.splash.SplashDestination
+import app.cooperativa.presentation.mainflow.splash.directivasplashScreen
 import app.cooperativa.presentation.mainflow.socios.SociosMainNavigation
 import app.cooperativa.presentation.mainflow.socios.sociosMainNavigationGraph
 

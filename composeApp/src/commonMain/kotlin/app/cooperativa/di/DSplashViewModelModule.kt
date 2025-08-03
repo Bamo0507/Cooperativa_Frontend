@@ -1,8 +1,8 @@
 package app.cooperativa.di
 
-import app.cooperativa.presentation.mainflow.directiva.splash.SplashViewModel
+import app.cooperativa.presentation.mainflow.splash.SplashViewModel
 import org.koin.dsl.module
 
 val dsplashmodule = module {
-    factory { SplashViewModel() }
+    factory { SplashViewModel(get()) }
 }

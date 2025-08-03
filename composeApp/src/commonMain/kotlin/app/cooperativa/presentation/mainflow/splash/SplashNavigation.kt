@@ -1,4 +1,4 @@
-package app.cooperativa.presentation.mainflow.directiva.splash
+package app.cooperativa.presentation.mainflow.splash
 
 import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
