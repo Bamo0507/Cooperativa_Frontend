@@ -1,0 +1,6 @@
+query GettingAffiliates {
+    getAllMembers{
+        usuarioId,
+        name
+    }
+}
