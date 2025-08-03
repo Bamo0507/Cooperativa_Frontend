@@ -11,31 +11,27 @@ class CoopLoginRepository(
 ) : LoginRepository {
 
     override suspend fun login(userName: String, passCode: String): LoginResult {
-        val response = clientProvider.client.mutation(
-            LoginMutation(user_name = userName, pass_code = passCode)
-        ).execute()
+        val response = clientProvider.login(userName = userName, passCode = passCode)
 
-        // Si hay errores de transporte o GraphQL-level
         if (response.hasErrors()) {
-            val msgs = response.errors?.joinToString { it.message } ?: "Error desconocido"
+            val msgs = response.errors?.joinToString { it.message } ?: "Error desconocido del servidor"
             return LoginResult.Failure(msgs)
         }
 
         val payload = response.data?.login
             ?: return LoginResult.Failure("Respuesta vacía del servidor")
 
-        // Según tu schema, puede venir Ok o Err
         payload.Ok?.let { okBlock ->
             val token = okBlock.access_token
-            val userType = okBlock.user_type ?: "affiliate" // default si no viene
-            if (token.isNullOrBlank()) {
+            val userType = okBlock.user_type.ifBlank { "affiliate" } // fallback si es vacío
+            if (token.isBlank()) {
                 return LoginResult.Failure("Token inválido recibido")
             }
             return LoginResult.Success(token, userType)
         }
 
         payload.Err?.let { errBlock ->
-            return LoginResult.Failure(errBlock.message ?: "Error sin mensaje")
+            return LoginResult.Failure(errBlock.message)
         }
 
         return LoginResult.Failure("Respuesta no esperada del login")
