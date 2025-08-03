@@ -58,7 +58,7 @@ class CoopLoginRepository(
                 val token = it.access_token
                 if (token.isBlank()) return LoginResult.Failure("Token inválido recibido")
 //                TODO: CAMBIAR PARA TENER EL TYPE QUE MANDE EL BACKEND
-                return LoginResult.Success(token, "affiliate") // default mientras backend envía user_type
+                return LoginResult.Success(token, "directive") // default mientras backend envía user_type
             }
             parsed.Err?.let { return LoginResult.Failure(it.message) }
 

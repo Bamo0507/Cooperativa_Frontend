@@ -24,6 +24,7 @@ import app.cooperativa.navigation.SociosBottomNavBar
 import app.cooperativa.navigation.topLevelDestinationsDirectiva
 import app.cooperativa.navigation.topLevelDestinationsSocios
 import app.cooperativa.presentation.mainflow.directiva.account.dAccountNavGraph
+import app.cooperativa.presentation.mainflow.directiva.manager.dManagerNavGraph
 import app.cooperativa.presentation.mainflow.directiva.pagos.DPaymentNavGraph
 import app.cooperativa.presentation.mainflow.directiva.pagos.dPaymentNavGraph
 import app.cooperativa.presentation.mainflow.directiva.prestamos.dLoanNavGraph
@@ -118,8 +119,8 @@ fun DirectivaMainFlowScreen(
 
             dAccountNavGraph(navController, onLogOutClick, onChangeToSocios)
 
+            dManagerNavGraph(navController)
         }
-
     }
 
 }
