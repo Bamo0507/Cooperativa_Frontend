@@ -98,36 +98,6 @@ fun SAccountScreen(
 //
 //            Spacer(modifier = Modifier.height(40.dp))
 
-            // Boton "Presentar Pago"
-            CoopIconButton(
-                onClick = {},
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(56.dp)
-                    .clip(RoundedCornerShape(50))
-                    .background(CoopTheme.colorScheme.primary),
-                colors = IconButtonDefaults.iconButtonColors(
-                    containerColor = CoopTheme.colorScheme.primary,
-                    contentColor = CoopTheme.colorScheme.onPrimary
-                )
-            ) {
-                Row(
-                    verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = Arrangement.Center,
-                    modifier = Modifier.fillMaxWidth()
-                ) {
-                    Icon(
-                        imageVector = Icons.Default.Payments,
-                        contentDescription = null
-                    )
-                    Spacer(modifier = Modifier.width(8.dp))
-                    CoopText(
-                        text = "Presentar Pago",
-                        fontWeight = FontWeight.Bold
-                    )
-                }
-            }
-
             Spacer(modifier = Modifier.height(20.dp))
 
             // Botón "Cambiar a Directiva"
