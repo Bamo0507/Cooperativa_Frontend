@@ -6,3 +6,26 @@ type History {
   owedCapital: Float
   payedToCapital: Float
 }
+
+input LoginInput {
+  user_name: String!
+  pass_code: String!
+}
+
+type LoginOk {
+  access_token: String!
+  user_type: String!
+}
+
+type LoginErr {
+  message: String!
+}
+
+type LoginPayload {
+  Ok: LoginOk
+  Err: LoginErr
+}
+
+type Mutation {
+  login(input: LoginInput!): LoginPayload
+}

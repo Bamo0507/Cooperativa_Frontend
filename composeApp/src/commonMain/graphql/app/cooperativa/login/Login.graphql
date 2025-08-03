@@ -1,0 +1,11 @@
+mutation login($input: LoginInput!) {
+    login(input: $input) {
+        Ok {
+            access_token
+            user_type
+        }
+        Err {
+            message
+        }
+    }
+}
