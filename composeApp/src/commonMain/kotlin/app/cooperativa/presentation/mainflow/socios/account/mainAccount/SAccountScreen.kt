@@ -20,6 +20,7 @@ import androidx.compose.material.icons.filled.Payments
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButtonDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -27,6 +28,7 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import app.cooperativa.theme.CoopTheme
 import app.cooperativa.theme.components.CoopIconButton
 import app.cooperativa.theme.components.CoopText
@@ -41,16 +43,19 @@ fun SAccountRoute(
     onChangeToDirectiva: () -> Unit,
     viewModel: SAccountViewModel = koinInject()
 ){
+    val state by viewModel.uiState.collectAsStateWithLifecycle()
 
     SAccountScreen(
         onLogOutClick = onLogOutClick,
         onChangeToDirectiva = onChangeToDirectiva,
+        state = state,
         clearPrefs = viewModel::logout
     )
 }
 
 @Composable
 fun SAccountScreen(
+    state: SAccountState,
     onLogOutClick: () -> Unit,
     onChangeToDirectiva: () -> Unit,
     clearPrefs: () -> Unit
@@ -100,37 +105,39 @@ fun SAccountScreen(
 
             Spacer(modifier = Modifier.height(20.dp))
 
-            // Botón "Cambiar a Directiva"
-            CoopIconButton(
-                onClick = onChangeToDirectiva,
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(56.dp)
-                    .clip(RoundedCornerShape(50))
-                    .background(CoopTheme.colorScheme.primary),
-                colors = IconButtonDefaults.iconButtonColors(
-                    containerColor = CoopTheme.colorScheme.primary,
-                    contentColor = CoopTheme.colorScheme.onPrimary
-                )
-            ) {
-                Row(
-                    verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = Arrangement.Center,
-                    modifier = Modifier.fillMaxWidth()
+            if(state.userType == "directive"){
+                // Botón "Cambiar a Directiva"
+                CoopIconButton(
+                    onClick = onChangeToDirectiva,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(56.dp)
+                        .clip(RoundedCornerShape(50))
+                        .background(CoopTheme.colorScheme.primary),
+                    colors = IconButtonDefaults.iconButtonColors(
+                        containerColor = CoopTheme.colorScheme.primary,
+                        contentColor = CoopTheme.colorScheme.onPrimary
+                    )
                 ) {
-                    Icon(
-                        imageVector = Icons.Default.Groups,
-                        contentDescription = null
-                    )
-                    Spacer(modifier = Modifier.width(8.dp))
-                    CoopText(
-                        text = "Cambiar a Directiva",
-                        fontWeight = FontWeight.Bold
-                    )
+                    Row(
+                        verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.Center,
+                        modifier = Modifier.fillMaxWidth()
+                    ) {
+                        Icon(
+                            imageVector = Icons.Default.Groups,
+                            contentDescription = null
+                        )
+                        Spacer(modifier = Modifier.width(8.dp))
+                        CoopText(
+                            text = "Cambiar a Directiva",
+                            fontWeight = FontWeight.Bold
+                        )
+                    }
                 }
+                Spacer(modifier = Modifier.height(20.dp))
             }
 
-            Spacer(modifier = Modifier.height(20.dp))
 
             // Botón "Cerrar Sesión"
             CoopIconButton(
