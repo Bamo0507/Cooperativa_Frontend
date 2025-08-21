@@ -17,6 +17,7 @@ interface DFineManagerRepository {
 class DirectiveFineManagerRepository(
     private val clientProvider: GraphQLClientProvider
 ) : DFineManagerRepository {
+
     // TODO: Implementar en el client cuando se tenga
     override suspend fun submitFine() {
         TODO("Not yet implemented")
