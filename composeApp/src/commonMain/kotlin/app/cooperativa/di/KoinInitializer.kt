@@ -15,6 +15,7 @@ import app.cooperativa.di.directiva.dsolicitudprestamomodule
 import app.cooperativa.di.socios.saccountmodule
 import app.cooperativa.di.socios.shistorialmodule
 import app.cooperativa.di.socios.spagoEnviarModule
+import app.cooperativa.di.socios.spagoErrorModule
 import app.cooperativa.di.socios.spagosStatusModule
 import app.cooperativa.di.socios.sprestamomodule
 import org.koin.core.context.startKoin
@@ -44,7 +45,9 @@ fun getKoinModules() = listOf(
     saccountmodule,
     daccountmodule,
 
-    dfinemanagermodule
+    dfinemanagermodule,
+
+    spagoErrorModule
 )
 
 object KoinHelper {

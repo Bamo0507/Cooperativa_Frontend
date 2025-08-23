@@ -5,6 +5,9 @@ import androidx.navigation.NavGraphBuilder
 import androidx.navigation.navigation
 import app.cooperativa.presentation.mainflow.socios.pagos.agregarPago.SPagoEnviarDestination
 import app.cooperativa.presentation.mainflow.socios.pagos.agregarPago.spagosEnviarScreen
+import app.cooperativa.presentation.mainflow.socios.pagos.pagoError.SPagoErrorDestination
+import app.cooperativa.presentation.mainflow.socios.pagos.pagoError.navigateToSPagoError
+import app.cooperativa.presentation.mainflow.socios.pagos.pagoError.spagoErrorScreen
 import app.cooperativa.presentation.mainflow.socios.pagos.pagoStatus.SPagosStatusDestination
 import app.cooperativa.presentation.mainflow.socios.pagos.pagoStatus.sociosPagosStatusScreen
 import kotlinx.serialization.Serializable
@@ -19,10 +22,23 @@ fun NavGraphBuilder.sPagosNavGraph(
         sociosPagosStatusScreen(
             onAddPaymentClick = {
                 navController.navigate(SPagoEnviarDestination)
+            },
+            onWatchError = { paymentId ->
+                navController.navigateToSPagoError(
+                    destination = SPagoErrorDestination(
+                        paymentId
+                    )
+                )
             }
         )
 
         spagosEnviarScreen(
+            onBackClick = {
+                navController.navigateUp()
+            }
+        )
+
+        spagoErrorScreen(
             onBackClick = {
                 navController.navigateUp()
             }

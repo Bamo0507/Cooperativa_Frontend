@@ -8,11 +8,13 @@ import kotlinx.serialization.Serializable
 data object SPagosStatusDestination
 
 fun NavGraphBuilder.sociosPagosStatusScreen(
-    onAddPaymentClick: () -> Unit
+    onAddPaymentClick: () -> Unit,
+    onWatchError: (String) -> Unit
 ){
     composable<SPagosStatusDestination> {
         SPagosStatusRoute(
-            onAddPaymentClick
+            onAddPaymentClick,
+            onWatchError
         )
     }
 }
