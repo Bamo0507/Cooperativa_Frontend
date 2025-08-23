@@ -1,13 +1,22 @@
 package app.cooperativa.presentation.mainflow.directiva.pagos.fineSelection
 
+import app.cooperativa.utils.formatMoney
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Check
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.*
+import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
@@ -15,7 +24,6 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import kotlinx.datetime.LocalDate
 import org.koin.compose.koinInject
 import org.koin.core.parameter.parametersOf
-import app.cooperativa.data.model.dto.FineType
 import app.cooperativa.presentation.utils.LoadingScreen
 import app.cooperativa.presentation.utils.ErrorScreen
 import app.cooperativa.theme.CoopTheme
@@ -23,6 +31,7 @@ import app.cooperativa.theme.components.CoopButton
 import app.cooperativa.theme.components.CoopOutlinedCard
 import app.cooperativa.theme.components.CoopTopBar
 import app.cooperativa.theme.components.CoopText
+import androidx.compose.foundation.isSystemInDarkTheme
 
 /**
  * Route Composable: handles loading/error and passes to screen when ready
@@ -78,54 +87,105 @@ fun FineSelectionScreen(
             modifier = modifier
                 .verticalScroll(rememberScrollState())
                 .padding(padding)
-                .padding(16.dp),
+                .padding(vertical = 20.dp, horizontal = 24.dp),
             verticalArrangement = Arrangement.spacedBy(12.dp)
         ) {
             CoopText(
                 text = "Usuario: ${state.userName}",
                 fontWeight = FontWeight.Bold,
-                style = MaterialTheme.typography.titleMedium
+                style = MaterialTheme.typography.titleMedium,
+                color = CoopTheme.colorScheme.onSurface
             )
 
+            Box(
+                modifier = Modifier
+                    .clip(RoundedCornerShape(8.dp))
+                    .background(CoopTheme.colorScheme.secondary.copy(alpha = 0.12f))
+                    .padding(horizontal = 10.dp, vertical = 6.dp)
+            ) {
+                CoopText(
+                    text = "Multas (${state.fineDetails.size})",
+                    style = MaterialTheme.typography.labelLarge,
+                    color = CoopTheme.colorScheme.secondary
+                )
+            }
+
             state.fineDetails.forEach { detail ->
-                CoopOutlinedCard(modifier = Modifier.fillMaxWidth()) {
-                    Column(Modifier.padding(12.dp), verticalArrangement = Arrangement.spacedBy(4.dp)) {
-                        CoopText(
-                            text = when(detail.type) {
-                                FineType.LOAN  -> "Préstamo"
-                                FineType.QUOTA -> "Cuota"
-                            },
-                            fontWeight = FontWeight.SemiBold,
-                            style = MaterialTheme.typography.bodyMedium
-                        )
-                        Spacer(modifier = Modifier.height(4.dp))
-                        CoopText(
-                            text = detail.name,
-                            style = MaterialTheme.typography.bodyMedium,
-                            fontWeight = FontWeight.SemiBold,
-                            modifier = Modifier.padding(start = 4.dp)
-                        )
+                Card(
+                    modifier = Modifier.fillMaxWidth(),
+                    shape = RoundedCornerShape(8.dp),
+                    colors = CardDefaults.cardColors(containerColor = CoopTheme.colorScheme.surfaceVariant),
+                    elevation = CardDefaults.cardElevation(defaultElevation = if (isSystemInDarkTheme()) 0.dp else 1.dp)
+                ) {
+                    Column(
+                        modifier = Modifier.padding(12.dp),
+                        verticalArrangement = Arrangement.spacedBy(8.dp)
+                    ) {
+                        Row(
+                            modifier = Modifier.fillMaxWidth(),
+                            verticalAlignment = Alignment.CenterVertically,
+                            horizontalArrangement = Arrangement.Start
+                        ) {
+                            CoopText(
+                                text = detail.name,
+                                style = MaterialTheme.typography.bodyLarge,
+                                fontWeight = FontWeight.SemiBold,
+                                color = CoopTheme.colorScheme.onSurface
+                            )
+                        }
 
                         OutlinedTextField(
                             value = detail.amount,
                             onValueChange = { onAmountChange(detail.id, it) },
                             label = { Text("Monto") },
+                            prefix = { Text("Q ") },
                             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
+                            singleLine = true,
+                            supportingText = { Text("Ingrese el monto de la multa") },
                             modifier = Modifier.fillMaxWidth()
                         )
                     }
                 }
             }
 
-            Spacer(modifier = Modifier.weight(1f))
+            // Resumen de totales
+            val total = state.fineDetails.sumOf { it.amount.toDoubleOrNull() ?: 0.0 }.toFloat()
+            Spacer(modifier = Modifier.height(4.dp))
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                CoopText(
+                    text = "Resumen",
+                    style = MaterialTheme.typography.labelLarge,
+                    fontWeight = FontWeight.SemiBold,
+                    color = CoopTheme.colorScheme.onSurface
+                )
+                CoopText(
+                    text = "Total: ${formatMoney(total)}  (${state.fineDetails.size} multas)",
+                    style = MaterialTheme.typography.bodyMedium,
+                    color = CoopTheme.colorScheme.onSurface.copy(alpha = 0.7f)
+                )
+            }
 
-            Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.End) {
+            Spacer(modifier = Modifier.height(12.dp))
+
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.End
+            ) {
                 CoopButton(
                     onClick = onConfirmClick,
+                    modifier = Modifier
                 ) {
+                    Icon(imageVector = Icons.Filled.Check, contentDescription = null)
+                    Spacer(modifier = Modifier.width(8.dp))
                     Text("Guardar")
                 }
             }
+
+            Spacer(modifier = Modifier.height(12.dp))
         }
     }
 }
