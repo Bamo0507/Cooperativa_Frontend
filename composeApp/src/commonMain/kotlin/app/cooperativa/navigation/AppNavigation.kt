@@ -26,7 +26,7 @@ fun AppNavigation(
 
         loginScreen(
             onLogin = { userType ->
-                if (userType == "directive") {
+                if (userType == "Directive") {
                     navController.navigate(DirectivaMainNavigation) {
                         popUpTo(LoginDestination) { inclusive = true }
                     }

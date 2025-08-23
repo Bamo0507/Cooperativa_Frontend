@@ -22,7 +22,7 @@ class CoopLoginRepository(
     private data class LoginRequest(val user_name: String, val pass_code: String)
 
     @Serializable
-    private data class OkPayload(val access_token: String)
+    private data class OkPayload(val access_token: String, val user_type: String)
 
     @Serializable
     private data class ErrPayload(val message: String)
@@ -37,10 +37,9 @@ class CoopLoginRepository(
         return try {
             val response: HttpResponse = httpClient.request("$baseUrl/general/login") {
                 method = HttpMethod.Get
-                contentType(ContentType.Application.Json)       // <- igual que Insomnia
-                // Si instalaste ContentNegotiation { json(...) }, puedes pasar directamente el objeto:
+                contentType(ContentType.Application.Json)
+
                 setBody(LoginRequest(user_name = userName, pass_code = passCode))
-                // No agregues Accept ni otros headers raros.
             }
 
             val bodyText = response.bodyAsText()
@@ -56,9 +55,11 @@ class CoopLoginRepository(
 
             parsed.Ok?.let {
                 val token = it.access_token
-                if (token.isBlank()) return LoginResult.Failure("Token inválido recibido")
-//                TODO: CAMBIAR PARA TENER EL TYPE QUE MANDE EL BACKEND
-                return LoginResult.Success(token, "directive") // default mientras backend envía user_type
+                val user_type = it.user_type
+
+                if (token.isBlank() || user_type.isBlank()) return LoginResult.Failure("Token inválido recibido")
+
+                return LoginResult.Success(token, user_type)
             }
             parsed.Err?.let { return LoginResult.Failure(it.message) }
 

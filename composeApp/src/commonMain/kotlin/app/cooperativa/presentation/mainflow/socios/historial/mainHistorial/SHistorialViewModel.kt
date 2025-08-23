@@ -44,7 +44,7 @@ class SHistorialViewModel(
                 _uiState.update {
                     it.copy(
                         isLoading = false,
-                        errorMessage = e.message ?: "Error desconocido"
+                        errorMessage = "Error desconocido"
                     )
                 }
             }

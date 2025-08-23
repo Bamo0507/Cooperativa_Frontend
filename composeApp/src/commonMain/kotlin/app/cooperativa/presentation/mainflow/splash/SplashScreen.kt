@@ -58,7 +58,7 @@ fun SplashScreen(
             }
         } else if(!state.isLoading && state.hasLoggedIn){
             // Determine flow according to user type
-            if(state.userType == "directive") {
+            if(state.userType == "Directive") {
                 navController.navigate(DirectivaMainNavigation) {
                     popUpTo(SplashDestination) { inclusive = true }
                 }

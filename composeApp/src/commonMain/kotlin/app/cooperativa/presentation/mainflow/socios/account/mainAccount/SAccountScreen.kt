@@ -105,7 +105,7 @@ fun SAccountScreen(
 
             Spacer(modifier = Modifier.height(20.dp))
 
-            if(state.userType == "directive"){
+            if(state.userType == "Directive"){
                 // Botón "Cambiar a Directiva"
                 CoopIconButton(
                     onClick = onChangeToDirectiva,

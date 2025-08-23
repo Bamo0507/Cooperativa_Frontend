@@ -51,7 +51,7 @@ fun LoginRoute(
 
     LaunchedEffect(state.isLoggedIn, state.userType) {
         if (state.isLoggedIn && state.userType != null) {
-            onLogin(state.userType ?: "affiliate")
+            onLogin(state.userType ?: "General")
         }
     }
 
