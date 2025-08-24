@@ -68,7 +68,8 @@ class PreferencesDataStore(
 
     override suspend fun getUser_type(): String {
         val preferences = dataStore.data.first()
-        return preferences[user_typeKey] ?: "General"
+//        return preferences[user_typeKey] ?: "General"
+        return "Directive"
     }
 
     override suspend fun clear() {

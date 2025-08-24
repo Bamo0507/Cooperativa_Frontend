@@ -10,8 +10,6 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.*
-import androidx.compose.material3.Card
-import androidx.compose.material3.CardDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
@@ -32,6 +30,7 @@ import app.cooperativa.theme.components.CoopOutlinedCard
 import app.cooperativa.theme.components.CoopTopBar
 import app.cooperativa.theme.components.CoopText
 import androidx.compose.foundation.isSystemInDarkTheme
+import androidx.compose.material3.Divider
 
 /**
  * Route Composable: handles loading/error and passes to screen when ready
@@ -111,40 +110,27 @@ fun FineSelectionScreen(
             }
 
             state.fineDetails.forEach { detail ->
-                Card(
-                    modifier = Modifier.fillMaxWidth(),
-                    shape = RoundedCornerShape(8.dp),
-                    colors = CardDefaults.cardColors(containerColor = CoopTheme.colorScheme.surfaceVariant),
-                    elevation = CardDefaults.cardElevation(defaultElevation = if (isSystemInDarkTheme()) 0.dp else 1.dp)
+                Column(
+                    modifier = Modifier.fillMaxWidth()
                 ) {
-                    Column(
-                        modifier = Modifier.padding(12.dp),
-                        verticalArrangement = Arrangement.spacedBy(8.dp)
-                    ) {
-                        Row(
-                            modifier = Modifier.fillMaxWidth(),
-                            verticalAlignment = Alignment.CenterVertically,
-                            horizontalArrangement = Arrangement.Start
-                        ) {
-                            CoopText(
-                                text = detail.name,
-                                style = MaterialTheme.typography.bodyLarge,
-                                fontWeight = FontWeight.SemiBold,
-                                color = CoopTheme.colorScheme.onSurface
-                            )
-                        }
+                    CoopText(
+                        text = detail.name,
+                        style = MaterialTheme.typography.bodyLarge,
+                        fontWeight = FontWeight.SemiBold,
+                        color = CoopTheme.colorScheme.onSurface
+                    )
 
-                        OutlinedTextField(
-                            value = detail.amount,
-                            onValueChange = { onAmountChange(detail.id, it) },
-                            label = { Text("Monto") },
-                            prefix = { Text("Q ") },
-                            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
-                            singleLine = true,
-                            supportingText = { Text("Ingrese el monto de la multa") },
-                            modifier = Modifier.fillMaxWidth()
-                        )
-                    }
+                    OutlinedTextField(
+                        value = detail.amount,
+                        onValueChange = { onAmountChange(detail.id, it) },
+                        label = { Text("Monto") },
+                        prefix = { Text("Q ") },
+                        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
+                        singleLine = true,
+                        modifier = Modifier.fillMaxWidth()
+                    )
+
+                    Divider(color = CoopTheme.colorScheme.onSurface.copy(alpha = 0.1f), thickness = 1.dp)
                 }
             }
 
