@@ -314,8 +314,7 @@ fun FineSection(
     Column(modifier = modifier.fillMaxWidth()) {
         Row(
             modifier = Modifier
-                .fillMaxWidth()
-                .padding(vertical = 4.dp),
+                .fillMaxWidth(),
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
@@ -346,7 +345,7 @@ fun FineSection(
                 onClick = { /* TODO */ },
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(vertical = 4.dp)
+                    .padding(vertical = 12.dp)
             ) {
                 Column(
                     modifier = Modifier.padding(16.dp)
@@ -389,7 +388,9 @@ fun FineSection(
         if(hasLoanFines){
             CoopOutlinedCard(
                 onClick = { /* TODO */ },
-                modifier = Modifier.fillMaxWidth().padding(vertical = 4.dp)
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(vertical = 12.dp)
             ){
                 Column(
                     modifier = Modifier.padding(16.dp)

@@ -113,7 +113,6 @@ fun SPagosStatusScreen(
                     .padding(top=14.dp),
                 verticalArrangement = Arrangement.spacedBy(16.dp)
             ) {
-                // replace with state
                 items(payments.size){idx ->
                     PagoStatusCard(
                         pagoId = payments[idx].pagoId,
