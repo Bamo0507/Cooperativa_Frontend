@@ -43,6 +43,7 @@ class DPaymentsViewModel(
                         pendingPayments = pending,
                         paidPayments = paid,
                         fines = allFines,
+                        allPendingPayments = pending,
                         allPaidPayments = paid,
                         allFinesList = allFines
                     )
@@ -72,19 +73,32 @@ class DPaymentsViewModel(
         val q = query.trim().lowercase()
         val state = _uiState.value
         when (state.selectedTabIndex) {
+            0 -> {
+                val filtered =
+                    if (q.isEmpty()) state.allPendingPayments
+                    else state.pendingPayments.filter {
+                        it.paymentName.lowercase().contains(q) ||
+                        it.username.lowercase().contains(q) ||
+                        it.dateOfPayment.lowercase().contains(q)
+                    }
+                _uiState.update { it.copy(pendingPayments = filtered) }
+            }
             1 -> {
-                val filtered = if (q.isEmpty()) state.allPaidPayments
-                else state.allPaidPayments.filter {
-                    it.paymentName.lowercase().contains(q)
+                val filtered =
+                    if (q.isEmpty()) state.allPaidPayments
+                    else state.allPaidPayments.filter {
+                        it.paymentName.lowercase().contains(q)
                             || it.username.lowercase().contains(q)
-                }
+                                || it.dateOfPayment.lowercase().contains(q)
+                    }
                 _uiState.update { it.copy(paidPayments = filtered) }
             }
             2 -> {
-                val filtered = if (q.isEmpty()) state.allFinesList
-                else state.allFinesList.filter {
-                    it.userName.lowercase().contains(q)
-                }
+                val filtered =
+                    if (q.isEmpty()) state.allFinesList
+                    else state.allFinesList.filter {
+                        it.userName.lowercase().contains(q)
+                    }
                 _uiState.update { it.copy(fines = filtered) }
             }
         }

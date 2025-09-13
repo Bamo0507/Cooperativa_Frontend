@@ -33,12 +33,8 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import org.koin.compose.koinInject
-
 import app.cooperativa.data.model.dto.Fine
 import app.cooperativa.data.model.dto.FineType
-import app.cooperativa.data.model.ui.BasicInfoPayment
-import app.cooperativa.presentation.mainflow.directiva.pagos.pagosGeneral.DPaymentsState
-import app.cooperativa.presentation.mainflow.directiva.pagos.pagosGeneral.DPaymentsViewModel
 import app.cooperativa.presentation.utils.ErrorScreen
 import app.cooperativa.presentation.utils.LoadingScreen
 import app.cooperativa.theme.CoopTheme
@@ -116,6 +112,14 @@ fun DPaymentsScreen(
 
                 when (state.selectedTabIndex) {
                     0 -> {
+                        CoopSearchBar(
+                            query = state.searchQuery,
+                            onQueryChanged = onSearchQueryChange,
+                            placeholder = "Buscar...",
+                            modifier = Modifier
+                                .padding(bottom = 8.dp)
+                        )
+
                         // Pagos pendientes
                         LazyColumn(
                             modifier = Modifier.fillMaxSize(),
@@ -128,6 +132,7 @@ fun DPaymentsScreen(
                                     paymentName = basic.paymentName,
                                     affiliatedName = basic.username,
                                     onPaymentClick = onPendingPaymentClick,
+                                    dateOfPayment = basic.dateOfPayment,
                                     modifier = Modifier
                                         .fillMaxWidth()
                                         .padding(vertical = 2.dp)
@@ -154,6 +159,7 @@ fun DPaymentsScreen(
                                     paymentName = basic.paymentName,
                                     affiliatedName = basic.username,
                                     onPaymentClick = onPaidPaymentClick,
+                                    dateOfPayment = basic.dateOfPayment,
                                     modifier = Modifier
                                         .fillMaxWidth()
                                         .padding(vertical = 2.dp)
@@ -198,6 +204,7 @@ fun PaymentItem(
     idPayment: Int,
     paymentName: String,
     affiliatedName: String,
+    dateOfPayment: String,
     onPaymentClick: (Int) -> Unit,
     modifier: Modifier = Modifier
 ) {
@@ -215,10 +222,19 @@ fun PaymentItem(
             Column {
                 CoopText(
                     text = paymentName,
-                    fontWeight = FontWeight.Bold
+                    fontWeight = FontWeight.Bold,
+                    style = CoopTheme.typography.bodyMedium
                 )
                 Spacer(modifier = Modifier.height(4.dp))
-                CoopText(text = affiliatedName)
+                CoopText(
+                    text = affiliatedName,
+                    style = CoopTheme.typography.bodyMedium
+                )
+                Spacer(modifier = Modifier.height(4.dp))
+                CoopText(
+                    text = dateOfPayment,
+                    style = CoopTheme.typography.bodySmall
+                )
             }
             Spacer(modifier = Modifier.width(8.dp))
             CoopIcon(
