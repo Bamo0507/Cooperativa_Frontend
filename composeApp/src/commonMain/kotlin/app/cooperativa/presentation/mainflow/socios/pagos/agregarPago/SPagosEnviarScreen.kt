@@ -15,6 +15,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.foundation.BorderStroke
+import androidx.compose.foundation.Image
 import app.cooperativa.theme.components.CoopText
 import app.cooperativa.theme.components.CoopOutlinedButton
 import androidx.compose.foundation.layout.size
@@ -70,7 +71,10 @@ import com.mohamedrejeb.calf.io.KmpFile
 import com.mohamedrejeb.calf.picker.FilePickerFileType
 import com.mohamedrejeb.calf.picker.FilePickerSelectionMode
 import com.mohamedrejeb.calf.picker.rememberFilePickerLauncher
+import cooperativa.composeapp.generated.resources.Res
+import cooperativa.composeapp.generated.resources.ic_payment_error
 import org.jetbrains.compose.resources.Font
+import org.jetbrains.compose.resources.painterResource
 
 @Composable
 fun SPagoEnviarRoute(
@@ -127,6 +131,12 @@ fun SPagoEnviarScreen(
     var showFirstTimeHelp by rememberSaveable { mutableStateOf(false) }
     LaunchedEffect(state.hasSentPayment) {
         showFirstTimeHelp = !state.hasSentPayment
+    }
+    var showAmountMismatchDialog by rememberSaveable { mutableStateOf(false) }
+    LaunchedEffect(state.errorMontoPago) {
+        if (state.errorMontoPago) {
+            showAmountMismatchDialog = true
+        }
     }
     // File picker for selecting or changing the proof‑of‑payment image
     val picker = rememberFilePickerLauncher(
@@ -510,26 +520,15 @@ fun SPagoEnviarScreen(
                 }
             }
 
-            // Mensaje de validación de monto
             item {
-                if (state.errorMontoPago) {
-                    CoopText(
-                        text = "El monto declarado no coincide con los datos seleccionados.",
-                        style = CoopTheme.typography.bodyMedium,
-                        color = CoopTheme.colorScheme.error,
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(horizontal = 12.dp, vertical = 4.dp)
-                    )
-                }
-            }
-
-            item {
-                Spacer(modifier = Modifier.height(56.dp))
+                Spacer(modifier = Modifier.height(64.dp))
             }
         }
         if (showFirstTimeHelp) {
             FirstTimeHelpDialog(onDismiss = { showFirstTimeHelp = false })
+        }
+        if (showAmountMismatchDialog) {
+            AmountMismatchDialog(onDismiss = { showAmountMismatchDialog = false })
         }
     }
 }
@@ -596,6 +595,51 @@ private fun FirstTimeHelpDialog(onDismiss: () -> Unit) {
                 CoopButton(
                     onClick = onDismiss
                 ) {
+                    CoopText(
+                        text = "Entendido",
+                        color = CoopTheme.colorScheme.onPrimary
+                    )
+                }
+            }
+        },
+        containerColor = CoopTheme.colorScheme.surface
+    )
+}
+
+@Composable
+private fun AmountMismatchDialog(onDismiss: () -> Unit) {
+    AlertDialog(
+        onDismissRequest = onDismiss,
+        icon = {
+            Image(
+                painter = painterResource(Res.drawable.ic_payment_error),
+                contentDescription = null,
+                modifier = Modifier.size(48.dp)
+            )
+        },
+        title = {
+            CoopText(
+                text = "Montos no coinciden",
+                style = CoopTheme.typography.titleMedium,
+                color = CoopTheme.colorScheme.onSurface,
+                textAlign = TextAlign.Center,
+                fontWeight = FontWeight.Bold
+            )
+        },
+        text = {
+            CoopText(
+                text = "El total que declaraste no coincide con la suma de los pagos.\nRevisa los montos antes de continuar.",
+                style = CoopTheme.typography.bodyMedium,
+                color = CoopTheme.colorScheme.onSurface,
+                textAlign = TextAlign.Center
+            )
+        },
+        confirmButton = {
+            Box(
+                modifier = Modifier.fillMaxWidth(),
+                contentAlignment = Alignment.Center
+            ) {
+                CoopButton(onClick = onDismiss) {
                     CoopText(
                         text = "Entendido",
                         color = CoopTheme.colorScheme.onPrimary
