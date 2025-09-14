@@ -266,7 +266,7 @@ fun FilterChipsRow(
     onSelect: (Int) -> Unit,
     modifier: Modifier = Modifier
 ) {
-    val chipOptions = listOf("Pendientes", "Pagados", "Moras")
+    val chipOptions = listOf("Pendientes", "Pagados", "Multas")
 
     Row(
         modifier = modifier
