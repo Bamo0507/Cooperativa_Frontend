@@ -31,6 +31,7 @@ import app.cooperativa.theme.components.CoopTopBar
 import app.cooperativa.theme.components.CoopText
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material3.Divider
+import app.cooperativa.theme.components.CoopOutlinedTextField
 
 /**
  * Route Composable: handles loading/error and passes to screen when ready
@@ -120,7 +121,7 @@ fun FineSelectionScreen(
                         color = CoopTheme.colorScheme.onSurface
                     )
 
-                    OutlinedTextField(
+                    CoopOutlinedTextField(
                         value = detail.amount,
                         onValueChange = { onAmountChange(detail.id, it) },
                         label = { Text("Monto") },
@@ -130,7 +131,7 @@ fun FineSelectionScreen(
                         modifier = Modifier.fillMaxWidth()
                     )
 
-                    Divider(color = CoopTheme.colorScheme.onSurface.copy(alpha = 0.1f), thickness = 1.dp)
+                    Spacer(modifier = Modifier.height(8.dp))
                 }
             }
 
