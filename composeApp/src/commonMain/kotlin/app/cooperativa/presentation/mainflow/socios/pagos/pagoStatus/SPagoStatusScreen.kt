@@ -32,6 +32,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import app.cooperativa.data.model.dto.Estados
@@ -158,49 +159,68 @@ fun PagoStatusCard(
             verticalAlignment = Alignment.CenterVertically
         ){
             Column(
+                modifier = Modifier
+                    .weight(1f)
+                    .padding(end = 12.dp),
                 verticalArrangement = Arrangement.SpaceAround
-            ){
+            ) {
                 CoopText(
                     text = nombrePago,
                     style = CoopTheme.typography.bodyLarge,
                     fontWeight = FontWeight.Bold,
-                    color = CoopTheme.colorScheme.onSurface
+                    color = CoopTheme.colorScheme.onSurface,
+                    maxLines = 1,
+                    overflow = TextOverflow.Ellipsis
                 )
-
                 CoopText(
                     text = getStatusText(estado),
                     style = CoopTheme.typography.bodyMedium,
                     fontWeight = FontWeight.Bold,
-                    color = colorText
+                    color = colorText,
+                    maxLines = 1,
+                    overflow = TextOverflow.Ellipsis
                 )
             }
 
-            Spacer(modifier = Modifier.weight(1f))
-
             when (estado) {
                 Estados.RECHAZADO -> {
-                    CoopIcon(
-                        Icons.Outlined.ErrorOutline,
-                        contentDescription = "Error en Pago",
-                        tint = CoopTheme.colorScheme.rejected,
-                        modifier = Modifier.background(Color.Transparent)
-                    )
+                    Box(
+                        modifier = Modifier.size(24.dp),
+                        contentAlignment = Alignment.Center
+                    ) {
+                        CoopIcon(
+                            Icons.Outlined.ErrorOutline,
+                            contentDescription = "Error en Pago",
+                            tint = CoopTheme.colorScheme.rejected,
+                            modifier = Modifier.size(24.dp).background(Color.Transparent)
+                        )
+                    }
                 }
                 Estados.APROBADO -> {
-                    CoopIcon(
-                        Icons.Outlined.CheckCircle,
-                        contentDescription = "Pago aprobado",
-                        tint = CoopTheme.colorScheme.approved,
-                        modifier = Modifier.background(Color.Transparent)
-                    )
+                    Box(
+                        modifier = Modifier.size(24.dp),
+                        contentAlignment = Alignment.Center
+                    ) {
+                        CoopIcon(
+                            Icons.Outlined.CheckCircle,
+                            contentDescription = "Pago aprobado",
+                            tint = CoopTheme.colorScheme.approved,
+                            modifier = Modifier.size(24.dp).background(Color.Transparent)
+                        )
+                    }
                 }
                 Estados.PENDIENTE -> {
-                    CoopIcon(
-                        Icons.Outlined.Schedule,
-                        contentDescription = "Pago en revisión",
-                        tint = CoopTheme.colorScheme.pending,
-                        modifier = Modifier.background(Color.Transparent)
-                    )
+                    Box(
+                        modifier = Modifier.size(24.dp),
+                        contentAlignment = Alignment.Center
+                    ) {
+                        CoopIcon(
+                            Icons.Outlined.Schedule,
+                            contentDescription = "Pago en revisión",
+                            tint = CoopTheme.colorScheme.pending,
+                            modifier = Modifier.size(24.dp).background(Color.Transparent)
+                        )
+                    }
                 }
             }
         }

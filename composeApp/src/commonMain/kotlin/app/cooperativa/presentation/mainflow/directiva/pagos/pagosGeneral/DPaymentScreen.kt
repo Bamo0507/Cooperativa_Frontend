@@ -14,6 +14,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.layout.size
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material3.IconButton
@@ -31,6 +32,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import org.koin.compose.koinInject
@@ -230,32 +232,48 @@ fun PaymentItem(
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(16.dp),
-            horizontalArrangement = Arrangement.SpaceBetween,
+            horizontalArrangement = Arrangement.Start,
             verticalAlignment = Alignment.CenterVertically
         ) {
-            Column {
+            Column(
+                modifier = Modifier.weight(1f)
+            ) {
                 CoopText(
                     text = paymentName,
                     fontWeight = FontWeight.Bold,
-                    style = CoopTheme.typography.bodyMedium
+                    style = CoopTheme.typography.bodyMedium,
+                    maxLines = 1,
+                    overflow = TextOverflow.Ellipsis
                 )
                 Spacer(modifier = Modifier.height(4.dp))
                 CoopText(
                     text = affiliatedName,
-                    style = CoopTheme.typography.bodyMedium
+                    style = CoopTheme.typography.bodyMedium,
+                    maxLines = 1,
+                    overflow = TextOverflow.Ellipsis
                 )
                 Spacer(modifier = Modifier.height(4.dp))
                 CoopText(
                     text = dateOfPayment,
-                    style = CoopTheme.typography.bodySmall
+                    style = CoopTheme.typography.bodySmall,
+                    maxLines = 1,
+                    overflow = TextOverflow.Ellipsis
                 )
             }
-            Spacer(modifier = Modifier.width(8.dp))
-            CoopIcon(
-                imageVector = Icons.Filled.ArrowForward,
-                contentDescription = "Ir al detalle",
-                tint = CoopTheme.colorScheme.secondary
-            )
+
+            Spacer(modifier = Modifier.width(12.dp))
+
+            Box(
+                modifier = Modifier.size(24.dp),
+                contentAlignment = Alignment.Center
+            ) {
+                CoopIcon(
+                    imageVector = Icons.Filled.ArrowForward,
+                    contentDescription = "Ir al detalle",
+                    tint = CoopTheme.colorScheme.secondary,
+                    modifier = Modifier.size(24.dp)
+                )
+            }
         }
     }
 }
