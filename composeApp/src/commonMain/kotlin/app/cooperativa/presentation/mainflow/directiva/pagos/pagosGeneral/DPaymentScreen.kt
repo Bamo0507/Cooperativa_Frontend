@@ -13,6 +13,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.Image
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material3.IconButton
@@ -45,6 +46,9 @@ import app.cooperativa.theme.components.CoopText
 import app.cooperativa.theme.components.CoopTopBar
 import app.cooperativa.theme.utils.dateToString
 import app.cooperativa.utils.formatMoney
+import org.jetbrains.compose.resources.painterResource
+import cooperativa.composeapp.generated.resources.Res
+import cooperativa.composeapp.generated.resources.ic_no_results
 
 /**
  * Route: inyecta ViewModel y observa el estado para la pantalla de Pagos.
@@ -119,24 +123,26 @@ fun DPaymentsScreen(
                             modifier = Modifier
                                 .padding(bottom = 8.dp)
                         )
-
-                        // Pagos pendientes
-                        LazyColumn(
-                            modifier = Modifier.fillMaxSize(),
-                            contentPadding = PaddingValues(vertical = 8.dp),
-                            verticalArrangement = Arrangement.spacedBy(8.dp)
-                        ) {
-                            items(state.pendingPayments) { basic ->
-                                PaymentItem(
-                                    idPayment = basic.id,
-                                    paymentName = basic.paymentName,
-                                    affiliatedName = basic.username,
-                                    onPaymentClick = onPendingPaymentClick,
-                                    dateOfPayment = basic.dateOfPayment,
-                                    modifier = Modifier
-                                        .fillMaxWidth()
-                                        .padding(vertical = 2.dp)
-                                )
+                        if (state.pendingPayments.isEmpty()) {
+                            NoResultsView()
+                        } else {
+                            LazyColumn(
+                                modifier = Modifier.fillMaxSize(),
+                                contentPadding = PaddingValues(vertical = 8.dp),
+                                verticalArrangement = Arrangement.spacedBy(8.dp)
+                            ) {
+                                items(state.pendingPayments) { basic ->
+                                    PaymentItem(
+                                        idPayment = basic.id,
+                                        paymentName = basic.paymentName,
+                                        affiliatedName = basic.username,
+                                        onPaymentClick = onPendingPaymentClick,
+                                        dateOfPayment = basic.dateOfPayment,
+                                        modifier = Modifier
+                                            .fillMaxWidth()
+                                            .padding(vertical = 2.dp)
+                                    )
+                                }
                             }
                         }
                     }
@@ -148,22 +154,26 @@ fun DPaymentsScreen(
                             modifier = Modifier
                                 .padding(bottom = 8.dp)
                         )
-                        LazyColumn(
-                            modifier = Modifier.fillMaxSize(),
-                            contentPadding = PaddingValues(vertical = 8.dp),
-                            verticalArrangement = Arrangement.spacedBy(8.dp)
-                        ) {
-                            items(state.paidPayments) { basic ->
-                                PaymentItem(
-                                    idPayment = basic.id,
-                                    paymentName = basic.paymentName,
-                                    affiliatedName = basic.username,
-                                    onPaymentClick = onPaidPaymentClick,
-                                    dateOfPayment = basic.dateOfPayment,
-                                    modifier = Modifier
-                                        .fillMaxWidth()
-                                        .padding(vertical = 2.dp)
-                                )
+                        if (state.paidPayments.isEmpty()) {
+                            NoResultsView()
+                        } else {
+                            LazyColumn(
+                                modifier = Modifier.fillMaxSize(),
+                                contentPadding = PaddingValues(vertical = 8.dp),
+                                verticalArrangement = Arrangement.spacedBy(8.dp)
+                            ) {
+                                items(state.paidPayments) { basic ->
+                                    PaymentItem(
+                                        idPayment = basic.id,
+                                        paymentName = basic.paymentName,
+                                        affiliatedName = basic.username,
+                                        onPaymentClick = onPaidPaymentClick,
+                                        dateOfPayment = basic.dateOfPayment,
+                                        modifier = Modifier
+                                            .fillMaxWidth()
+                                            .padding(vertical = 2.dp)
+                                    )
+                                }
                             }
                         }
                     }
@@ -175,19 +185,23 @@ fun DPaymentsScreen(
                             modifier = Modifier
                                 .padding(bottom = 8.dp)
                         )
-                        LazyColumn(
-                            modifier = Modifier.fillMaxSize(),
-                            contentPadding = PaddingValues(vertical = 8.dp),
-                            verticalArrangement = Arrangement.spacedBy(8.dp)
-                        ) {
-                            items(state.fines) { fine ->
-                                FineSection(
-                                    fine = fine,
-                                    modifier = Modifier
-                                        .fillMaxWidth()
-                                        .padding(vertical = 4.dp),
-                                    onFineClick = onFineClick
-                                )
+                        if (state.fines.isEmpty()) {
+                            NoResultsView()
+                        } else {
+                            LazyColumn(
+                                modifier = Modifier.fillMaxSize(),
+                                contentPadding = PaddingValues(vertical = 8.dp),
+                                verticalArrangement = Arrangement.spacedBy(8.dp)
+                            ) {
+                                items(state.fines) { fine ->
+                                    FineSection(
+                                        fine = fine,
+                                        modifier = Modifier
+                                            .fillMaxWidth()
+                                            .padding(vertical = 4.dp),
+                                        onFineClick = onFineClick
+                                    )
+                                }
                             }
                         }
                     }
@@ -434,5 +448,28 @@ fun FineSection(
             }
         }
 
+    }
+}
+
+@Composable
+private fun NoResultsView() {
+    Column(
+        modifier = Modifier
+            .fillMaxSize(),
+        verticalArrangement = Arrangement.Center,
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
+        Image(
+            painter = painterResource(Res.drawable.ic_no_results),
+            contentDescription = "Sin resultados"
+        )
+        CoopText(
+            text = "No hay resultados",
+            fontWeight = FontWeight.Bold,
+            style = CoopTheme.typography.titleMedium,
+            textAlign = TextAlign.Center,
+            modifier = Modifier.padding(vertical = 6.dp)
+        )
+        Spacer(modifier = Modifier.height(16.dp))
     }
 }
