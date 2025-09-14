@@ -234,8 +234,9 @@ fun SPagoEnviarScreen(
                         onItemSelected = { cuotaToAdd = it },
                         itemToString = { it.nombreAsociado },
                         modifier = Modifier.weight(1.3f),
-                        label = { CoopText("Selecciona...") },
-                        placeholder = { CoopText("Elige") }
+                        label = { CoopText("Selecciona") },
+                        placeholder = { CoopText("Elige") },
+                        truncateSingleLine = true
                     )
                     Spacer(modifier = Modifier.width(8.dp))
                     CoopOutlinedTextField(
@@ -302,8 +303,9 @@ fun SPagoEnviarScreen(
                         onItemSelected = { loanToAdd = it },
                         itemToString = { it.nombrePago },
                         modifier = Modifier.weight(1.3f),
-                        label = { CoopText("Selecciona...") },
-                        placeholder = { CoopText("Elige") }
+                        label = { CoopText("Selecciona") },
+                        placeholder = { CoopText("Elige") },
+                        truncateSingleLine = true
                     )
                     Spacer(modifier = Modifier.width(8.dp))
                     CoopOutlinedTextField(
@@ -370,8 +372,9 @@ fun SPagoEnviarScreen(
                         onItemSelected = { fineToAdd = it },
                         itemToString = { it.fineName },
                         modifier = Modifier.weight(1.3f),
-                        label = { CoopText("Selecciona...") },
-                        placeholder = { CoopText("Elige") }
+                        label = { CoopText("Selecciona") },
+                        placeholder = { CoopText("Elige") },
+                        truncateSingleLine = true
                     )
                     Spacer(modifier = Modifier.width(8.dp))
                     CoopOutlinedTextField(
@@ -440,8 +443,9 @@ fun SPagoEnviarScreen(
                         onItemSelected = { userToAdd = it },
                         itemToString = { it.name },
                         modifier = Modifier.weight(1.3f),
-                        label = { CoopText("Selecciona...") },
-                        placeholder = { CoopText("Elige") }
+                        label = { CoopText("Selecciona") },
+                        placeholder = { CoopText("Elige") },
+                        truncateSingleLine = true
                     )
                     Spacer(modifier = Modifier.width(8.dp))
                     CoopOutlinedTextField(
