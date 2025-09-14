@@ -2,6 +2,7 @@ package app.cooperativa.data.preferences
 
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
+import androidx.datastore.preferences.core.booleanPreferencesKey
 import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.core.stringPreferencesKey
 import app.cooperativa.domain.localstorage.PreferencesLocalStorage
@@ -15,6 +16,20 @@ class PreferencesDataStore(
     private val user_nameKey = stringPreferencesKey("user_name")
     private val pass_codeKey = stringPreferencesKey("pass_code")
     private val user_typeKey = stringPreferencesKey("user_type")
+    private val hasSentPaymentKey = booleanPreferencesKey("hasSentPayment")
+
+    override suspend fun hasSentPayment(): Boolean {
+        val preferences = dataStore.data.first()
+        val hasSentValue = preferences[hasSentPaymentKey] ?: false
+
+        if(!hasSentValue){
+            dataStore.edit { preferences ->
+                preferences[hasSentPaymentKey] = true
+            }
+            return false
+        }
+        return hasSentValue
+    }
 
     override suspend fun setAccessToken(accessToken: String) {
         dataStore.edit { preferences ->

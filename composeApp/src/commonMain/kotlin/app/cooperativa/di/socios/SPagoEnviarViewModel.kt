@@ -10,6 +10,6 @@ val spagoEnviarModule = module {
     single<SPagoEnviarRepository> { MockSociosPagoEnviarRepository() }
 
     factory {
-        SPagoEnviarViewModel(get())
+        SPagoEnviarViewModel(get(), get())
     }
 }

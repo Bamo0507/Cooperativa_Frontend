@@ -10,8 +10,15 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
+import androidx.compose.material3.AlertDialog
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.foundation.BorderStroke
 import app.cooperativa.theme.components.CoopText
 import app.cooperativa.theme.components.CoopOutlinedButton
+import androidx.compose.foundation.layout.size
+import app.cooperativa.theme.components.CoopButton
 import androidx.compose.material.icons.filled.CloudUpload
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -53,6 +60,7 @@ import app.cooperativa.theme.components.CoopDropdown
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.text.font.FontWeight
 import app.cooperativa.theme.components.CoopText
 import app.cooperativa.data.model.dto.CapitalContribution
 import app.cooperativa.utils.formatMoney
@@ -62,6 +70,7 @@ import com.mohamedrejeb.calf.io.KmpFile
 import com.mohamedrejeb.calf.picker.FilePickerFileType
 import com.mohamedrejeb.calf.picker.FilePickerSelectionMode
 import com.mohamedrejeb.calf.picker.rememberFilePickerLauncher
+import org.jetbrains.compose.resources.Font
 
 @Composable
 fun SPagoEnviarRoute(
@@ -115,6 +124,10 @@ fun SPagoEnviarScreen(
     onRemoveCapitalContribution: (CapitalContribution) -> Unit,
     modifier: Modifier = Modifier
 ) {
+    var showFirstTimeHelp by rememberSaveable { mutableStateOf(false) }
+    LaunchedEffect(state.hasSentPayment) {
+        showFirstTimeHelp = !state.hasSentPayment
+    }
     // File picker for selecting or changing the proof‑of‑payment image
     val picker = rememberFilePickerLauncher(
         type = FilePickerFileType.Image,
@@ -515,6 +528,9 @@ fun SPagoEnviarScreen(
                 Spacer(modifier = Modifier.height(56.dp))
             }
         }
+        if (showFirstTimeHelp) {
+            FirstTimeHelpDialog(onDismiss = { showFirstTimeHelp = false })
+        }
     }
 }
 
@@ -537,4 +553,56 @@ fun ImagePreview(
             contentDescription = null
         )
     }
+}
+
+@Composable
+private fun FirstTimeHelpDialog(onDismiss: () -> Unit) {
+    AlertDialog(
+        onDismissRequest = onDismiss,
+        icon = {
+            Icon(
+                imageVector = Icons.Default.CloudUpload,
+                contentDescription = null,
+                tint = CoopTheme.colorScheme.onPrimary,
+                modifier = Modifier.size(36.dp)
+            )
+        },
+        title = {
+            CoopText(
+                text = "¿Cómo presentar tu pago?",
+                style = CoopTheme.typography.titleMedium,
+                color = CoopTheme.colorScheme.onSurface,
+                textAlign = TextAlign.Center,
+                fontWeight = FontWeight.Bold
+            )
+        },
+        text = {
+            CoopText(
+                text = "1) Completa Nombre, monto, número de cuenta y boleta.\n" +
+                       "2) Agregar datos: Cuotas, Préstamos, Multas y Aportes de Capital.\n" +
+                       "3) Carga una foto del comprobante con “Cargar imagen”.\n" +
+                       "4) Verifica que el Monto declarado coincida con la suma de lo indicado.\n" +
+                       "5) Toca “Enviar” para presentar tu pago.",
+                style = CoopTheme.typography.bodyMedium,
+                color = CoopTheme.colorScheme.onSurface,
+                textAlign = TextAlign.Center
+            )
+        },
+        confirmButton = {
+            Box(
+                modifier = Modifier.fillMaxWidth(),
+                contentAlignment = Alignment.Center
+            ) {
+                CoopButton(
+                    onClick = onDismiss
+                ) {
+                    CoopText(
+                        text = "Entendido",
+                        color = CoopTheme.colorScheme.onPrimary
+                    )
+                }
+            }
+        },
+        containerColor = CoopTheme.colorScheme.surface
+    )
 }

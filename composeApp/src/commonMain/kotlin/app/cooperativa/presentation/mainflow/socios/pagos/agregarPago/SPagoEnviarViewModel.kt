@@ -11,6 +11,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import app.cooperativa.data.model.dto.CapitalContribution
+import app.cooperativa.domain.localstorage.PreferencesLocalStorage
 import app.cooperativa.domain.share.convertHeicToJpeg
 import com.mohamedrejeb.calf.core.PlatformContext
 import com.mohamedrejeb.calf.io.KmpFile
@@ -20,6 +21,7 @@ import kotlinx.coroutines.flow.update
 
 class SPagoEnviarViewModel(
     private val repository: SPagoEnviarRepository,
+    private val prefs: PreferencesLocalStorage,
     private val userId: Int = 1 // TODO: Delete and use local storage inyection instead
 ) : ViewModel() {
     private val _uiState: MutableStateFlow<SPagoEnviarState> = MutableStateFlow(
@@ -114,6 +116,15 @@ class SPagoEnviarViewModel(
                 errorMessage = null
             )
             try {
+                // Cargar si el usuario ya habia accedido
+                val hasSentPayment = prefs.hasSentPayment()
+
+                _uiState.update {
+                    it.copy(
+                        hasSentPayment = hasSentPayment
+                    )
+                }
+
                 // Carga de datos del repositorio
                 val cuotas = repository.getCuotasMensualesPendientes()
                 val prestamos = repository.getPrestamoCuotasByUser(userId)

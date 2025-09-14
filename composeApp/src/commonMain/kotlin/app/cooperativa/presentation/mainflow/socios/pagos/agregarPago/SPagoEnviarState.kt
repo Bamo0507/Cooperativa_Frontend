@@ -12,6 +12,8 @@ data class SPagoEnviarState(
     val numberoCuenta: String = "",
     val numeroBoleta: String = "",
 
+    val hasSentPayment: Boolean = true,
+
     val cuotasDisponibles: List<QuotaAffiliate> = emptyList(),
     val prestamosDisponibles: List<LoanQuota> = emptyList(),
     val multasDisponibles: List<FinePayAffiliate> = emptyList(),
