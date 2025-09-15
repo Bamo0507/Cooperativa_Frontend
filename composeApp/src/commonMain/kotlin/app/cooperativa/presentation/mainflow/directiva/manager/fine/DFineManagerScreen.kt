@@ -108,10 +108,18 @@ fun DFineManagerScreen(
 
                 CoopOutlinedTextField(
                     value = state.fineName,
-                    onValueChange = updateFineName,
+                    onValueChange = { input ->
+                        val sanitized = input
+                            .replace("\n", " ")
+                            .replace("\r", " ")
+                            .take(20)
+                        updateFineName(sanitized)
+                    },
                     label = { Text("Nombre de Multa") },
                     placeholder = { Text("Ingrese nombre") },
                     isError = false,
+                    singleLine = true,
+                    maxLines = 1,
                     modifier = Modifier.padding(vertical = 6.dp)
                 )
 

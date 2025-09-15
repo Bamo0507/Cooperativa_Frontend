@@ -174,10 +174,16 @@ fun SPagoEnviarScreen(
             item {
                 CoopOutlinedTextField(
                     value = state.nombrePago,
-                    onValueChange = onNombreChange,
+                    onValueChange = { input ->
+                        // Sin saltos de línea y con tope de 20 chars
+                        val sanitized = input.replace("\n", " ").replace("\r", " ").take(20)
+                        onNombreChange(sanitized)
+                    },
                     label = { Text("Nombre") },
                     placeholder = { Text("Ingrese nombre") },
                     isError = false,
+                    singleLine = true,
+                    maxLines = 1
                 )
             }
             item {

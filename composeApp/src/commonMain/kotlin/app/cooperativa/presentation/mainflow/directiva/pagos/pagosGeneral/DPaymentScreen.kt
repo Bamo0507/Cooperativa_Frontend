@@ -348,7 +348,6 @@ fun FineSection(
             modifier = Modifier
                 .fillMaxWidth(),
             verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.SpaceBetween
         ) {
             CoopText(
                 text = fine.userName,
@@ -356,19 +355,23 @@ fun FineSection(
                 textAlign = TextAlign.Start,
                 style = CoopTheme.typography.bodyLarge,
                 color = CoopTheme.colorScheme.onSecondary,
+                maxLines = 1,
+                overflow = TextOverflow.Ellipsis,
+                modifier = Modifier
+                    .weight(1f)
+                    .padding(end = 8.dp)
             )
-            Box(
-                contentAlignment = Alignment.CenterEnd
-            ){
-                IconButton(onClick = { onFineClick(fine.userId) }) {
-                    CoopIcon(
-                        imageVector = Icons.Filled.Edit,
-                        contentDescription = "Editar mora",
-                        tint = CoopTheme.colorScheme.tertiary,
-                        modifier = Modifier.fillMaxWidth()
-                    )
-                }
 
+            IconButton(
+                onClick = { onFineClick(fine.userId) },
+                modifier = Modifier.size(40.dp)
+            ) {
+                CoopIcon(
+                    imageVector = Icons.Filled.Edit,
+                    contentDescription = "Editar mora",
+                    tint = CoopTheme.colorScheme.tertiary,
+                    modifier = Modifier.size(22.dp)
+                )
             }
         }
 

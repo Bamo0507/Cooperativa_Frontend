@@ -49,9 +49,13 @@ class DFineManagerViewModel(
     }
 
     fun updateFineName(name: String) {
-        _uiState.value = _uiState.value.copy(
-            fineName = name
-        )
+        val sanitized = name
+            .replace("\n", " ")
+            .replace("\r", " ")
+            .take(20)
+        _uiState.update { it.copy(
+            fineName = sanitized
+        ) }
     }
 
     fun updateFineAmount(amount: String) {
