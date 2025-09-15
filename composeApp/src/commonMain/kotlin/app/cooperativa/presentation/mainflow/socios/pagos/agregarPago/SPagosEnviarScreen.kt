@@ -16,11 +16,16 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.CloudUpload
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.Send
+import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.Edit
+import androidx.compose.material.icons.filled.CreditCard
+import androidx.compose.material.icons.filled.Receipt
+import androidx.compose.material.icons.filled.Wallet
 import androidx.compose.material3.AlertDialog
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.ExtendedFloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -159,14 +164,24 @@ fun SPagoEnviarScreen(
             verticalArrangement = Arrangement.spacedBy(6.dp)
         ) {
             item {
+                CoopText(
+                    text = "Información Básica",
+                    style = CoopTheme.typography.titleMedium,
+                    modifier = Modifier.padding(top = 8.dp, bottom = 4.dp),
+                    fontWeight = FontWeight.Bold
+                )
+            }
+            item {
                 CoopOutlinedTextField(
                     value = state.nombrePago,
                     onValueChange = onNombreChange,
                     label = { Text("Nombre") },
                     placeholder = { Text("Ingrese nombre") },
                     isError = false,
-                    modifier = Modifier.padding(vertical = 6.dp)
                 )
+            }
+            item {
+                Spacer(modifier = Modifier.height(4.dp))
             }
             item {
                 CoopOutlinedTextField(
@@ -178,12 +193,14 @@ fun SPagoEnviarScreen(
                     isError = false,
                     keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Decimal),
                     singleLine = true,
-                    modifier = Modifier.padding(vertical = 6.dp),
                     digitsOnly = true,
                     allowDecimal = true,
                     allowNegative = false,
                     maxDecimalPlaces = 2
                 )
+            }
+            item {
+                Spacer(modifier = Modifier.height(4.dp))
             }
             item {
                 CoopOutlinedTextField(
@@ -193,8 +210,10 @@ fun SPagoEnviarScreen(
                     placeholder = { Text("Solo dígitos") },
                     keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
                     isError = false,
-                    modifier = Modifier.padding(vertical = 6.dp)
                 )
+            }
+            item {
+                Spacer(modifier = Modifier.height(4.dp))
             }
             item {
                 CoopOutlinedTextField(
@@ -204,59 +223,62 @@ fun SPagoEnviarScreen(
                     placeholder = { Text("Solo dígitos") },
                     keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
                     isError = false,
-                    modifier = Modifier.padding(vertical = 6.dp)
                 )
+            }
+            item {
+                Spacer(modifier = Modifier.height(4.dp))
             }
             // Sección Cuotas
             item {
                 CoopText(
                     text = "Cuotas",
                     style = CoopTheme.typography.titleMedium,
-                    modifier = Modifier.padding(vertical = 4.dp)
+                    modifier = Modifier.padding(top = 12.dp, bottom = 8.dp),
+                    fontWeight = FontWeight.Bold
                 )
             }
             item {
                 var cuotaToAdd by remember { mutableStateOf<QuotaAffiliate?>(null) }
-                Row(
-                    modifier = Modifier
-                        .fillMaxWidth(),
-                    verticalAlignment = Alignment.CenterVertically
+                CoopDropdown(
+                    items = state.cuotasDisponibles,
+                    selectedItem = cuotaToAdd,
+                    onItemSelected = { cuotaToAdd = it },
+                    itemToString = { it.nombreAsociado },
+                    modifier = Modifier.fillMaxWidth(),
+                    placeholder = { CoopText("Elige") },
+                    truncateSingleLine = true,
+                    forceExternalLabel = true
+                )
+                Spacer(modifier = Modifier.height(8.dp))
+                CoopOutlinedTextField(
+                    value = cuotaToAdd?.montoCuota?.toString() ?: "",
+                    onValueChange = {},
+                    label = { CoopText("Monto") },
+                    placeholder = { CoopText("Monto") },
+                    prefix = { Text("Q ") },
+                    readOnly = true,
+                    enabled = true,
+                    isError = false,
+                    containerColor = CoopTheme.colorScheme.surfaceVariant,
+                    contentColor = CoopTheme.colorScheme.onSurface,
+                    modifier = Modifier.fillMaxWidth(),
+                    borderColor = CoopTheme.colorScheme.primary
+                )
+                Spacer(modifier = Modifier.height(8.dp))
+                CoopButton(
+                    onClick = {
+                        cuotaToAdd?.let {
+                            onAddCuota(it)
+                            cuotaToAdd = null
+                        }
+                    },
+                    modifier = Modifier.fillMaxWidth(),
+                    enabled = cuotaToAdd != null
                 ) {
-                    CoopDropdown(
-                        items = state.cuotasDisponibles,
-                        selectedItem = cuotaToAdd,
-                        onItemSelected = { cuotaToAdd = it },
-                        itemToString = { it.nombreAsociado },
-                        modifier = Modifier.weight(1.3f),
-                        label = { CoopText("Selecciona") },
-                        placeholder = { CoopText("Elige") },
-                        truncateSingleLine = true
-                    )
-                    Spacer(modifier = Modifier.width(8.dp))
-                    CoopOutlinedTextField(
-                        value = cuotaToAdd?.montoCuota?.toString() ?: "",
-                        onValueChange = {},
-                        label = { CoopText("Monto") },
-                        placeholder = { CoopText("Monto") },
-                        readOnly = true,
-                        enabled = true,
-                        isError = false,
-                        containerColor = CoopTheme.colorScheme.surfaceVariant,
-                        contentColor = CoopTheme.colorScheme.onSurface,
-                        modifier = Modifier.weight(0.7f),
-                        borderColor = CoopTheme.colorScheme.primary
-                    )
-                    Spacer(modifier = Modifier.width(8.dp))
-                    IconButton(
-                        onClick = {
-                            cuotaToAdd?.let {
-                                onAddCuota(it)
-                                cuotaToAdd = null
-                            }
-                        },
-                        enabled = cuotaToAdd != null
-                    ) {
-                        Icon(Icons.Default.Add, contentDescription = "Agregar cuota")
+                    Row(verticalAlignment = Alignment.CenterVertically) {
+                        Icon(Icons.Filled.Add, contentDescription = null)
+                        Spacer(modifier = Modifier.width(8.dp))
+                        CoopText("Agregar cuota", color = CoopTheme.colorScheme.onPrimary, style = CoopTheme.typography.bodyMedium)
                     }
                 }
             }
@@ -281,51 +303,52 @@ fun SPagoEnviarScreen(
                 CoopText(
                     text = "Préstamos",
                     style = CoopTheme.typography.titleMedium,
-                    modifier = Modifier.padding(vertical = 4.dp)
+                    modifier = Modifier.padding(top = 12.dp, bottom = 8.dp),
+                    fontWeight = FontWeight.Bold
                 )
             }
             item {
                 var loanToAdd by remember { mutableStateOf<LoanQuota?>(null) }
-                Row(
-                    modifier = Modifier
-                        .fillMaxWidth(),
-                    verticalAlignment = Alignment.CenterVertically
+                CoopDropdown(
+                    items = state.prestamosDisponibles,
+                    selectedItem = loanToAdd,
+                    onItemSelected = { loanToAdd = it },
+                    itemToString = { it.nombrePago },
+                    modifier = Modifier.fillMaxWidth(),
+                    placeholder = { CoopText("Elige") },
+                    truncateSingleLine = true,
+                    forceExternalLabel = true
+                )
+                Spacer(modifier = Modifier.height(8.dp))
+                CoopOutlinedTextField(
+                    value = loanToAdd?.monto?.toString() ?: "",
+                    onValueChange = {},
+                    label = { CoopText("Monto") },
+                    placeholder = { CoopText("Monto") },
+                    prefix = { Text("Q ") },
+                    readOnly = true,
+                    enabled = true,
+                    isError = false,
+                    containerColor = CoopTheme.colorScheme.surfaceVariant,
+                    contentColor = CoopTheme.colorScheme.onSurface,
+                    modifier = Modifier.fillMaxWidth(),
+                    borderColor = CoopTheme.colorScheme.primary
+                )
+                Spacer(modifier = Modifier.height(8.dp))
+                CoopButton(
+                    onClick = {
+                        loanToAdd?.let {
+                            onAddLoanQuota(it)
+                            loanToAdd = null
+                        }
+                    },
+                    modifier = Modifier.fillMaxWidth(),
+                    enabled = loanToAdd != null
                 ) {
-                    CoopDropdown(
-                        items = state.prestamosDisponibles,
-                        selectedItem = loanToAdd,
-                        onItemSelected = { loanToAdd = it },
-                        itemToString = { it.nombrePago },
-                        modifier = Modifier.weight(1.3f),
-                        label = { CoopText("Selecciona") },
-                        placeholder = { CoopText("Elige") },
-                        truncateSingleLine = true
-                    )
-                    Spacer(modifier = Modifier.width(8.dp))
-                    CoopOutlinedTextField(
-                        value = loanToAdd?.monto?.toString() ?: "",
-                        onValueChange = {},
-                        label = { CoopText("Monto") },
-                        placeholder = { CoopText("Monto") },
-                        readOnly = true,
-                        enabled = true,
-                        isError = false,
-                        containerColor = CoopTheme.colorScheme.surfaceVariant,
-                        contentColor = CoopTheme.colorScheme.onSurface,
-                        modifier = Modifier.weight(0.7f),
-                        borderColor = CoopTheme.colorScheme.primary
-                    )
-                    Spacer(modifier = Modifier.width(8.dp))
-                    IconButton(
-                        onClick = {
-                            loanToAdd?.let {
-                                onAddLoanQuota(it)
-                                loanToAdd = null
-                            }
-                        },
-                        enabled = loanToAdd != null
-                    ) {
-                        Icon(Icons.Default.Add, contentDescription = "Agregar préstamo")
+                    Row(verticalAlignment = Alignment.CenterVertically) {
+                        Icon(Icons.Filled.Add, contentDescription = null)
+                        Spacer(modifier = Modifier.width(8.dp))
+                        CoopText("Agregar préstamo", color = CoopTheme.colorScheme.onPrimary, style = CoopTheme.typography.bodyMedium)
                     }
                 }
             }
@@ -350,51 +373,52 @@ fun SPagoEnviarScreen(
                 CoopText(
                     text = "Multas",
                     style = CoopTheme.typography.titleMedium,
-                    modifier = Modifier.padding(vertical = 4.dp)
+                    modifier = Modifier.padding(top = 12.dp, bottom = 8.dp),
+                    fontWeight = FontWeight.Bold,
                 )
             }
             item {
                 var fineToAdd by remember { mutableStateOf<FinePayAffiliate?>(null) }
-                Row(
-                    modifier = Modifier
-                        .fillMaxWidth(),
-                    verticalAlignment = Alignment.CenterVertically
+                CoopDropdown(
+                    items = state.multasDisponibles,
+                    selectedItem = fineToAdd,
+                    onItemSelected = { fineToAdd = it },
+                    itemToString = { it.fineName },
+                    modifier = Modifier.fillMaxWidth(),
+                    placeholder = { CoopText("Elige") },
+                    truncateSingleLine = true,
+                    forceExternalLabel = true
+                )
+                Spacer(modifier = Modifier.height(8.dp))
+                CoopOutlinedTextField(
+                    value = fineToAdd?.fineAmount?.toString() ?: "",
+                    onValueChange = {},
+                    label = { CoopText("Monto") },
+                    placeholder = { CoopText("Monto") },
+                    prefix = { Text("Q ") },
+                    readOnly = true,
+                    enabled = true,
+                    isError = false,
+                    containerColor = CoopTheme.colorScheme.surfaceVariant,
+                    contentColor = CoopTheme.colorScheme.onSurface,
+                    modifier = Modifier.fillMaxWidth(),
+                    borderColor = CoopTheme.colorScheme.primary
+                )
+                Spacer(modifier = Modifier.height(8.dp))
+                CoopButton(
+                    onClick = {
+                        fineToAdd?.let {
+                            onAddFine(it)
+                            fineToAdd = null
+                        }
+                    },
+                    modifier = Modifier.fillMaxWidth(),
+                    enabled = fineToAdd != null
                 ) {
-                    CoopDropdown(
-                        items = state.multasDisponibles,
-                        selectedItem = fineToAdd,
-                        onItemSelected = { fineToAdd = it },
-                        itemToString = { it.fineName },
-                        modifier = Modifier.weight(1.3f),
-                        label = { CoopText("Selecciona") },
-                        placeholder = { CoopText("Elige") },
-                        truncateSingleLine = true
-                    )
-                    Spacer(modifier = Modifier.width(8.dp))
-                    CoopOutlinedTextField(
-                        value = fineToAdd?.fineAmount?.toString() ?: "",
-                        onValueChange = {},
-                        label = { CoopText("Monto") },
-                        placeholder = { CoopText("Monto") },
-                        readOnly = true,
-                        enabled = true,
-                        isError = false,
-                        containerColor = CoopTheme.colorScheme.surfaceVariant,
-                        contentColor = CoopTheme.colorScheme.onSurface,
-                        modifier = Modifier.weight(0.7f),
-                        borderColor = CoopTheme.colorScheme.primary
-                    )
-                    Spacer(modifier = Modifier.width(8.dp))
-                    IconButton(
-                        onClick = {
-                            fineToAdd?.let {
-                                onAddFine(it)
-                                fineToAdd = null
-                            }
-                        },
-                        enabled = fineToAdd != null
-                    ) {
-                        Icon(Icons.Default.Add, contentDescription = "Agregar multa")
+                    Row(verticalAlignment = Alignment.CenterVertically) {
+                        Icon(Icons.Filled.Add, contentDescription = null)
+                        Spacer(modifier = Modifier.width(8.dp))
+                        CoopText("Agregar multa", color = CoopTheme.colorScheme.onPrimary, style = CoopTheme.typography.bodyMedium)
                     }
                 }
             }
@@ -419,51 +443,57 @@ fun SPagoEnviarScreen(
                 CoopText(
                     text = "Aportes de Capital",
                     style = CoopTheme.typography.titleMedium,
-                    modifier = Modifier.padding(vertical = 4.dp)
+                    modifier = Modifier.padding(top = 12.dp, bottom = 8.dp),
+                    fontWeight = FontWeight.Bold
                 )
             }
 
             item {
                 var userToAdd by remember { mutableStateOf<BasicUserInfo?>(null) }
                 var capitalText by remember { mutableStateOf("") }
-                Row(
-                    modifier = Modifier
-                        .fillMaxWidth(),
-                    verticalAlignment = Alignment.CenterVertically
+                CoopDropdown(
+                    items = state.usuariosDisponibles,
+                    selectedItem = userToAdd,
+                    onItemSelected = { userToAdd = it },
+                    itemToString = { it.name },
+                    modifier = Modifier.fillMaxWidth(),
+                    placeholder = { CoopText("Elige") },
+                    truncateSingleLine = true,
+                    forceExternalLabel = true
+                )
+                Spacer(modifier = Modifier.height(8.dp))
+                CoopOutlinedTextField(
+                    value = capitalText,
+                    onValueChange = { capitalText = it },
+                    label = { Text("Monto") },
+                    placeholder = { Text("0.00") },
+                    keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Decimal),
+                    singleLine = true,
+                    isError = false,
+                    modifier = Modifier.fillMaxWidth(),
+                    digitsOnly = true,
+                    allowDecimal = true,
+                    allowNegative = false,
+                    maxDecimalPlaces = 2,
+                    prefix = { Text("Q ") }
+                )
+                Spacer(modifier = Modifier.height(8.dp))
+                CoopButton(
+                    onClick = {
+                        val amount = capitalText.toFloatOrNull()
+                        if (userToAdd != null && amount != null) {
+                            onAddCapitalContribution(userToAdd!!, amount)
+                            userToAdd = null
+                            capitalText = ""
+                        }
+                    },
+                    modifier = Modifier.fillMaxWidth(),
+                    enabled = userToAdd != null && capitalText.toFloatOrNull() != null
                 ) {
-                    CoopDropdown(
-                        items = state.usuariosDisponibles,
-                        selectedItem = userToAdd,
-                        onItemSelected = { userToAdd = it },
-                        itemToString = { it.name },
-                        modifier = Modifier.weight(1.3f),
-                        label = { CoopText("Selecciona") },
-                        placeholder = { CoopText("Elige") },
-                        truncateSingleLine = true
-                    )
-                    Spacer(modifier = Modifier.width(8.dp))
-                    CoopOutlinedTextField(
-                        value = capitalText,
-                        onValueChange = { capitalText = it.filter { c -> c.isDigit() || c == '.' } },
-                        label = { Text("Monto") },
-                        placeholder = { Text("0.00") },
-                        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
-                        isError = false,
-                        modifier = Modifier.weight(0.7f)
-                    )
-                    Spacer(modifier = Modifier.width(8.dp))
-                    IconButton(
-                        onClick = {
-                            val amount = capitalText.toFloatOrNull()
-                            if (userToAdd != null && amount != null) {
-                                onAddCapitalContribution(userToAdd!!, amount)
-                                userToAdd = null
-                                capitalText = ""
-                            }
-                        },
-                        enabled = userToAdd != null && capitalText.toFloatOrNull() != null
-                    ) {
-                        Icon(Icons.Default.Add, contentDescription = "Agregar aporte")
+                    Row(verticalAlignment = Alignment.CenterVertically) {
+                        Icon(Icons.Filled.Add, contentDescription = null)
+                        Spacer(modifier = Modifier.width(8.dp))
+                        CoopText("Agregar aporte", color = CoopTheme.colorScheme.onPrimary, style = CoopTheme.typography.bodyMedium)
                     }
                 }
             }

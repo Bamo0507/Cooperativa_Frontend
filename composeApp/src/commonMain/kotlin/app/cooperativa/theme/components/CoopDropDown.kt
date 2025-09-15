@@ -51,6 +51,7 @@ fun <T> CoopDropdown(
     focusedBorderColor: Color = CoopTheme.colorScheme.primary,
     unfocusedBorderColor: Color = CoopTheme.colorScheme.surfaceVariant,
     errorBorderColor: Color = CoopTheme.colorScheme.error,
+    borderColor: Color? = null,
     textStyle: TextStyle = CoopTheme.typography.bodyLarge,
     contentPadding: Dp = 16.dp
 ) {
@@ -139,10 +140,10 @@ fun <T> CoopDropdown(
                     cursorColor = cursorColor,
                     errorCursorColor = CoopTheme.colorScheme.error,
 
-                    focusedBorderColor = focusedBorderColor,
-                    unfocusedBorderColor = unfocusedBorderColor,
-                    disabledBorderColor = unfocusedBorderColor.copy(alpha = 0.3f),
-                    errorBorderColor = errorBorderColor,
+                    focusedBorderColor = borderColor ?: focusedBorderColor,
+                    unfocusedBorderColor = borderColor ?: unfocusedBorderColor,
+                    disabledBorderColor = (borderColor ?: unfocusedBorderColor).copy(alpha = 0.3f),
+                    errorBorderColor = borderColor ?: errorBorderColor,
                 ),
                 trailingIcon = {
                     Icon(
