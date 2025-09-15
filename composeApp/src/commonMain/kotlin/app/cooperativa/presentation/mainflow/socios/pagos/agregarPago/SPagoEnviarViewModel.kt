@@ -39,11 +39,40 @@ class SPagoEnviarViewModel(
         )
     }
 
-    fun updateMontoPago(monto: Float) {
-        _uiState.value = _uiState.value.copy(
-            montoPago = monto,
-            montoActualDeclarado = monto
-        )
+    fun updateMontoPago(amountText: String) {
+        val normalized = amountText.replace(',', '.')
+        var dotSeen = false
+        var decimals = 0
+        val clean = buildString {
+            normalized.forEach { ch ->
+                when {
+                    ch.isDigit() -> {
+                        if (dotSeen) {
+                            if (decimals < 2) {
+                                append(ch)
+                                decimals++
+                            }
+                        } else {
+                            append(ch)
+                        }
+                    }
+                    ch == '.' && !dotSeen -> {
+                        if (isEmpty()) append('0')
+                        append('.')
+                        dotSeen = true
+                        decimals = 0
+                    }
+                }
+            }
+        }
+        val parsed = clean.toFloatOrNull() ?: 0f
+        _uiState.update {
+            it.copy(
+                montoPagoText = clean,
+                montoPago = parsed,
+                montoActualDeclarado = parsed
+            )
+        }
     }
 
     fun updateNumeroCuenta(cuenta: String) {

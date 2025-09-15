@@ -1,69 +1,59 @@
 package app.cooperativa.presentation.mainflow.socios.pagos.agregarPago
 
-import app.cooperativa.data.model.dto.BasicUserInfo
-import app.cooperativa.data.model.dto.QuotaAffiliate
-import app.cooperativa.data.model.dto.LoanQuota
-import app.cooperativa.data.model.dto.FinePayAffiliate
-import app.cooperativa.presentation.mainflow.socios.pagos.agregarPago.SPagoEnviarViewModel
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
-import androidx.compose.material3.AlertDialog
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.saveable.rememberSaveable
-import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
-import app.cooperativa.theme.components.CoopText
-import app.cooperativa.theme.components.CoopOutlinedButton
-import androidx.compose.foundation.layout.size
-import app.cooperativa.theme.components.CoopButton
-import androidx.compose.material.icons.filled.CloudUpload
-import androidx.compose.ui.graphics.vector.ImageVector
-import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.ui.graphics.Color
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.ui.text.input.KeyboardType
-import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import app.cooperativa.theme.CoopTheme
-import app.cooperativa.theme.components.CoopOutlinedTextField
-import app.cooperativa.theme.components.CoopTopBar
-import org.koin.compose.koinInject
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
-import androidx.compose.ui.unit.dp
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.IconButton
-import androidx.compose.material3.Icon
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.CloudUpload
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.Send
-import androidx.compose.material.icons.filled.Upload
+import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.ExtendedFloatingActionButton
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.mutableStateOf
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Text
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
-import app.cooperativa.theme.components.CoopDropdown
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.font.FontWeight
-import app.cooperativa.theme.components.CoopText
+import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.unit.dp
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import app.cooperativa.data.model.dto.BasicUserInfo
 import app.cooperativa.data.model.dto.CapitalContribution
+import app.cooperativa.data.model.dto.FinePayAffiliate
+import app.cooperativa.data.model.dto.LoanQuota
+import app.cooperativa.data.model.dto.QuotaAffiliate
+import app.cooperativa.theme.CoopTheme
+import app.cooperativa.theme.components.CoopButton
+import app.cooperativa.theme.components.CoopDropdown
+import app.cooperativa.theme.components.CoopOutlinedButton
+import app.cooperativa.theme.components.CoopOutlinedTextField
+import app.cooperativa.theme.components.CoopText
+import app.cooperativa.theme.components.CoopTopBar
 import app.cooperativa.utils.formatMoney
 import coil3.compose.AsyncImage
 import com.mohamedrejeb.calf.core.LocalPlatformContext
@@ -73,8 +63,8 @@ import com.mohamedrejeb.calf.picker.FilePickerSelectionMode
 import com.mohamedrejeb.calf.picker.rememberFilePickerLauncher
 import cooperativa.composeapp.generated.resources.Res
 import cooperativa.composeapp.generated.resources.ic_payment_error
-import org.jetbrains.compose.resources.Font
 import org.jetbrains.compose.resources.painterResource
+import org.koin.compose.koinInject
 
 @Composable
 fun SPagoEnviarRoute(
@@ -88,9 +78,7 @@ fun SPagoEnviarRoute(
         state = state,
         onBackClick = onBackClick,
         onNombreChange = viewModel::updateNombrePago,
-        onMontoChange = { text ->
-            text.toFloatOrNull()?.let { viewModel.updateMontoPago(it) }
-        },
+        onMontoChange = viewModel::updateMontoPago,
         onPickImage = { image ->
             viewModel.handleImagePicked(context, image)
         },
@@ -182,13 +170,19 @@ fun SPagoEnviarScreen(
             }
             item {
                 CoopOutlinedTextField(
-                    value = state.montoPago.toString(),
+                    value = state.montoPagoText,
                     onValueChange = onMontoChange,
                     label = { Text("Monto") },
                     placeholder = { Text("0.00") },
-                    keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
+                    prefix = { Text("Q ") },
                     isError = false,
-                    modifier = Modifier.padding(vertical = 6.dp)
+                    keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Decimal),
+                    singleLine = true,
+                    modifier = Modifier.padding(vertical = 6.dp),
+                    digitsOnly = true,
+                    allowDecimal = true,
+                    allowNegative = false,
+                    maxDecimalPlaces = 2
                 )
             }
             item {

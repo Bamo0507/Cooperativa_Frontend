@@ -9,6 +9,7 @@ import app.cooperativa.data.model.dto.QuotaAffiliate
 data class SPagoEnviarState(
     val nombrePago: String = "",
     val montoPago: Float = 0.0f,
+    val montoPagoText: String = "",
     val numberoCuenta: String = "",
     val numeroBoleta: String = "",
 

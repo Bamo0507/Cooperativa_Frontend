@@ -126,10 +126,15 @@ fun FineSelectionScreen(
                         onValueChange = { onAmountChange(detail.id, it) },
                         label = { Text("Monto") },
                         prefix = { Text("Q ") },
-                        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
+                        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Decimal),
                         singleLine = true,
-                        modifier = Modifier.fillMaxWidth()
+                        modifier = Modifier.fillMaxWidth(),
+                        digitsOnly = true,
+                        allowDecimal = true,
+                        allowNegative = false,
+                        maxDecimalPlaces = 2,
                     )
+
 
                     Spacer(modifier = Modifier.height(8.dp))
                 }
@@ -150,7 +155,10 @@ fun FineSelectionScreen(
                     color = CoopTheme.colorScheme.onSurface
                 )
                 CoopText(
-                    text = "Total: ${formatMoney(total)}  (${state.fineDetails.size} multas)",
+                    text = if (state.fineDetails.size == 1)
+                        "Total: ${formatMoney(total)}  (${state.fineDetails.size} multa)"
+                    else
+                        "Total: ${formatMoney(total)}  (${state.fineDetails.size} multas)",
                     style = MaterialTheme.typography.bodyMedium,
                     color = CoopTheme.colorScheme.onSurface.copy(alpha = 0.7f)
                 )

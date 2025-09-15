@@ -55,19 +55,35 @@ class DFineManagerViewModel(
     }
 
     fun updateFineAmount(amount: String) {
-        // sanitize and parse safely (supports one decimal point)
+        val normalized = amount.replace(',', '.')
+        var dotSeen = false
+        var decimals = 0
         val clean = buildString {
-            var dotSeen = false
-            for (ch in amount.replace(',', '.')) {
-                if (ch.isDigit()) append(ch)
-                else if (ch == '.' && !dotSeen) {
-                    append(ch)
-                    dotSeen = true
+            normalized.forEach { ch ->
+                when {
+                    ch.isDigit() -> {
+                        if (dotSeen) {
+                            if (decimals < 2) {
+                                append(ch)
+                                decimals++
+                            }
+                        } else {
+                            append(ch)
+                        }
+                    }
+                    ch == '.' && !dotSeen -> {
+                        append(ch)
+                        dotSeen = true
+                        decimals = 0
+                    }
                 }
             }
         }
         val parsed = clean.toFloatOrNull() ?: 0f
-        _uiState.update { it.copy(fineAmount = parsed) }
+        _uiState.update { it.copy(
+            fineAmountText = clean,
+            fineAmount = parsed
+        ) }
     }
 
     fun updateAffiliate(member: String, userId: Int) {
