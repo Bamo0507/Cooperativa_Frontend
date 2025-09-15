@@ -13,6 +13,7 @@ import androidx.compose.ui.Modifier
 import androidx.navigation.compose.rememberNavController
 import app.cooperativa.navigation.AppNavigation
 import app.cooperativa.presentation.login.LoginRoute
+import app.cooperativa.presentation.utils.KeyboardDismissOnTap
 import app.cooperativa.theme.CoopTheme
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.ui.tooling.preview.Preview
@@ -25,8 +26,10 @@ import cooperativa.composeapp.generated.resources.compose_multiplatform
 fun App() {
     val navController = rememberNavController()
     CoopTheme {
-        AppNavigation(
-            navController = navController
-        )
+        KeyboardDismissOnTap {
+            AppNavigation(
+                navController = navController
+            )
+        }
     }
 }
