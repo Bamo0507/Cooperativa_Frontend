@@ -119,6 +119,7 @@ fun SPagosStatusScreen(
                         pagoId = payments[idx].pagoId,
                         nombrePago = payments[idx].nombrePago,
                         estado = payments[idx].estado,
+                        dateOfPayment = payments[idx].dateOfPayment,
                         onWatchError = onWatchError
                     )
                 }
@@ -134,6 +135,7 @@ fun PagoStatusCard(
     nombrePago: String,
     estado: Estados,
     pagoId: String,
+    dateOfPayment: String,
     onWatchError: (String) -> Unit,
     modifier: Modifier = Modifier
 ){
@@ -177,6 +179,13 @@ fun PagoStatusCard(
                     style = CoopTheme.typography.bodyMedium,
                     fontWeight = FontWeight.Bold,
                     color = colorText,
+                    maxLines = 1,
+                    overflow = TextOverflow.Ellipsis
+                )
+                CoopText(
+                    text = dateOfPayment,
+                    style = CoopTheme.typography.bodySmall,
+                    color = CoopTheme.colorScheme.onSurface,
                     maxLines = 1,
                     overflow = TextOverflow.Ellipsis
                 )
