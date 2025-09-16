@@ -18,13 +18,16 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Check
 import androidx.compose.material.icons.filled.Close
+import androidx.compose.material.icons.filled.HighlightOff
 import androidx.compose.material.icons.filled.Wallpaper
+import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
@@ -69,9 +72,12 @@ fun DPendingPayRoute(
             DPendingPayScreen(
                 payment = state.payment!!,
                 commentInput = state.commentInput,
+                showRejectDialog = state.showRejectDialog,
                 onCommentChange = viewModel::onCommentChange,
                 onApprove = viewModel::onApprove,
                 onReject = viewModel::onReject,
+                onOpenRejectDialog = viewModel::openRejectDialog,
+                onCloseRejectDialog = viewModel::closeRejectDialog,
                 onBackClick = onBackClick
             )
         }
@@ -82,9 +88,12 @@ fun DPendingPayRoute(
 fun DPendingPayScreen(
     payment: Payment,
     commentInput: String,
+    showRejectDialog: Boolean,
     onCommentChange: (String) -> Unit,
     onApprove: () -> Unit,
     onReject: () -> Unit,
+    onOpenRejectDialog: () -> Unit,
+    onCloseRejectDialog: () -> Unit,
     onBackClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
@@ -106,6 +115,8 @@ fun DPendingPayScreen(
                 .padding(vertical = 6.dp, horizontal = 8.dp)
                 .verticalScroll(rememberScrollState())
         ) {
+            DPendingBasicInfoCard(payment)
+
             // Cuotas
             payment.quotas.orEmpty().takeIf { it.isNotEmpty() }?.let { list ->
                 DPendingSection(
@@ -172,30 +183,14 @@ fun DPendingPayScreen(
                 )
             }
 
-
-            // Comentarios
-            CoopText(
-                text = "Comentarios",
-                fontWeight = FontWeight.Bold,
-                modifier = Modifier.padding(vertical = 8.dp, horizontal = 16.dp),
-                color = CoopTheme.colorScheme.onSurface
-            )
-            CoopOutlinedTextField(
-                value = commentInput,
-                onValueChange = onCommentChange,
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(horizontal = 16.dp)
-                    .border(1.dp, CoopTheme.colorScheme.primary, RoundedCornerShape(16.dp))
-                    .height(128.dp)
-            )
+            Spacer(modifier = Modifier.weight(1f))
 
             // Botones de acción
             Row(
                 horizontalArrangement = Arrangement.SpaceBetween,
                 modifier = Modifier.fillMaxWidth().padding(vertical = 8.dp, horizontal = 16.dp)
             ) {
-                CoopOutlinedButton(onClick = onReject, shape = RoundedCornerShape(16.dp)) {
+                CoopOutlinedButton(onClick = onOpenRejectDialog, shape = RoundedCornerShape(16.dp)) {
                     CoopIcon(Icons.Default.Close, "Rechazar")
                     Spacer(Modifier.width(4.dp))
                     CoopText("Negar")
@@ -206,7 +201,151 @@ fun DPendingPayScreen(
                     CoopText("Aprobar", color = CoopTheme.colorScheme.onPrimary)
                 }
             }
+
+            if (showRejectDialog) {
+                RejectPaymentDialog(
+                    comment = commentInput,
+                    onCommentChange = onCommentChange,
+                    onConfirm = onReject,
+                    onDismiss = onCloseRejectDialog
+                )
+            }
         }
+    }
+}
+
+@Composable
+private fun RejectPaymentDialog(
+    comment: String,
+    onCommentChange: (String) -> Unit,
+    onConfirm: () -> Unit,
+    onDismiss: () -> Unit
+) {
+    AlertDialog(
+        onDismissRequest = onDismiss,
+        icon = {
+            CoopIcon(
+                imageVector = Icons.Filled.HighlightOff,
+                contentDescription = null,
+                tint = CoopTheme.colorScheme.rejected,
+                modifier = Modifier.size(36.dp)
+            )
+        },
+        title = {
+            CoopText(
+                text = "Rechazar pago",
+                style = CoopTheme.typography.titleMedium,
+                color = CoopTheme.colorScheme.onSurface,
+                fontWeight = FontWeight.Bold,
+                textAlign = TextAlign.Center
+            )
+        },
+        text = {
+            Column(verticalArrangement = Arrangement.spacedBy(10.dp)) {
+                CoopText(
+                    text = "Escribe el motivo del rechazo para informar al socio.",
+                    style = CoopTheme.typography.bodyMedium,
+                    color = CoopTheme.colorScheme.onSurface
+                )
+                CoopOutlinedTextField(
+                    value = comment,
+                    onValueChange = onCommentChange,
+                    placeholder = {
+                        CoopText(
+                            text = "Motivo de rechazo…",
+                            style = CoopTheme.typography.bodyMedium,
+                        )
+                    },
+                    isError = false,
+                    singleLine = false,
+                    maxLines = 4,
+                    modifier = Modifier.fillMaxWidth(),
+                    textStyle = CoopTheme.typography.bodyMedium,
+                    // colores específicos para este diálogo
+                    focusedBorderColor = CoopTheme.colorScheme.rejected,
+                    unfocusedBorderColor = CoopTheme.colorScheme.rejected.copy(alpha = 0.5f),
+                    cursorColor = CoopTheme.colorScheme.rejected
+                )
+            }
+        },
+        dismissButton = {
+            CoopOutlinedButton(onClick = onDismiss) {
+                CoopText(
+                    text = "Cancelar",
+                    style = CoopTheme.typography.bodyMedium,
+                )
+            }
+        },
+        confirmButton = {
+            CoopButton(
+                onClick = onConfirm,
+                enabled = comment.isNotBlank(),
+                colors = ButtonDefaults.buttonColors(
+                    containerColor = CoopTheme.colorScheme.rejected.copy(0.9f),
+                    contentColor = CoopTheme.colorScheme.onPrimary,
+                    disabledContainerColor = CoopTheme.colorScheme.rejected.copy(alpha = 0.60f),
+                    disabledContentColor = CoopTheme.colorScheme.onPrimary.copy(alpha = 0.65f)
+                )
+            ) {
+                CoopText(
+                    text = "Enviar",
+                    color = Color.White,
+                    style = CoopTheme.typography.bodyMedium,
+                )
+            }
+        },
+        containerColor = CoopTheme.colorScheme.surface
+    )
+}
+
+@Composable
+private fun DPendingBasicInfoCard(payment: Payment) {
+    val total = (
+            payment.quotas.orEmpty().sumOf { it.amount.toDouble() } +
+                    payment.loanPayments.orEmpty().sumOf { it.amountPayed.toDouble() } +
+                    payment.finePayments.orEmpty().sumOf { it.amount.toDouble() } +
+                    payment.contributionPayments.orEmpty().sumOf { it.amount.toDouble() }
+            ).toFloat()
+
+    CoopOutlinedCard(modifier = Modifier.padding(vertical = 10.dp, horizontal = 16.dp)) {
+        Column(Modifier.padding(16.dp), verticalArrangement = Arrangement.spacedBy(8.dp)) {
+            InfoRow("Nombre del pago", payment.paymentName)
+            InfoRow("Presentado por",  payment.userName)
+            InfoRow("Fecha presentada", dateToString(payment.paymentDate))
+            InfoRow("Nº de boleta",    payment.receiptNumber ?: "—")
+            InfoRow("Nº de cuenta",    payment.accountNumber ?: "—")
+
+            Spacer(Modifier.height(4.dp))
+            InfoRow(
+                label = "Monto total",
+                value = app.cooperativa.utils.formatMoney(total),
+                valueColor = CoopTheme.colorScheme.onSecondary
+            )
+        }
+    }
+}
+
+@Composable
+private fun InfoRow(
+    label: String,
+    value: String,
+    valueColor: Color = CoopTheme.colorScheme.onSurface
+) {
+    Row(
+        modifier = Modifier.fillMaxWidth(),
+    ) {
+        CoopText(
+            text = label,
+            fontWeight = FontWeight.Bold,
+            color = CoopTheme.colorScheme.onSurface.copy(alpha = 0.90f),
+            modifier = Modifier.weight(1f)
+        )
+        CoopText(
+            text = value,
+            color = valueColor,
+            textAlign = TextAlign.End,
+            modifier = Modifier.weight(1f)
+        )
     }
 }
 

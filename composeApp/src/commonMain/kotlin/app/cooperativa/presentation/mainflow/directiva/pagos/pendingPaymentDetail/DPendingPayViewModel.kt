@@ -39,6 +39,14 @@ class DPendingPayViewModel(
         _uiState.update { it.copy(commentInput = comment) }
     }
 
+    fun openRejectDialog() {
+        _uiState.update { it.copy(showRejectDialog = true) }
+    }
+
+    fun closeRejectDialog() {
+        _uiState.update { it.copy(showRejectDialog = false) }
+    }
+
     // aprobar pago
     fun onApprove() {
         // TODO: lógica de aprobación
@@ -46,7 +54,9 @@ class DPendingPayViewModel(
 
     // negar pago
     fun onReject() {
-        // TODO: lógica de rechazo
+        // TODO: lógica de rechazo (usar uiState.value.commentInput)
+        // Al terminar, cierra el diálogo:
+        _uiState.update { it.copy(showRejectDialog = false) }
     }
 
 }

@@ -17,5 +17,8 @@ data class Payment(
 
     val paymentImage: String,
 
-    val isPaymentPending: Boolean = true
+    val isPaymentPending: Boolean = true,
+
+    val accountNumber: String? = null,
+    val receiptNumber: String? = null
 )
