@@ -1,9 +1,11 @@
 package app.cooperativa.domain.socios
 
+import app.cooperativa.core.network.apollo.GraphQlException
+import app.cooperativa.core.network.apollo.executeQuery
 import app.cooperativa.data.model.dto.HistoryResponse
 import app.cooperativa.data.model.dto.Prestamo
 import app.cooperativa.graphql.GetHistoryQuery
-import app.cooperativa.graphql.GraphQLClientProvider
+import com.apollographql.apollo3.ApolloClient
 import com.apollographql.apollo3.api.ApolloResponse
 
 interface SHistorialRepository {
@@ -13,21 +15,23 @@ interface SHistorialRepository {
 
 // ---------------------------------------------------------------------
 class SociosHistorialRepository(
-    private val clientProvider: GraphQLClientProvider
+    private val apollo: ApolloClient
 ) : SHistorialRepository {
-    //TODO: Implementar en el client cuando lo tengan
+
+    // TODO: implementar cuando exista el query en backend
     override suspend fun getPrestamosByUser(accessToken: String): List<Prestamo> {
         return emptyList()
     }
 
     override suspend fun fetchHistory(accessToken: String): HistoryResponse {
-        val response: ApolloResponse<GetHistoryQuery.Data> = clientProvider.getHistoryResponse(accessToken)
-        val history = response.data?.getHistory
-            ?: throw Exception("Ooops, no se pudo obtener el historial!")
+        return apollo.executeQuery(GetHistoryQuery(accessToken = accessToken)) { data ->
+            val h = data.getHistory
+                ?: throw GraphQlException("Ooops, no se pudo obtener el historial")
 
-        return HistoryResponse(
-            owedCapital = history.owedCapital?.toFloat() ?: 1f,
-            payedToCapital = history.payedToCapital?.toFloat() ?: 1f
-        )
+            HistoryResponse(
+                owedCapital = h.owedCapital?.toFloat() ?: 0f,
+                payedToCapital = h.payedToCapital?.toFloat() ?: 0f
+            )
+        }
     }
 }

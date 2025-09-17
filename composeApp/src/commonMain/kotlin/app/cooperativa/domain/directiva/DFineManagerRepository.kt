@@ -1,7 +1,8 @@
 package app.cooperativa.domain.directiva
 
+import app.cooperativa.core.network.apollo.executeQuery
 import app.cooperativa.graphql.GettingAffiliatesQuery
-import app.cooperativa.graphql.GraphQLClientProvider
+import com.apollographql.apollo3.ApolloClient
 import com.apollographql.apollo3.api.ApolloResponse
 
 data class Member(
@@ -11,34 +12,25 @@ data class Member(
 
 interface DFineManagerRepository {
     suspend fun getAllAffiliates(): List<Member>
-    suspend fun submitFine() //TBD
+    suspend fun submitFine() // TBD
 }
 
 class DirectiveFineManagerRepository(
-    private val clientProvider: GraphQLClientProvider
+    private val apollo: ApolloClient
 ) : DFineManagerRepository {
 
-    // TODO: Implementar en el client cuando se tenga
-    override suspend fun submitFine() {
-        TODO("Not yet implemented")
+    override suspend fun getAllAffiliates(): List<Member> {
+        return apollo.executeQuery(GettingAffiliatesQuery()) { data ->
+            data.getAllMemembers.map { node ->
+                Member(
+                    usuarioId = node.usuarioId, // no null
+                    name = node.name            // no null
+                )
+            }
+        }
     }
 
-    override suspend fun getAllAffiliates(): List<Member> {
-        val response = clientProvider.getAllAffiliates()
-
-        if (response.hasErrors()) {
-            val msg = response.errors?.joinToString { it.message } ?: "Error de GraphQL"
-            throw Exception(msg)
-        }
-
-        val members = response.data?.getAllMemembers
-            ?: throw Exception("Ooops, no se pudo obtener los socios!")
-
-        return members.map {
-            Member(
-                usuarioId = it.usuarioId,
-                name = it.name
-            )
-        }
+    override suspend fun submitFine() {
+        // TODO cuando exista la mutation
     }
 }

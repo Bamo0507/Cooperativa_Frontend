@@ -47,7 +47,9 @@ fun getKoinModules() = listOf(
 
     dfinemanagermodule,
 
-    spagoErrorModule
+    spagoErrorModule,
+
+    coreNetworkModule,
 )
 
 object KoinHelper {
