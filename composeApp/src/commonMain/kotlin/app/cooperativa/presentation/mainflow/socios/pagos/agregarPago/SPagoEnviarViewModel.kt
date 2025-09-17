@@ -11,6 +11,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import app.cooperativa.data.model.dto.CapitalContribution
+import app.cooperativa.domain.localstorage.PreferencesLocalStorage
 import app.cooperativa.domain.share.convertHeicToJpeg
 import com.mohamedrejeb.calf.core.PlatformContext
 import com.mohamedrejeb.calf.io.KmpFile
@@ -20,6 +21,7 @@ import kotlinx.coroutines.flow.update
 
 class SPagoEnviarViewModel(
     private val repository: SPagoEnviarRepository,
+    private val prefs: PreferencesLocalStorage,
     private val userId: Int = 1 // TODO: Delete and use local storage inyection instead
 ) : ViewModel() {
     private val _uiState: MutableStateFlow<SPagoEnviarState> = MutableStateFlow(
@@ -37,11 +39,40 @@ class SPagoEnviarViewModel(
         )
     }
 
-    fun updateMontoPago(monto: Float) {
-        _uiState.value = _uiState.value.copy(
-            montoPago = monto,
-            montoActualDeclarado = monto
-        )
+    fun updateMontoPago(amountText: String) {
+        val normalized = amountText.replace(',', '.')
+        var dotSeen = false
+        var decimals = 0
+        val clean = buildString {
+            normalized.forEach { ch ->
+                when {
+                    ch.isDigit() -> {
+                        if (dotSeen) {
+                            if (decimals < 2) {
+                                append(ch)
+                                decimals++
+                            }
+                        } else {
+                            append(ch)
+                        }
+                    }
+                    ch == '.' && !dotSeen -> {
+                        if (isEmpty()) append('0')
+                        append('.')
+                        dotSeen = true
+                        decimals = 0
+                    }
+                }
+            }
+        }
+        val parsed = clean.toFloatOrNull() ?: 0f
+        _uiState.update {
+            it.copy(
+                montoPagoText = clean,
+                montoPago = parsed,
+                montoActualDeclarado = parsed
+            )
+        }
     }
 
     fun updateNumeroCuenta(cuenta: String) {
@@ -114,6 +145,15 @@ class SPagoEnviarViewModel(
                 errorMessage = null
             )
             try {
+                // Cargar si el usuario ya habia accedido
+                val hasSentPayment = prefs.hasSentPayment()
+
+                _uiState.update {
+                    it.copy(
+                        hasSentPayment = hasSentPayment
+                    )
+                }
+
                 // Carga de datos del repositorio
                 val cuotas = repository.getCuotasMensualesPendientes()
                 val prestamos = repository.getPrestamoCuotasByUser(userId)

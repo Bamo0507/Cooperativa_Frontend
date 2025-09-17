@@ -1,3 +1,4 @@
+/* <<<<<<<<<<<<<<  ✨ Windsurf Command 🌟 >>>>>>>>>>>>>>>> */
 package app.cooperativa.data.localdb.directiva
 
 import kotlinx.datetime.LocalDate
@@ -35,6 +36,7 @@ object PaymentMockData {
                     date = LocalDate(2025, 5, 1)
                 )
             ),
+            dateOfPayment = LocalDate(2025, 5, 1).toString(),
             paymentImage = "https://example.com/images/house_loan.png",
             isPaymentPending = true
         ),
@@ -59,6 +61,7 @@ object PaymentMockData {
                 )
             ),
             loanPayments = null,
+            dateOfPayment = LocalDate(2025, 4, 28).toString(),
             paymentImage = "https://example.com/images/credit_card.png",
             isPaymentPending = false
         ),
@@ -79,6 +82,7 @@ object PaymentMockData {
                     date = LocalDate(2025, 5, 3)
                 )
             ),
+            dateOfPayment = LocalDate(2025, 5, 3).toString(),
             paymentImage = "https://example.com/images/car_loan.png",
             isPaymentPending = true
         ),
@@ -97,6 +101,7 @@ object PaymentMockData {
                 )
             ),
             loanPayments = null,
+            dateOfPayment = LocalDate(2025, 4, 30).toString(),
             paymentImage = "https://example.com/images/internet_bill.png",
             isPaymentPending = false
         ),
@@ -124,6 +129,7 @@ object PaymentMockData {
                     date = LocalDate(2025, 5, 5)
                 )
             ),
+            dateOfPayment = LocalDate(2025, 5, 5).toString(),
             paymentImage = "https://example.com/images/student_loan.png",
             isPaymentPending = false
         ),
@@ -142,6 +148,7 @@ object PaymentMockData {
                     amount = 20.0f
                 )
             ),
+            dateOfPayment = LocalDate(2025, 5, 6).toString(),
             paymentImage = "https://example.com/images/late_fee.png",
             isPaymentPending = true
         ),
@@ -159,6 +166,7 @@ object PaymentMockData {
                     amount = 50.0f
                 )
             ),
+            dateOfPayment = LocalDate(2025, 5, 7).toString(),
             paymentImage = "https://example.com/images/contribution.png",
             isPaymentPending = false
         ),
@@ -206,7 +214,8 @@ object PaymentMockData {
                 )
             ),
             paymentImage = "https://example.com/images/full_payment.png",
-            isPaymentPending = true
+            isPaymentPending = true,
+            dateOfPayment = LocalDate(2025, 5, 8).toString(),
         ),
     )
 
@@ -215,7 +224,8 @@ object PaymentMockData {
             id = it.id,
             paymentName = it.paymentName,
             username = it.userName,
-            isPaymentPending = it.isPaymentPending
+            isPaymentPending = it.isPaymentPending,
+            dateOfPayment = it.paymentDate.toString()
         )
     }
 

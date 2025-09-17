@@ -4,5 +4,6 @@ data class BasicInfoPayment(
     val id: Int,
     val paymentName: String,
     val username: String,
+    val dateOfPayment: String,
     val isPaymentPending: Boolean = true
 )

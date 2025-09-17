@@ -10,6 +10,7 @@ data class DPaymentsState(
     val paidPayments: List<BasicInfoPayment> = emptyList(),
     val fines: List<Fine> = emptyList(),
     val allPaidPayments: List<BasicInfoPayment> = emptyList(),
+    val allPendingPayments: List<BasicInfoPayment> = emptyList(),
     val allFinesList: List<Fine> = emptyList(),
     val isLoading: Boolean = false,
     val errorMessage: String? = null

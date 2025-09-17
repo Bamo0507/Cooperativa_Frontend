@@ -25,6 +25,7 @@ fun CoopOutlinedTextField(
     modifier: Modifier = Modifier,
     label: @Composable (() -> Unit)? = null,
     placeholder: @Composable (() -> Unit)? = null,
+    prefix: @Composable (() -> Unit)? = null,
     leadingIcon: @Composable (() -> Unit)? = null,
     trailingIcon: @Composable (() -> Unit)? = null,
     isError: Boolean = false,
@@ -44,14 +45,52 @@ fun CoopOutlinedTextField(
     errorBorderColor: Color = CoopTheme.colorScheme.error,
     borderColor: Color? = null,
     textStyle: TextStyle = CoopTheme.typography.bodyLarge,
-    contentPadding: Dp = 16.dp
+    contentPadding: Dp = 16.dp,
+    digitsOnly: Boolean = false,
+    allowDecimal: Boolean = false,
+    allowNegative: Boolean = false,
+    maxDecimalPlaces: Int? = null,
 ) {
+    fun sanitize(input: String): String {
+        if (!digitsOnly) return input
+        var hasDot = false
+        var hasSign = false
+        val out = StringBuilder()
+        var decimalsCount = 0
+        input.forEachIndexed { idx, c ->
+            when {
+                c.isDigit() -> {
+                    if (hasDot && maxDecimalPlaces != null) {
+                        if (decimalsCount < maxDecimalPlaces) {
+                            out.append(c)
+                            decimalsCount++
+                        }
+                    } else {
+                        out.append(c)
+                    }
+                }
+                allowDecimal && c == '.' && !hasDot -> {
+                    if (out.isEmpty()) out.append('0')
+                    out.append('.')
+                    hasDot = true
+                    decimalsCount = 0
+                }
+                allowNegative && c == '-' && idx == 0 && !hasSign -> {
+                    out.append('-')
+                    hasSign = true
+                }
+            }
+        }
+        return out.toString()
+    }
+
     OutlinedTextField(
         value = value,
-        onValueChange = onValueChange,
+        onValueChange = { new -> onValueChange(sanitize(new)) },
         modifier = modifier.fillMaxWidth(),
         label = label,
         placeholder = placeholder,
+        prefix = prefix,
         leadingIcon = leadingIcon,
         trailingIcon = trailingIcon,
         isError = isError,

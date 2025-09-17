@@ -7,6 +7,8 @@ data class DFineManagerState(
 
     val fineName: String = "",
     val fineAmount: Float = 0.0f,
+    val fineAmountText: String = "",
+
     val affiliateName: String = "",
     val affiliateId: Int = 0,
 

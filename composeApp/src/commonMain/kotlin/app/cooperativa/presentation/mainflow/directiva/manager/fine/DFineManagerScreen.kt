@@ -108,21 +108,35 @@ fun DFineManagerScreen(
 
                 CoopOutlinedTextField(
                     value = state.fineName,
-                    onValueChange = updateFineName,
+                    onValueChange = { input ->
+                        val sanitized = input
+                            .replace("\n", " ")
+                            .replace("\r", " ")
+                            .take(20)
+                        updateFineName(sanitized)
+                    },
                     label = { Text("Nombre de Multa") },
                     placeholder = { Text("Ingrese nombre") },
                     isError = false,
+                    singleLine = true,
+                    maxLines = 1,
                     modifier = Modifier.padding(vertical = 6.dp)
                 )
 
                 CoopOutlinedTextField(
-                    value = state.fineAmount.toString(),
+                    value = state.fineAmountText,
                     onValueChange = updateFineAmount,
                     label = { Text("Monto de Multa") },
-                    placeholder = { Text("Ingrese monto") },
+                    placeholder = { Text("0.00") },
+                    prefix = { Text("Q ") },
                     isError = false,
                     keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Decimal),
-                    modifier = Modifier.padding(vertical = 6.dp)
+                    singleLine = true,
+                    modifier = Modifier.padding(vertical = 6.dp),
+                    digitsOnly = true,
+                    allowDecimal = true,
+                    allowNegative = false,
+                    maxDecimalPlaces = 2
                 )
 
                 Spacer(modifier = Modifier.weight(1f))

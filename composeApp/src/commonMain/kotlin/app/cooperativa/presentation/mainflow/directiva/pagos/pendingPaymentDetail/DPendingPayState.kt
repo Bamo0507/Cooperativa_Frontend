@@ -6,5 +6,6 @@ data class DPendingPayState(
     val payment: Payment? = null,
     val commentInput: String = "",
     val isLoading: Boolean = false,
-    val errorMessage: String? = null
+    val errorMessage: String? = null,
+    val showRejectDialog: Boolean = false
 )

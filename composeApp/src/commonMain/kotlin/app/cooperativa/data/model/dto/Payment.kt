@@ -8,6 +8,7 @@ data class Payment(
     val paymentName: String,
     val userName: String,
     val paymentDate: LocalDate,
+    val dateOfPayment: String,
 
     val quotas: List<Quotas>? = null,
     val loanPayments: List<LoanPayment>? = null,
@@ -16,5 +17,8 @@ data class Payment(
 
     val paymentImage: String,
 
-    val isPaymentPending: Boolean = true
+    val isPaymentPending: Boolean = true,
+
+    val accountNumber: String? = null,
+    val receiptNumber: String? = null
 )

@@ -1,6 +1,7 @@
 package app.cooperativa.navigation
 
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import app.cooperativa.presentation.login.LoginDestination
@@ -14,11 +15,13 @@ import app.cooperativa.presentation.mainflow.socios.sociosMainNavigationGraph
 
 @Composable
 fun AppNavigation(
-    navController: NavHostController
+    navController: NavHostController,
+    modifier: Modifier = Modifier
 ){
     NavHost(
         navController = navController,
-        startDestination = SplashDestination
+        startDestination = SplashDestination,
+        modifier = modifier
     ){
         directivasplashScreen(
             navController = navController
@@ -59,7 +62,5 @@ fun AppNavigation(
                 navController.navigate(DirectivaMainNavigation)
             }
         )
-
-
     }
 }
