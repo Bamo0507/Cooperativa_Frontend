@@ -55,24 +55,12 @@ object SPagoEnviarMockData {
         )
     )
 
-    private val mockFines = listOf(
-        FinePayAffiliate(userId = 1, fineName = "Multa por atraso cuota #1", fineAmount = 10f),
-        FinePayAffiliate(userId = 1, fineName = "Multa administrativa #1", fineAmount = 5f),
-        FinePayAffiliate(userId = 2, fineName = "Multa por atraso cuota #2", fineAmount = 20f),
-        FinePayAffiliate(userId = 2, fineName = "Multa administrativa #2", fineAmount = 10f),
-        FinePayAffiliate(userId = 3, fineName = "Multa por atraso cuota #3", fineAmount = 30f)
-    )
-
     fun getCuotasMensualesPendientes(): List<QuotaAffiliate> =
         mockCuotas
 
     fun getPrestamoCuotasByUser(userId: Int): List<LoanQuota> =
         // De momento devolvemos todas las cuotas de préstamo sin filtrar
         mockLoanQuotas
-
-    fun getPagoMultasByQuotasUser(userIds: List<Int>): List<FinePayAffiliate> {
-        return mockFines.filter { it.userId in userIds }
-    }
 
     fun getAllUsers(): List<BasicUserInfo> =
         mockUsers

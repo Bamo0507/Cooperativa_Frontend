@@ -29,7 +29,6 @@ class FineViewModel(
                     name = d.name,
                     date = d.date,
                     amount = d.amount.toString(),
-                    type = d.type
                 )
             }
             _uiState.update {

@@ -16,7 +16,6 @@ object FineMockData {
                     name = "Mora Pago Casa",
                     date = LocalDate(2025, 5, 1),
                     amount = 25.0f,
-                    type = FineType.LOAN
                 )
             )
         ),
@@ -29,28 +28,24 @@ object FineMockData {
                     name = "Mora Pago Tarjeta",
                     date = LocalDate(2025, 4, 28),
                     amount = 15.0f,
-                    type = FineType.QUOTA
                 ),
                 FineDetail(
                     id = 3,
                     name = "Penalización Extra",
                     date = LocalDate(2025, 5, 30),
                     amount = 10.0f,
-                    type = FineType.QUOTA
                 ),
                 FineDetail(
                     id = 4,
                     name = "Mora Pago Vehículo",
                     date = LocalDate(2025, 5, 3),
                     amount = 30.0f,
-                    type = FineType.LOAN
                 ),
                 FineDetail(
                     id = 5,
                     name = "Mora Pago Vehículo",
                     date = LocalDate(2025, 6, 3),
                     amount = 30.0f,
-                    type = FineType.LOAN
                 )
             )
         ),
@@ -63,14 +58,12 @@ object FineMockData {
                     name = "Mora Pago Vehículo",
                     date = LocalDate(2025, 5, 3),
                     amount = 30.0f,
-                    type = FineType.LOAN
                 ),
                 FineDetail(
                     id = 5,
                     name = "Mora Pago Vehículo",
                     date = LocalDate(2025, 6, 3),
                     amount = 30.0f,
-                    type = FineType.LOAN
                 )
             )
         ),
@@ -83,7 +76,6 @@ object FineMockData {
                     name = "Recargo por reconexión",
                     date = LocalDate(2025, 4, 30),
                     amount = 8.0f,
-                    type = FineType.QUOTA
                 )
             )
         ),
@@ -96,7 +88,6 @@ object FineMockData {
                     name = "Mora Estudiantil",
                     date = LocalDate(2025, 5, 5),
                     amount = 20.0f,
-                    type = FineType.LOAN
                 )
             )
         )

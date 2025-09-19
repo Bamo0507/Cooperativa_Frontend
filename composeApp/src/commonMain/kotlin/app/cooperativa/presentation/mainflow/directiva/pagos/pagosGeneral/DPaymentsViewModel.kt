@@ -96,8 +96,9 @@ class DPaymentsViewModel(
             2 -> {
                 val filtered =
                     if (q.isEmpty()) state.allFinesList
-                    else state.allFinesList.filter {
-                        it.userName.lowercase().contains(q)
+                    else state.allFinesList.filter { fine ->
+                        fine.userName.lowercase().contains(q) ||
+                                fine.fineDetails.any { it.name.lowercase().contains(q) }
                     }
                 _uiState.update { it.copy(fines = filtered) }
             }

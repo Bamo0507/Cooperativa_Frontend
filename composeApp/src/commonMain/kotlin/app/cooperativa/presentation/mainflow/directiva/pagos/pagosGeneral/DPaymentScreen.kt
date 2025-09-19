@@ -196,7 +196,7 @@ fun DPaymentsScreen(
                                 verticalArrangement = Arrangement.spacedBy(8.dp)
                             ) {
                                 items(state.fines) { fine ->
-                                    FineSection(
+                                    FineSimplifiedCard(
                                         fine = fine,
                                         modifier = Modifier
                                             .fillMaxWidth()
@@ -335,18 +335,15 @@ fun FilterChipsRow(
 }
 
 @Composable
-fun FineSection(
+fun FineSimplifiedCard(
     fine: Fine,
     onFineClick: (Int) -> Unit,
     modifier: Modifier = Modifier
-){
-    val hasQuotaFines = fine.fineDetails.any { it.type == FineType.QUOTA }
-    val hasLoanFines = fine.fineDetails.any { it.type == FineType.LOAN }
-
+) {
     Column(modifier = modifier.fillMaxWidth()) {
+        // Header con nombre del usuario + botón editar
         Row(
-            modifier = Modifier
-                .fillMaxWidth(),
+            modifier = Modifier.fillMaxWidth(),
             verticalAlignment = Alignment.CenterVertically,
         ) {
             CoopText(
@@ -375,100 +372,44 @@ fun FineSection(
             }
         }
 
-        if (hasQuotaFines) {
+        // Una sola card con filas: nombre (izq) + monto (der)
+        if (fine.fineDetails.isNotEmpty()) {
             CoopOutlinedCard(
-                onClick = { /* TODO */ },
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(vertical = 12.dp)
+                    .padding(bottom = 12.dp, top = 6.dp)
             ) {
                 Column(
-                    modifier = Modifier.padding(16.dp)
+                    modifier = Modifier.padding(16.dp),
+                    verticalArrangement = Arrangement.spacedBy(8.dp)
                 ) {
-                    CoopText(
-                        text = "Cuotas",
-                        fontWeight = FontWeight.Bold,
-                        textAlign = TextAlign.Start,
-                        style = CoopTheme.typography.bodyMedium
-                    )
-
-                    Spacer(modifier = Modifier.height(8.dp))
-
-                    fine.fineDetails
-                        .filter { it.type == FineType.QUOTA }
-                        .forEach { fineDetail ->
-                            Row(
-                                modifier = Modifier
-                                    .fillMaxWidth()
-                                    .padding(vertical = 4.dp),
-                                horizontalArrangement = Arrangement.SpaceBetween,
-                                verticalAlignment = Alignment.CenterVertically
-                            ) {
-                                CoopText(
-                                    text = dateToString(fineDetail.date),
-                                    style = CoopTheme.typography.bodyMedium
-                                )
-
-                                CoopText(
-                                    text = formatMoney(fineDetail.amount),
-                                    textAlign = TextAlign.End,
-                                    style = CoopTheme.typography.bodyMedium
-                                )
-                            }
-                        }
-                }
-            }
-        }
-
-        if(hasLoanFines){
-            CoopOutlinedCard(
-                onClick = { /* TODO */ },
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(vertical = 12.dp)
-            ){
-                Column(
-                    modifier = Modifier.padding(16.dp)
-                ) {
-                    CoopText(
-                        text = "Préstamos",
-                        fontWeight = FontWeight.Bold,
-                        textAlign = TextAlign.Start,
-                        style = CoopTheme.typography.bodyMedium
-                    )
-                    Spacer(modifier = Modifier.height(8.dp))
-
-                    fine.fineDetails.filter { it.type == FineType.LOAN }.forEach { fineDetail ->
-                        Row (modifier = Modifier.fillMaxWidth().padding(vertical = 8.dp),
+                    fine.fineDetails.forEach { detail ->
+                        Row(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(vertical = 2.dp),
                             horizontalArrangement = Arrangement.SpaceBetween,
-                            verticalAlignment = Alignment.CenterVertically,
-                        ){
-                            Column {
-                                CoopText(
-                                    text = dateToString(fineDetail.date),
-                                    textAlign = TextAlign.Start,
-                                    style = CoopTheme.typography.bodyMedium
-                                )
-                                CoopText(
-                                    text = fineDetail.name,
-                                    textAlign = TextAlign.Start,
-                                    style = CoopTheme.typography.bodyMedium
-                                )
-                            }
-
-                            Spacer(modifier = Modifier.weight(1f))
+                            verticalAlignment = Alignment.CenterVertically
+                        ) {
                             CoopText(
-                                text = formatMoney(fineDetail.amount),
+                                text = detail.name,
+                                style = CoopTheme.typography.bodyMedium,
+                                maxLines = 1,
+                                overflow = TextOverflow.Ellipsis,
+                                modifier = Modifier.weight(1f)
+                            )
+                            CoopText(
+                                text = formatMoney(detail.amount),
                                 textAlign = TextAlign.End,
-                                style = CoopTheme.typography.bodyMedium
+                                style = CoopTheme.typography.bodyMedium,
+                                color = CoopTheme.colorScheme.onSecondary,
+                                modifier = Modifier.weight(1f)
                             )
                         }
                     }
-
                 }
             }
         }
-
     }
 }
 
