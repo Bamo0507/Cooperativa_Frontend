@@ -1,15 +1,24 @@
 package app.cooperativa.di.socios
 
-import app.cooperativa.domain.socios.MockSociosPagoEnviarRepository
+import app.cooperativa.domain.localstorage.PreferencesLocalStorage
 import app.cooperativa.domain.socios.SPagoEnviarRepository
+import app.cooperativa.domain.socios.SociosPagoEnviarRepository
 import app.cooperativa.presentation.mainflow.socios.pagos.agregarPago.SPagoEnviarViewModel
+import com.apollographql.apollo3.ApolloClient
+import org.koin.core.qualifier.named
 import org.koin.dsl.module
 
 val spagoEnviarModule = module {
-    // Declare current mock implementation
-    single<SPagoEnviarRepository> { MockSociosPagoEnviarRepository() }
+    single<SPagoEnviarRepository> {
+        SociosPagoEnviarRepository(
+            fineApollo = get<ApolloClient>(named("fine"))
+        )
+    }
 
     factory {
-        SPagoEnviarViewModel(get(), get())
+        SPagoEnviarViewModel(
+            repository = get(),
+            prefs = get()
+        )
     }
 }
