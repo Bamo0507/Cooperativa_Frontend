@@ -5,25 +5,43 @@ import app.cooperativa.data.model.dto.BasicUserInfo
 import app.cooperativa.data.model.dto.FinePayAffiliate
 import app.cooperativa.data.model.dto.LoanQuota
 import app.cooperativa.data.model.dto.QuotaAffiliate
+import app.cooperativa.graphql.GetFinesByIdQuery
+import com.apollographql.apollo3.ApolloClient
 
 interface SPagoEnviarRepository {
     suspend fun getCuotasMensualesPendientes(): List<QuotaAffiliate>
     suspend fun getPrestamoCuotasByUser(userId: Int): List<LoanQuota>
-    suspend fun getPagoMultasByQuotasUser(usersIds: List<Int>): List<FinePayAffiliate>
+    suspend fun getFinesByAccessToken(accessToken: String): List<FinePayAffiliate>
+
     suspend fun getAllUsers(): List<BasicUserInfo>
 }
 
-// Mock implementation of the repository
-class MockSociosPagoEnviarRepository: SPagoEnviarRepository {
-    override suspend fun getCuotasMensualesPendientes(): List<QuotaAffiliate> =
-        SPagoEnviarMockData.getCuotasMensualesPendientes()
+class SociosPagoEnviarRepository(
+    private val fineApollo: ApolloClient
+) : SPagoEnviarRepository {
+    //TODO: penditne de definir x backend
+    override suspend fun getCuotasMensualesPendientes(): List<QuotaAffiliate> = emptyList()
+    override suspend fun getPrestamoCuotasByUser(userId: Int): List<LoanQuota> = emptyList()
+    override suspend fun getAllUsers(): List<BasicUserInfo> = emptyList()
 
-    override suspend fun getPrestamoCuotasByUser(userId: Int): List<LoanQuota> =
-        SPagoEnviarMockData.getPrestamoCuotasByUser(userId)
+    override suspend fun getFinesByAccessToken(accessToken: String): List<FinePayAffiliate> {
+        val response = fineApollo.query(
+            GetFinesByIdQuery(accessToken = accessToken)
+        ).execute()
 
-    override suspend fun getPagoMultasByQuotasUser(usersIds: List<Int>): List<FinePayAffiliate> =
-        SPagoEnviarMockData.getPagoMultasByQuotasUser(usersIds)
+        if (response.hasErrors()) {
+            val msg = response.errors?.joinToString { it.message }.orEmpty()
+            throw RuntimeException(msg.ifBlank { "Error GraphQL (getFinesById)" })
+        }
 
-    override suspend fun getAllUsers(): List<BasicUserInfo> =
-        SPagoEnviarMockData.getAllUsers()
+        val fines = response.data?.getFinesById
+            ?: throw RuntimeException("Respuesta vacía (getFinesById)")
+
+        return fines.map { f ->
+            FinePayAffiliate(
+                fineName = f.razon,
+                fineAmount = f.cantidad.toFloat()
+            )
+        }
+    }
 }
