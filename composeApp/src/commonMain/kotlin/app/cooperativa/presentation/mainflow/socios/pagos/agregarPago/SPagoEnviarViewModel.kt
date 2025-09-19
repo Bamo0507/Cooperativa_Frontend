@@ -22,7 +22,6 @@ import kotlinx.coroutines.flow.update
 class SPagoEnviarViewModel(
     private val repository: SPagoEnviarRepository,
     private val prefs: PreferencesLocalStorage,
-    private val userId: Int = 1 // TODO: Delete and use local storage inyection instead
 ) : ViewModel() {
     private val _uiState: MutableStateFlow<SPagoEnviarState> = MutableStateFlow(
         SPagoEnviarState()
@@ -139,41 +138,49 @@ class SPagoEnviarViewModel(
 
     private fun loadData() {
         viewModelScope.launch {
-            // Indica que se está cargando
-            _uiState.value = _uiState.value.copy(
-                isLoading = true,
-                errorMessage = null
-            )
+            _uiState.update { it.copy(isLoading = true, errorMessage = null) }
+
             try {
-                // Cargar si el usuario ya habia accedido
+                // Flag para UI
                 val hasSentPayment = prefs.hasSentPayment()
 
-                _uiState.update {
-                    it.copy(
-                        hasSentPayment = hasSentPayment
-                    )
-                }
+                // Acceso
+                val accessToken = prefs.getAccessToken().orEmpty()
 
-                // Carga de datos del repositorio
+                // Datos mock/actuales (cuotas, préstamos, usuarios)
                 val cuotas = repository.getCuotasMensualesPendientes()
-                val prestamos = repository.getPrestamoCuotasByUser(userId)
-                val multas = repository.getPagoMultasByQuotasUser(listOf(userId))
+                val prestamos = repository.getPrestamoCuotasByUser(1) // TODO: migrar a accessToken cuando tengas el query
                 val usuarios = repository.getAllUsers()
 
-                // Actualiza el estado con los datos cargados
-                _uiState.value = _uiState.value.copy(
-                    isLoading = false,
-                    cuotasDisponibles = cuotas,
-                    prestamosDisponibles = prestamos,
-                    multasDisponibles = multas,
-                    usuariosDisponibles = usuarios
-                )
+                // Multas desde GraphQL (/graphql/fine) con fallback a vacío si falla
+                val multas = try {
+                    if (accessToken.isNotBlank()) {
+                        repository.getFinesByAccessToken(accessToken)
+                    } else {
+                        emptyList()
+                    }
+                } catch (e: Exception) {
+                    // log si quieres
+                    emptyList()
+                }
+
+                // Set UI
+                _uiState.update {
+                    it.copy(
+                        hasSentPayment = hasSentPayment,
+                        cuotasDisponibles = cuotas,
+                        prestamosDisponibles = prestamos,
+                        multasDisponibles = multas,
+                        usuariosDisponibles = usuarios,
+                        isLoading = false,
+                        errorMessage = null
+                    )
+                }
             } catch (e: Exception) {
-                // Manejo de error
-                _uiState.value = _uiState.value.copy(
-                    isLoading = false,
-                    errorMessage = e.message
-                )
+                // Error general
+                _uiState.update {
+                    it.copy(isLoading = false, errorMessage = "Error al cargar datos" ?: "Error al cargar datos")
+                }
             }
         }
     }
