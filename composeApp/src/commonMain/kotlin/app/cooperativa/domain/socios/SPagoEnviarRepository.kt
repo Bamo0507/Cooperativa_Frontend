@@ -39,8 +39,8 @@ class SociosPagoEnviarRepository(
 
         return fines.map { f ->
             FinePayAffiliate(
-                fineName = f.razon,
-                fineAmount = f.cantidad.toFloat()
+                fineName = f.reason,
+                fineAmount = f.quantity.toFloat()
             )
         }
     }

@@ -10,7 +10,7 @@ data class DFineManagerState(
     val fineAmountText: String = "",
 
     val affiliateName: String = "",
-    val affiliateId: Int = 0,
+    val affiliateId: String = "",
 
     val isLoading: Boolean = false,
     val errorMessage: String? = null

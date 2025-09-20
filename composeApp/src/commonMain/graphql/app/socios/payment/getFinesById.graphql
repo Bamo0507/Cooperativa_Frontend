@@ -1,6 +1,6 @@
 query GetFinesById($accessToken: String!) {
     getFinesById(accessToken: $accessToken) {
-        razon
-        cantidad
+        quantity
+        reason
     }
 }

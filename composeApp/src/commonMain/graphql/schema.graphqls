@@ -1,13 +1,15 @@
 type Query {
   getHistory(accessToken: String!): History
+
   getAllMemembers: [Member!]!
+
 #  Relacionados a formulario de pagos
   getFinesById(accessToken: String!): [Fine!]!
 }
 
 # General
 type Member {
-  usuarioId: Int!
+  userId: String!
   name: String!
 }
 
@@ -20,6 +22,6 @@ type History {
 # Socios - Pagos -------
 # Formulario de Pagos
 type Fine {
-  razon: String!
-  cantidad: Float!
+  reason: String!
+  quantity: Float!
 }

@@ -60,7 +60,7 @@ fun DFineManagerScreen(
     loadMembers: () -> Unit,
     updateFineAmount: (amount: String) -> Unit,
     updateFineName: (name: String) -> Unit,
-    selectedAffiliate: (affiliateName: String, affiliateId: Int) -> Unit,
+    selectedAffiliate: (affiliateName: String, affiliateId: String) -> Unit,
     state: DFineManagerState,
     onBackClick: () -> Unit,
     modifier: Modifier = Modifier
@@ -97,9 +97,9 @@ fun DFineManagerScreen(
                 CoopDropdown(
                     items = state.memberOptions,
                     selectedItem = state.memberOptions
-                        .firstOrNull { it.usuarioId == state.affiliateId },
+                        .firstOrNull { it.userId == state.affiliateId },
                     onItemSelected = { member ->
-                        selectedAffiliate(member.name, member.usuarioId)
+                        selectedAffiliate(member.name, member.userId)
                     },
                     itemToString = { it.name },
                     label = { CoopText("Selecciona...") },

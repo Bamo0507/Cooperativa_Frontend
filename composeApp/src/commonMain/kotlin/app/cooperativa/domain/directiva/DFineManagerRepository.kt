@@ -6,7 +6,7 @@ import com.apollographql.apollo3.ApolloClient
 import com.apollographql.apollo3.api.ApolloResponse
 
 data class Member(
-    val usuarioId: Int,
+    val userId: String,
     val name: String
 )
 
@@ -23,8 +23,8 @@ class DirectiveFineManagerRepository(
         return apollo.executeQuery(GettingAffiliatesQuery()) { data ->
             data.getAllMemembers.map { node ->
                 Member(
-                    usuarioId = node.usuarioId, // no null
-                    name = node.name            // no null
+                    userId = node.userId,
+                    name = node.name
                 )
             }
         }
