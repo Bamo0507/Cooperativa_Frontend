@@ -1,29 +1,39 @@
 type Query {
-  login(user_name: String!, pass_code: String!): LoginPayload
   getHistory(accessToken: String!): History
+
   getAllMemembers: [Member!]!
+
+#  Relacionados a pagos en socios
+  getFinesById(accessToken: String!): [Fine!]!
+
+  getUsersPayments(accessToken: String!): [UserPayment!]!
 }
 
+# General
 type Member {
-  usuarioId: Int!
+  userId: String!
   name: String!
 }
 
+# Socios - Historial
 type History {
   owedCapital: Float
   payedToCapital: Float
 }
 
-type LoginOk {
-  access_token: String!
-  user_type: String!
+# Socios - Pagos -------
+# Formulario de Pagos
+type UserPayment {
+  commentary: String!
+  paymentDate: String!
+  paymentId: String!
+  state: String!
+  ticketNum: String!
+  totalAmount: Float!
+  photo: String!
 }
 
-type LoginErr {
-  message: String!
-}
-
-type LoginPayload {
-  Ok: LoginOk
-  Err: LoginErr
+type Fine {
+  reason: String!
+  quantity: Float!
 }
