@@ -12,6 +12,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
@@ -45,6 +46,7 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import app.cooperativa.data.model.dto.BasicUserInfo
@@ -291,13 +293,26 @@ fun SPagoEnviarScreen(
             items(state.selectedCuotas.size) { cuotaIndex ->
                 val cuota = state.selectedCuotas[cuotaIndex]
                 Row(
-                    modifier = Modifier
-                        .fillMaxWidth(),
+                    modifier = Modifier.fillMaxWidth(),
                     verticalAlignment = Alignment.CenterVertically
                 ) {
-                    CoopText(cuota.nombreAsociado, style = CoopTheme.typography.bodyLarge)
-                    Spacer(modifier = Modifier.weight(1f))
-                    CoopText(formatMoney(cuota.montoCuota), style = CoopTheme.typography.bodyLarge)
+                    // Nombre (trunca con elipsis y ocupa el espacio disponible)
+                    CoopText(
+                        text = cuota.nombreAsociado,
+                        style = CoopTheme.typography.bodyLarge,
+                        maxLines = 1,
+                        overflow = TextOverflow.Ellipsis,
+                        modifier = Modifier.weight(1f)
+                    )
+                    // Monto (ancho mínimo fijo, alineado a la derecha)
+                    CoopText(
+                        text = formatMoney(cuota.montoCuota),
+                        style = CoopTheme.typography.bodyLarge,
+                        textAlign = TextAlign.End,
+                        modifier = Modifier
+                            .widthIn(min = 72.dp)
+                            .padding(start = 8.dp)
+                    )
                     IconButton(onClick = { onRemoveCuota(cuota) }) {
                         Icon(Icons.Default.Delete, contentDescription = "Eliminar cuota")
                     }
@@ -361,13 +376,24 @@ fun SPagoEnviarScreen(
             items(state.selectedLoanQuotas.size) { loanIndex ->
                 val loan = state.selectedLoanQuotas[loanIndex]
                 Row(
-                    modifier = Modifier
-                        .fillMaxWidth(),
+                    modifier = Modifier.fillMaxWidth(),
                     verticalAlignment = Alignment.CenterVertically
                 ) {
-                    CoopText(loan.nombrePago, style = CoopTheme.typography.bodyLarge)
-                    Spacer(modifier = Modifier.weight(1f))
-                    CoopText(formatMoney(loan.monto), style = CoopTheme.typography.bodyLarge)
+                    CoopText(
+                        text = loan.nombrePago,
+                        style = CoopTheme.typography.bodyLarge,
+                        maxLines = 1,
+                        overflow = TextOverflow.Ellipsis,
+                        modifier = Modifier.weight(1f)
+                    )
+                    CoopText(
+                        text = formatMoney(loan.monto),
+                        style = CoopTheme.typography.bodyLarge,
+                        textAlign = TextAlign.End,
+                        modifier = Modifier
+                            .widthIn(min = 72.dp)
+                            .padding(start = 8.dp)
+                    )
                     IconButton(onClick = { onRemoveLoanQuota(loan) }) {
                         Icon(Icons.Default.Delete, contentDescription = "Eliminar préstamo")
                     }
@@ -431,13 +457,24 @@ fun SPagoEnviarScreen(
             items(state.selectedFines.size) { fineIndex ->
                 val fine = state.selectedFines[fineIndex]
                 Row(
-                    modifier = Modifier
-                        .fillMaxWidth(),
+                    modifier = Modifier.fillMaxWidth(),
                     verticalAlignment = Alignment.CenterVertically
                 ) {
-                    CoopText(fine.fineName, style = CoopTheme.typography.bodyLarge)
-                    Spacer(modifier = Modifier.weight(1f))
-                    CoopText(formatMoney(fine.fineAmount), style = CoopTheme.typography.bodyLarge)
+                    CoopText(
+                        text = fine.fineName,
+                        style = CoopTheme.typography.bodyLarge,
+                        maxLines = 1,
+                        overflow = TextOverflow.Ellipsis,
+                        modifier = Modifier.weight(1f)
+                    )
+                    CoopText(
+                        text = formatMoney(fine.fineAmount),
+                        style = CoopTheme.typography.bodyLarge,
+                        textAlign = TextAlign.End,
+                        modifier = Modifier
+                            .widthIn(min = 72.dp)
+                            .padding(start = 8.dp)
+                    )
                     IconButton(onClick = { onRemoveFine(fine) }) {
                         Icon(Icons.Default.Delete, contentDescription = "Eliminar multa")
                     }
