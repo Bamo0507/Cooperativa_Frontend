@@ -1,7 +1,7 @@
 package app.cooperativa.data.model.dto
 
 enum class Estados {
-    PENDIENTE,
-    APROBADO,
-    RECHAZADO
+    PENDING,
+    COMPLETED,
+    ON_REVISION // TODO: Change 2 REJECTED
 }

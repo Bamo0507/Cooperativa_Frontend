@@ -3,7 +3,6 @@ package app.cooperativa.presentation.mainflow.socios.prestamos.mainPrestamos
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -14,14 +13,11 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.AttachFile
 import androidx.compose.material.icons.filled.Download
-import androidx.compose.material.icons.filled.Face
 import androidx.compose.material.icons.filled.Refresh
 import androidx.compose.material3.FilterChip
 import androidx.compose.material3.FilterChipDefaults
 import androidx.compose.material3.FloatingActionButton
-import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButtonDefaults
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -199,7 +195,7 @@ fun PrestamoStatusCard(
 
             Spacer(modifier = Modifier.weight(1f))
 
-            if (estado == Estados.APROBADO){
+            if (estado == Estados.COMPLETED){
                 CoopIconButton(
                     onClick = {}, //TODO: Agregar Descarga
                     colors = IconButtonDefaults.iconButtonColors(
@@ -254,7 +250,7 @@ fun PagareStatusCard(
 
             Spacer(modifier = Modifier.weight(1f))
 
-            if (estado == Estados.RECHAZADO){
+            if (estado == Estados.ON_REVISION){
                 CoopIconButton(
                     onClick = navToPagareSelection,
                     colors = IconButtonDefaults.iconButtonColors(
@@ -275,9 +271,9 @@ fun PagareStatusCard(
 
 fun getPagareStatusText(estado: Estados): String{
     return when(estado){
-        Estados.APROBADO -> "Aprobado"
-        Estados.PENDIENTE -> "En Revisión"
-        Estados.RECHAZADO -> "Volver a Cargar"
+        Estados.COMPLETED -> "Aprobado"
+        Estados.PENDING -> "En Revisión"
+        Estados.ON_REVISION -> "Volver a Cargar"
     }
 }
 

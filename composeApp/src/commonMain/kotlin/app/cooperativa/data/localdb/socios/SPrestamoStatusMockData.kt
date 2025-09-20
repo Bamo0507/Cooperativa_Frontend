@@ -10,21 +10,21 @@ object SPrestamoStatusMockData {
             solicitudId = 1,
             solicitanteId = 1,
             prestamoNombre = "Negocio de Fresas",
-            estadoPrestamo = Estados.PENDIENTE,
+            estadoPrestamo = Estados.PENDING,
             linkDescargaPagare = ""
         ),
         PrestamosStatus(
             solicitudId = 2,
             solicitanteId = 2,
             prestamoNombre = "Moto Yamaha",
-            estadoPrestamo = Estados.APROBADO,
+            estadoPrestamo = Estados.COMPLETED,
             linkDescargaPagare = ""
         ),
         PrestamosStatus(
             solicitudId = 3,
             solicitanteId = 3,
             prestamoNombre = "Casa de Playa",
-            estadoPrestamo = Estados.RECHAZADO,
+            estadoPrestamo = Estados.ON_REVISION,
             linkDescargaPagare = ""
         )
     )
@@ -34,19 +34,19 @@ object SPrestamoStatusMockData {
             solicitudId = 1,
             solicitanteId = 1,
             prestamoNombre = "Negocio de Banano",
-            estadoPagare = Estados.PENDIENTE,
+            estadoPagare = Estados.PENDING,
         ),
         PagaresStatus(
             solicitudId = 2,
             solicitanteId = 2,
             prestamoNombre = "Moto BMW",
-            estadoPagare = Estados.APROBADO,
+            estadoPagare = Estados.COMPLETED,
         ),
         PagaresStatus(
             solicitudId = 3,
             solicitanteId = 3,
             prestamoNombre = "Casa de Puerto",
-            estadoPagare = Estados.RECHAZADO,
+            estadoPagare = Estados.ON_REVISION,
         )
     )
 

@@ -4,6 +4,6 @@ data class PagaresStatus(
     val solicitudId: Int,
     val solicitanteId: Int,
     val prestamoNombre: String,
-    val estadoPagare: Estados = Estados.PENDIENTE
+    val estadoPagare: Estados = Estados.PENDING
 )
 

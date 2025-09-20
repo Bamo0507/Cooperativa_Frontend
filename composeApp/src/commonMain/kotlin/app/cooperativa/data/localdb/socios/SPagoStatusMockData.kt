@@ -9,19 +9,19 @@ object SPagoStatusMockData {
             pagoId = "1",
             nombrePago="Pago Febrero Cuotas 2023",
             dateOfPayment = "2023-02-01",
-            estado = Estados.APROBADO
+            estado = Estados.COMPLETED
         ),
         PagosStatus(
             pagoId = "2",
             nombrePago="Pago Enero Cuotas 2023",
             dateOfPayment = "2023-01-01",
-            estado = Estados.RECHAZADO
+            estado = Estados.ON_REVISION
         ),
         PagosStatus(
             pagoId = "3",
             nombrePago="Pago Diciembre Cuotas 2022",
             dateOfPayment = "2022-12-01",
-            estado = Estados.PENDIENTE
+            estado = Estados.PENDING
         )
     )
 

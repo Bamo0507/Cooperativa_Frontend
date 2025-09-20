@@ -7,7 +7,6 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -152,9 +151,9 @@ fun PagoStatusCard(
                 .fillMaxWidth()
                 .clickable {
                     when (estado) {
-                        Estados.RECHAZADO -> onWatchError(pagoId)
-                        Estados.APROBADO -> showApprovedDialog = true
-                        Estados.PENDIENTE -> showPendingDialog = true
+                        Estados.ON_REVISION -> onWatchError(pagoId)
+                        Estados.COMPLETED -> showApprovedDialog = true
+                        Estados.PENDING -> showPendingDialog = true
                     }
                 }
                 .padding(16.dp),
@@ -192,7 +191,7 @@ fun PagoStatusCard(
             }
 
             when (estado) {
-                Estados.RECHAZADO -> {
+                Estados.ON_REVISION -> {
                     Box(
                         modifier = Modifier.size(24.dp),
                         contentAlignment = Alignment.Center
@@ -205,7 +204,7 @@ fun PagoStatusCard(
                         )
                     }
                 }
-                Estados.APROBADO -> {
+                Estados.COMPLETED -> {
                     Box(
                         modifier = Modifier.size(24.dp),
                         contentAlignment = Alignment.Center
@@ -218,7 +217,7 @@ fun PagoStatusCard(
                         )
                     }
                 }
-                Estados.PENDIENTE -> {
+                Estados.PENDING -> {
                     Box(
                         modifier = Modifier.size(24.dp),
                         contentAlignment = Alignment.Center
