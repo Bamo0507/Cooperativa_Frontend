@@ -3,8 +3,10 @@ type Query {
 
   getAllMemembers: [Member!]!
 
-#  Relacionados a formulario de pagos
+#  Relacionados a pagos en socios
   getFinesById(accessToken: String!): [Fine!]!
+
+  getUsersPayments(accessToken: String!): [UserPayment!]!
 }
 
 # General
@@ -21,6 +23,16 @@ type History {
 
 # Socios - Pagos -------
 # Formulario de Pagos
+type UserPayment {
+  commentary: String!
+  paymentDate: String!
+  paymentId: String!
+  state: String!
+  ticketNum: String!
+  totalAmount: Float!
+  photo: String!
+}
+
 type Fine {
   reason: String!
   quantity: Float!
