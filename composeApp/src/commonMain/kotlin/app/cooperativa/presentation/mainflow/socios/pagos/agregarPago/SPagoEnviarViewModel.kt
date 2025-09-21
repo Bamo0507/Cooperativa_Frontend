@@ -87,21 +87,30 @@ class SPagoEnviarViewModel(
     }
 
     fun addCuota(cuota: QuotaAffiliate) {
-        _uiState.value = _uiState.value.copy(
-            selectedCuotas = _uiState.value.selectedCuotas + cuota
-        )
+        _uiState.update { state ->
+            state.copy(
+                selectedCuotas = state.selectedCuotas + cuota,
+                cuotasDisponibles = state.cuotasDisponibles - cuota
+            )
+        }
     }
 
     fun addLoanQuota(loan: LoanQuota) {
-        _uiState.value = _uiState.value.copy(
-            selectedLoanQuotas = _uiState.value.selectedLoanQuotas + loan
-        )
+        _uiState.update { state ->
+            state.copy(
+                selectedLoanQuotas = state.selectedLoanQuotas + loan,
+                prestamosDisponibles = state.prestamosDisponibles - loan
+            )
+        }
     }
 
     fun addFine(fine: FinePayAffiliate) {
-        _uiState.value = _uiState.value.copy(
-            selectedFines = _uiState.value.selectedFines + fine
-        )
+        _uiState.update { state ->
+            state.copy(
+                selectedFines = state.selectedFines + fine,
+                multasDisponibles = state.multasDisponibles - fine
+            )
+        }
     }
 
     fun addCapitalContribution(user: BasicUserInfo, amount: Float) {
@@ -110,30 +119,49 @@ class SPagoEnviarViewModel(
             userName = user.name,
             amount = amount
         )
-        _uiState.value = _uiState.value.copy(
-            aportesCapital = _uiState.value.aportesCapital + contribution
-        )
+        _uiState.update { state ->
+            state.copy(
+                aportesCapital = state.aportesCapital + contribution,
+                // quitar usuario de opciones para evitar duplicado
+                usuariosDisponibles = state.usuariosDisponibles.filter { it.userId != user.userId }
+            )
+        }
     }
 
     fun removeCuota(cuota: QuotaAffiliate) {
-        _uiState.value = _uiState.value.copy(
-            selectedCuotas = _uiState.value.selectedCuotas - cuota
-        )
+        _uiState.update { state ->
+            state.copy(
+                selectedCuotas = state.selectedCuotas - cuota,
+                // devolver la cuota a disponibles
+                cuotasDisponibles = state.cuotasDisponibles + cuota
+            )
+        }
     }
     fun removeLoanQuota(loan: LoanQuota) {
-        _uiState.value = _uiState.value.copy(
-            selectedLoanQuotas = _uiState.value.selectedLoanQuotas - loan
-        )
+        _uiState.update { state ->
+            state.copy(
+                selectedLoanQuotas = state.selectedLoanQuotas - loan,
+                prestamosDisponibles = state.prestamosDisponibles + loan
+            )
+        }
     }
     fun removeFine(fine: FinePayAffiliate) {
-        _uiState.value = _uiState.value.copy(
-            selectedFines = _uiState.value.selectedFines - fine
-        )
+        _uiState.update { state ->
+            state.copy(
+                selectedFines = state.selectedFines - fine,
+                multasDisponibles = state.multasDisponibles + fine
+            )
+        }
     }
     fun removeCapitalContribution(aporte: CapitalContribution) {
-        _uiState.value = _uiState.value.copy(
-            aportesCapital = _uiState.value.aportesCapital - aporte
-        )
+        _uiState.update { state ->
+            // reconstruimos una opción mínima para devolver al dropdown
+            val restoredUser = BasicUserInfo(userId = aporte.userId, name = aporte.userName)
+            state.copy(
+                aportesCapital = state.aportesCapital - aporte,
+                usuariosDisponibles = state.usuariosDisponibles + restoredUser
+            )
+        }
     }
 
     private fun loadData() {
@@ -165,13 +193,19 @@ class SPagoEnviarViewModel(
                 }
 
                 // Set UI
-                _uiState.update {
-                    it.copy(
+                _uiState.update { current ->
+                    // Filtra para no mostrar opciones ya seleccionadas
+                    val filteredCuotas = cuotas.filter { it !in current.selectedCuotas }
+                    val filteredPrestamos = prestamos.filter { it !in current.selectedLoanQuotas }
+                    val filteredMultas = multas.filter { it !in current.selectedFines }
+                    val filteredUsuarios = usuarios.filter { u -> current.aportesCapital.none { it.userId == u.userId } }
+
+                    current.copy(
                         hasSentPayment = hasSentPayment,
-                        cuotasDisponibles = cuotas,
-                        prestamosDisponibles = prestamos,
-                        multasDisponibles = multas,
-                        usuariosDisponibles = usuarios,
+                        cuotasDisponibles = filteredCuotas,
+                        prestamosDisponibles = filteredPrestamos,
+                        multasDisponibles = filteredMultas,
+                        usuariosDisponibles = filteredUsuarios,
                         isLoading = false,
                         errorMessage = null
                     )
