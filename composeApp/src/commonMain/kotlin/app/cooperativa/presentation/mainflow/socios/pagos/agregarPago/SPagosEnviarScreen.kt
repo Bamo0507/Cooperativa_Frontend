@@ -21,6 +21,7 @@ import androidx.compose.material.icons.filled.CloudUpload
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.Send
 import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material.icons.filled.CreditCard
 import androidx.compose.material.icons.filled.Receipt
@@ -42,6 +43,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
@@ -58,6 +60,7 @@ import app.cooperativa.theme.CoopTheme
 import app.cooperativa.theme.components.CoopButton
 import app.cooperativa.theme.components.CoopDropdown
 import app.cooperativa.theme.components.CoopOutlinedButton
+import app.cooperativa.theme.components.CoopOutlinedCard
 import app.cooperativa.theme.components.CoopOutlinedTextField
 import app.cooperativa.theme.components.CoopText
 import app.cooperativa.theme.components.CoopTopBar
@@ -185,7 +188,8 @@ fun SPagoEnviarScreen(
                     placeholder = { Text("Ingrese nombre") },
                     isError = false,
                     singleLine = true,
-                    maxLines = 1
+                    maxLines = 1,
+                    unfocusedBorderColor = CoopTheme.colorScheme.primary,
                 )
             }
             item {
@@ -204,7 +208,8 @@ fun SPagoEnviarScreen(
                     digitsOnly = true,
                     allowDecimal = true,
                     allowNegative = false,
-                    maxDecimalPlaces = 2
+                    maxDecimalPlaces = 2,
+                    unfocusedBorderColor = CoopTheme.colorScheme.primary,
                 )
             }
             item {
@@ -218,6 +223,7 @@ fun SPagoEnviarScreen(
                     placeholder = { Text("Solo dígitos") },
                     keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
                     isError = false,
+                    unfocusedBorderColor = CoopTheme.colorScheme.primary,
                 )
             }
             item {
@@ -231,6 +237,7 @@ fun SPagoEnviarScreen(
                     placeholder = { Text("Solo dígitos") },
                     keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
                     isError = false,
+                    unfocusedBorderColor = CoopTheme.colorScheme.primary,
                 )
             }
             item {
@@ -252,10 +259,11 @@ fun SPagoEnviarScreen(
                     selectedItem = cuotaToAdd,
                     onItemSelected = { cuotaToAdd = it },
                     itemToString = { it.nombreAsociado },
+                    placeholder = "Elige",
                     modifier = Modifier.fillMaxWidth(),
-                    placeholder = { CoopText("Elige") },
-                    truncateSingleLine = true,
-                    forceExternalLabel = true
+                    enableSearch = true,
+                    radioSize = 20.dp,
+                    optionMaxLines = 2
                 )
                 Spacer(modifier = Modifier.height(8.dp))
                 CoopOutlinedTextField(
@@ -292,31 +300,15 @@ fun SPagoEnviarScreen(
             }
             items(state.selectedCuotas.size) { cuotaIndex ->
                 val cuota = state.selectedCuotas[cuotaIndex]
-                Row(
-                    modifier = Modifier.fillMaxWidth(),
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    // Nombre (trunca con elipsis y ocupa el espacio disponible)
-                    CoopText(
-                        text = cuota.nombreAsociado,
-                        style = CoopTheme.typography.bodyLarge,
-                        maxLines = 1,
-                        overflow = TextOverflow.Ellipsis,
-                        modifier = Modifier.weight(1f)
-                    )
-                    // Monto (ancho mínimo fijo, alineado a la derecha)
-                    CoopText(
-                        text = formatMoney(cuota.montoCuota),
-                        style = CoopTheme.typography.bodyLarge,
-                        textAlign = TextAlign.End,
-                        modifier = Modifier
-                            .widthIn(min = 72.dp)
-                            .padding(start = 8.dp)
-                    )
-                    IconButton(onClick = { onRemoveCuota(cuota) }) {
-                        Icon(Icons.Default.Delete, contentDescription = "Eliminar cuota")
-                    }
-                }
+                SelectedItemRow(
+                    title = cuota.nombreAsociado,
+                    amountText = formatMoney(cuota.montoCuota),
+                    leadingIcon = Icons.Filled.Receipt,
+                    onRemove = { onRemoveCuota(cuota) },
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(vertical = 6.dp)
+                )
             }
 
             // Sección Préstamos
@@ -335,10 +327,11 @@ fun SPagoEnviarScreen(
                     selectedItem = loanToAdd,
                     onItemSelected = { loanToAdd = it },
                     itemToString = { it.nombrePago },
+                    placeholder = "Elige",
                     modifier = Modifier.fillMaxWidth(),
-                    placeholder = { CoopText("Elige") },
-                    truncateSingleLine = true,
-                    forceExternalLabel = true
+                    enableSearch = false,
+                    radioSize = 20.dp,
+                    optionMaxLines = 2
                 )
                 Spacer(modifier = Modifier.height(8.dp))
                 CoopOutlinedTextField(
@@ -375,29 +368,15 @@ fun SPagoEnviarScreen(
             }
             items(state.selectedLoanQuotas.size) { loanIndex ->
                 val loan = state.selectedLoanQuotas[loanIndex]
-                Row(
-                    modifier = Modifier.fillMaxWidth(),
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    CoopText(
-                        text = loan.nombrePago,
-                        style = CoopTheme.typography.bodyLarge,
-                        maxLines = 1,
-                        overflow = TextOverflow.Ellipsis,
-                        modifier = Modifier.weight(1f)
-                    )
-                    CoopText(
-                        text = formatMoney(loan.monto),
-                        style = CoopTheme.typography.bodyLarge,
-                        textAlign = TextAlign.End,
-                        modifier = Modifier
-                            .widthIn(min = 72.dp)
-                            .padding(start = 8.dp)
-                    )
-                    IconButton(onClick = { onRemoveLoanQuota(loan) }) {
-                        Icon(Icons.Default.Delete, contentDescription = "Eliminar préstamo")
-                    }
-                }
+                SelectedItemRow(
+                    title = loan.nombrePago,
+                    amountText = formatMoney(loan.monto),
+                    leadingIcon = Icons.Filled.CreditCard,
+                    onRemove = { onRemoveLoanQuota(loan) },
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(vertical = 6.dp)
+                )
             }
 
             // Sección Multas
@@ -416,10 +395,11 @@ fun SPagoEnviarScreen(
                     selectedItem = fineToAdd,
                     onItemSelected = { fineToAdd = it },
                     itemToString = { it.fineName },
+                    placeholder = "Elige",
                     modifier = Modifier.fillMaxWidth(),
-                    placeholder = { CoopText("Elige") },
-                    truncateSingleLine = true,
-                    forceExternalLabel = true
+                    enableSearch = false,
+                    radioSize = 20.dp,
+                    optionMaxLines = 2
                 )
                 Spacer(modifier = Modifier.height(8.dp))
                 CoopOutlinedTextField(
@@ -456,29 +436,15 @@ fun SPagoEnviarScreen(
             }
             items(state.selectedFines.size) { fineIndex ->
                 val fine = state.selectedFines[fineIndex]
-                Row(
-                    modifier = Modifier.fillMaxWidth(),
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    CoopText(
-                        text = fine.fineName,
-                        style = CoopTheme.typography.bodyLarge,
-                        maxLines = 1,
-                        overflow = TextOverflow.Ellipsis,
-                        modifier = Modifier.weight(1f)
-                    )
-                    CoopText(
-                        text = formatMoney(fine.fineAmount),
-                        style = CoopTheme.typography.bodyLarge,
-                        textAlign = TextAlign.End,
-                        modifier = Modifier
-                            .widthIn(min = 72.dp)
-                            .padding(start = 8.dp)
-                    )
-                    IconButton(onClick = { onRemoveFine(fine) }) {
-                        Icon(Icons.Default.Delete, contentDescription = "Eliminar multa")
-                    }
-                }
+                SelectedItemRow(
+                    title = fine.fineName,
+                    amountText = formatMoney(fine.fineAmount),
+                    leadingIcon = Icons.Filled.Receipt,
+                    onRemove = { onRemoveFine(fine) },
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(vertical = 6.dp)
+                )
             }
 
             // Sección Aportes de Capital
@@ -499,10 +465,11 @@ fun SPagoEnviarScreen(
                     selectedItem = userToAdd,
                     onItemSelected = { userToAdd = it },
                     itemToString = { it.name },
+                    placeholder = "Elige",
                     modifier = Modifier.fillMaxWidth(),
-                    placeholder = { CoopText("Elige") },
-                    truncateSingleLine = true,
-                    forceExternalLabel = true
+                    enableSearch = false,
+                    radioSize = 20.dp,
+                    optionMaxLines = 2
                 )
                 Spacer(modifier = Modifier.height(8.dp))
                 CoopOutlinedTextField(
@@ -513,6 +480,7 @@ fun SPagoEnviarScreen(
                     keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Decimal),
                     singleLine = true,
                     isError = false,
+                    unfocusedBorderColor = CoopTheme.colorScheme.primary,
                     modifier = Modifier.fillMaxWidth(),
                     digitsOnly = true,
                     allowDecimal = true,
@@ -542,18 +510,15 @@ fun SPagoEnviarScreen(
             }
             items(state.aportesCapital.size) { aporteIndex ->
                 val aporte = state.aportesCapital[aporteIndex]
-                Row(
+                SelectedItemRow(
+                    title = aporte.userName,
+                    amountText = formatMoney(aporte.amount),
+                    leadingIcon = Icons.Filled.Wallet,
+                    onRemove = { onRemoveCapitalContribution(aporte) },
                     modifier = Modifier
-                        .fillMaxWidth(),
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    CoopText(aporte.userName, style = CoopTheme.typography.bodyLarge)
-                    Spacer(modifier = Modifier.weight(1f))
-                    CoopText(formatMoney(aporte.amount), style = CoopTheme.typography.bodyLarge)
-                    IconButton(onClick = { onRemoveCapitalContribution(aporte) }) {
-                        Icon(Icons.Default.Delete, contentDescription = "Eliminar aporte")
-                    }
-                }
+                        .fillMaxWidth()
+                        .padding(vertical = 6.dp)
+                )
             }
 
             // Sección Imagen
@@ -720,4 +685,53 @@ private fun AmountMismatchDialog(onDismiss: () -> Unit) {
         },
         containerColor = CoopTheme.colorScheme.surface
     )
+}
+
+@Composable
+private fun SelectedItemRow(
+    title: String,
+    amountText: String,
+    leadingIcon: ImageVector,
+    onRemove: () -> Unit,
+    modifier: Modifier = Modifier
+) {
+    CoopOutlinedCard(
+        modifier = modifier,
+    ) {
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = 6.dp),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Spacer(Modifier.width(12.dp))
+
+            // Título: hasta 2 líneas, elipsis si se excede, centrado verticalmente
+            CoopText(
+                text = title,
+                style = CoopTheme.typography.bodyLarge,
+                maxLines = 2,
+                overflow = TextOverflow.Ellipsis,
+                modifier = Modifier.weight(1f).padding(vertical = 8.dp),
+            )
+
+            // Monto: ancho mínimo para evitar saltos y alineado al final
+            CoopText(
+                text = amountText,
+                style = CoopTheme.typography.bodyLarge,
+                textAlign = TextAlign.End,
+                modifier = Modifier
+                    .widthIn(min = 84.dp)
+                    .padding(start = 8.dp)
+            )
+
+            IconButton(onClick = onRemove) {
+                Icon(
+                    Icons.Default.Close,
+                    contentDescription = "Eliminar",
+                    tint = CoopTheme.colorScheme.onPrimary,
+                )
+            }
+        }
+    }
 }
