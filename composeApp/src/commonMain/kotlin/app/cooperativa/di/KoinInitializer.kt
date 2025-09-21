@@ -6,6 +6,7 @@ import app.cooperativa.di.dataStore.preferencesModule
 import app.cooperativa.di.directiva.daccountmodule
 import app.cooperativa.di.directiva.dfinemanagermodule
 import app.cooperativa.di.directiva.dfinesmodule
+import app.cooperativa.di.directiva.dloanmanagermodule
 import app.cooperativa.di.directiva.dpagaresmodule
 import app.cooperativa.di.directiva.dpagosmodule
 import app.cooperativa.di.directiva.dpaymentsdetailmodule
@@ -30,6 +31,7 @@ fun getKoinModules() = listOf(
     dsplashmodule,
     dpaymentsdetailmodule,
     dfinesmodule,
+    dloanmanagermodule,
     dpagaresmodule,
 
     shistorialmodule,

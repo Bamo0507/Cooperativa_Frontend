@@ -24,6 +24,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.text.font.FontWeight
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import app.cooperativa.presentation.utils.ErrorScreen
 import app.cooperativa.presentation.utils.LoadingScreen
@@ -76,103 +77,119 @@ fun DFineManagerScreen(
         },
         containerColor = CoopTheme.colorScheme.surface
     ){ padding ->
-        if(state.isLoading){
-            LoadingScreen(
-                message = "Cargando socios..."
-            )
-        } else if (state.errorMessage != null){
-            ErrorScreen(
-                message = state.errorMessage!!,
-                onRetry = loadMembers
-            )
-        } else {
-            Column(
-                modifier = modifier
-                    .fillMaxSize()
-                    .background(CoopTheme.colorScheme.surface)
-                    .padding(padding)
-                    .padding(vertical = 6.dp, horizontal = 24.dp),
-                verticalArrangement = Arrangement.spacedBy(12.dp)
-            ){
-                CoopDropdown(
-                    items = state.memberOptions,
-                    selectedItem = state.memberOptions
-                        .firstOrNull { it.userId == state.affiliateId },
-                    onItemSelected = { member ->
-                        selectedAffiliate(member.name, member.userId)
-                    },
-                    itemToString = { it.name },
-                    label = { CoopText("Selecciona...") },
-                    placeholder = { CoopText("Elige") }
-                )
+        when {
+            state.isLoading -> LoadingScreen(message = "Cargando socios…")
+            state.errorMessage != null -> ErrorScreen(state.errorMessage!!, onRetry = loadMembers)
+            else -> {
+                Column(
+                    modifier = modifier
+                        .fillMaxSize()
+                        .background(CoopTheme.colorScheme.surface)
+                        .padding(padding)
+                        .padding(vertical = 6.dp, horizontal = 24.dp),
+                    verticalArrangement = Arrangement.spacedBy(12.dp)
+                ) {
+                    LabeledField("Asociado") {
+                        CoopDropdown(
+                            items = state.memberOptions,
+                            selectedItem = state.memberOptions.firstOrNull { it.userId == state.affiliateId },
+                            onItemSelected = { member ->
+                                selectedAffiliate(member.name, member.userId)
+                            },
+                            itemToString = { it.name },
+                            modifier = Modifier.fillMaxWidth(),
+                            placeholder = "Elige",
+                            enableSearch = true,
+                            showElevation = false,
+                            radioSize = 20.dp,
+                            optionMaxLines = 2
+                        )
+                    }
 
-                CoopOutlinedTextField(
-                    value = state.fineName,
-                    onValueChange = { input ->
-                        val sanitized = input
-                            .replace("\n", " ")
-                            .replace("\r", " ")
-                            .take(20)
-                        updateFineName(sanitized)
-                    },
-                    label = { Text("Nombre de Multa") },
-                    placeholder = { Text("Ingrese nombre") },
-                    isError = false,
-                    singleLine = true,
-                    maxLines = 1,
-                    modifier = Modifier.padding(vertical = 6.dp)
-                )
+                    LabeledField("Razón de Multa") {
+                        CoopOutlinedTextField(
+                            value = state.fineName,
+                            onValueChange = { input ->
+                                val sanitized = input
+                                    .replace("\n", " ")
+                                    .replace("\r", " ")
+                                    .take(20)
+                                updateFineName(sanitized)
+                            },
+                            placeholder = { Text("Ingrese nombre") },
+                            singleLine = true,
+                            maxLines = 1,
+                            unfocusedBorderColor = CoopTheme.colorScheme.primary
+                        )
+                    }
 
-                CoopOutlinedTextField(
-                    value = state.fineAmountText,
-                    onValueChange = updateFineAmount,
-                    label = { Text("Monto de Multa") },
-                    placeholder = { Text("0.00") },
-                    prefix = { Text("Q ") },
-                    isError = false,
-                    keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Decimal),
-                    singleLine = true,
-                    modifier = Modifier.padding(vertical = 6.dp),
-                    digitsOnly = true,
-                    allowDecimal = true,
-                    allowNegative = false,
-                    maxDecimalPlaces = 2
-                )
+                    LabeledField("Monto de Multa") {
+                        CoopOutlinedTextField(
+                            value = state.fineAmountText,
+                            onValueChange = updateFineAmount,
+                            placeholder = { Text("0.00") },
+                            prefix = { Text("Q ") },
+                            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Decimal),
+                            singleLine = true,
+                            digitsOnly = true,
+                            allowDecimal = true,
+                            allowNegative = false,
+                            maxDecimalPlaces = 2,
+                            unfocusedBorderColor = CoopTheme.colorScheme.primary
+                        )
+                    }
 
-                Spacer(modifier = Modifier.weight(1f))
+                    Spacer(modifier = Modifier.weight(1f))
 
-                Box(
-                    contentAlignment = Alignment.BottomEnd,
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(bottom = 20.dp)
-                ){
-                    CoopButton(
-                        onClick = { /*TODO*/ },
+                    Box(
+                        contentAlignment = Alignment.BottomEnd,
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(bottom = 20.dp)
                     ){
-                        Row(
-                            horizontalArrangement = Arrangement.SpaceAround,
-                            verticalAlignment = Alignment.CenterVertically
-                        ) {
-                            CoopIcon(
-                                Icons.Default.Send,
-                                contentDescription = "Enviar",
-                                tint = CoopTheme.colorScheme.onPrimary
-                            )
+                        CoopButton(
+                            onClick = { /* TODO: submit */ },
+                        ){
+                            Row(
+                                horizontalArrangement = Arrangement.SpaceAround,
+                                verticalAlignment = Alignment.CenterVertically
+                            ) {
+                                CoopIcon(
+                                    Icons.Default.Send,
+                                    contentDescription = "Enviar",
+                                    tint = CoopTheme.colorScheme.onPrimary
+                                )
 
-                            Spacer(modifier = Modifier.width(12.dp))
+                                Spacer(modifier = Modifier.width(12.dp))
 
-                            CoopText(
-                                text = "Registrar",
-                                color = CoopTheme.colorScheme.onPrimary,
-                                style = CoopTheme.typography.bodyMedium
-                            )
+                                CoopText(
+                                    text = "Registrar",
+                                    color = CoopTheme.colorScheme.onPrimary,
+                                    style = CoopTheme.typography.bodyMedium
+                                )
+                            }
+
                         }
-
                     }
                 }
             }
-
         }
+    }
+}
+
+@Composable
+private fun LabeledField(
+    label: String,
+    content: @Composable () -> Unit
+) {
+    Column(
+        verticalArrangement = Arrangement.spacedBy(4.dp)
+    ) {
+        CoopText(
+            label,
+            style = CoopTheme.typography.bodyLarge,
+            fontWeight = FontWeight.Bold
+        )
+        content()
     }
 }

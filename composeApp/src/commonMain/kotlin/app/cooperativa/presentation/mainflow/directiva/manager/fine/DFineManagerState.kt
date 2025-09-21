@@ -1,6 +1,6 @@
 package app.cooperativa.presentation.mainflow.directiva.manager.fine
 
-import app.cooperativa.domain.directiva.Member
+import app.cooperativa.data.model.dto.Member
 
 data class DFineManagerState(
     val memberOptions: List<Member> = emptyList(),
