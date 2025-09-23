@@ -2,7 +2,6 @@ query GetUsersPayments($accessToken: String!) {
     getUsersPayments(accessToken: $accessToken) {
         commentary
         paymentDate
-        paymentId
         state
         ticketNum
         totalAmount

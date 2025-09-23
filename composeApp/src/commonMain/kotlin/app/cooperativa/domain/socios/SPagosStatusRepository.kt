@@ -21,7 +21,7 @@ class SociosPagosStatusRepository(
         ) { data ->
             data.getUsersPayments.map { node ->
                 PagosStatus(
-                    pagoId = node.paymentId,
+                    pagoId = node.ticketNum,
                     nombrePago = node.commentary,
                     estado = node.state.toEstado(),
                     dateOfPayment = node.paymentDate
