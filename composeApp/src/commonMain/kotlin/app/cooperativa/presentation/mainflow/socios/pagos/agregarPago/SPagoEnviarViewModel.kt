@@ -169,51 +169,44 @@ class SPagoEnviarViewModel(
             _uiState.update { it.copy(isLoading = true, errorMessage = null) }
 
             try {
-                // Flag para UI
                 val hasSentPayment = prefs.hasSentPayment()
-
-                // Acceso
                 val accessToken = prefs.getAccessToken().orEmpty()
 
-                // Datos mock/actuales (cuotas, préstamos, usuarios)
-                val cuotas = repository.getCuotasMensualesPendientes()
-                val prestamos = repository.getPrestamoCuotasByUser(1) // TODO: migrar a accessToken cuando tengas el query
-                val usuarios = repository.getAllUsers()
-
-                // Multas desde GraphQL (/graphql/fine) con fallback a vacío si falla
-                val multas = try {
-                    if (accessToken.isNotBlank()) {
-                        repository.getFinesByAccessToken(accessToken)
-                    } else {
-                        emptyList()
+                // Si no hay token, dejamos todo vacío
+                if (accessToken.isBlank()) {
+                    _uiState.update {
+                        it.copy(
+                            hasSentPayment = hasSentPayment,
+                            cuotasDisponibles = emptyList(),
+                            prestamosDisponibles = emptyList(),
+                            multasDisponibles = emptyList(),
+                            usuariosDisponibles = emptyList(),
+                            isLoading = false,
+                            errorMessage = "No hay token de acceso"
+                        )
                     }
-                } catch (e: Exception) {
-                    // log si quieres
-                    emptyList()
+                    return@launch
                 }
 
-                // Set UI
-                _uiState.update { current ->
-                    // Filtra para no mostrar opciones ya seleccionadas
-                    val filteredCuotas = cuotas.filter { it !in current.selectedCuotas }
-                    val filteredPrestamos = prestamos.filter { it !in current.selectedLoanQuotas }
-                    val filteredMultas = multas.filter { it !in current.selectedFines }
-                    val filteredUsuarios = usuarios.filter { u -> current.aportesCapital.none { it.userId == u.userId } }
+                // Cargas reales
+                val cuotas = repository.getMonthlyAffiliateQuota(accessToken)
+                val prestamos = repository.getPendingLoansQuotas(accessToken)
+                val multas = repository.getFinesByAccessToken(accessToken)
 
+                _uiState.update { current ->
                     current.copy(
                         hasSentPayment = hasSentPayment,
-                        cuotasDisponibles = filteredCuotas,
-                        prestamosDisponibles = filteredPrestamos,
-                        multasDisponibles = filteredMultas,
-                        usuariosDisponibles = filteredUsuarios,
+                        // Filtra lo ya seleccionado para evitar duplicados visuales
+                        cuotasDisponibles = cuotas.filter { it !in current.selectedCuotas },
+                        prestamosDisponibles = prestamos.filter { it !in current.selectedLoanQuotas },
+                        multasDisponibles = multas.filter { it !in current.selectedFines },
                         isLoading = false,
                         errorMessage = null
                     )
                 }
             } catch (e: Exception) {
-                // Error general
                 _uiState.update {
-                    it.copy(isLoading = false, errorMessage = "Error al cargar datos" ?: "Error al cargar datos")
+                    it.copy(isLoading = false, errorMessage = e.message ?: "Error al cargar datos")
                 }
             }
         }

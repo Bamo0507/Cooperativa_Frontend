@@ -1,0 +1,15 @@
+query GetPendingLoansQuotas($accessToken: String!) {
+    getPendingLoansQuotas(accessToken: $accessToken) {
+        userId
+        monto
+        fechaVencimiento
+        montoPagado
+        multa
+        pagadaPor
+        tipo
+        loanId
+        pagada
+        numeroQuota
+        nombrePrestamo
+    }
+}

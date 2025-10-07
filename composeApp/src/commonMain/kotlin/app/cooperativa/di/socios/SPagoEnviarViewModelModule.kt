@@ -11,7 +11,8 @@ import org.koin.dsl.module
 val spagoEnviarModule = module {
     single<SPagoEnviarRepository> {
         SociosPagoEnviarRepository(
-            fineApollo = get<ApolloClient>(named("fine"))
+            fineApollo = get<ApolloClient>(named("fine")),
+            quotaApollo = get<ApolloClient>(named("quota"))
         )
     }
 

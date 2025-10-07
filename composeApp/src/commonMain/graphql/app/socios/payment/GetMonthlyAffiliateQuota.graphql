@@ -1,0 +1,10 @@
+query GetMonthlyAffiliateQuota($accessToken: String!) {
+    getMonthlyAffiliateQuota(accessToken: $accessToken) {
+        identifier
+        userId
+        monto
+        nombre
+        fechaVencimiento
+        extraordinaria
+    }
+}

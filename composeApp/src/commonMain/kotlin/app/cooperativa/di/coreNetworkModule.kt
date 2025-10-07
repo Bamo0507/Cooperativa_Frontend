@@ -1,6 +1,5 @@
 package app.cooperativa.di
 
-import app.cooperativa.core.network.apollo.PaymentApollo
 import com.apollographql.apollo3.ApolloClient
 import org.koin.core.qualifier.named
 import org.koin.dsl.module
@@ -19,6 +18,11 @@ val coreNetworkModule = module {
     // Cliente para /graphql/fine
     single(named("fine")) {
         apollo("https://dev.cooperativa-isp.cc/graphql/fine")
+    }
+
+    // Cliente para /graphql/quota
+    single(named("quota")){
+        apollo("https://dev.cooperativa-isp.cc/graphql/quota")
     }
 
 }

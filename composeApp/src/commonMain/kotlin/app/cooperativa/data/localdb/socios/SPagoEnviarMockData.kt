@@ -1,7 +1,6 @@
 package app.cooperativa.data.localdb.socios
 
 import app.cooperativa.data.model.dto.BasicUserInfo
-import app.cooperativa.data.model.dto.FinePayAffiliate
 import app.cooperativa.data.model.dto.LoanQuota
 import app.cooperativa.data.model.dto.QuotaAffiliate
 
@@ -9,32 +8,32 @@ object SPagoEnviarMockData {
     private val mockCuotas = listOf(
         QuotaAffiliate(
             idCuota = 1,
-            idAsociado = 1,
-            nombreAsociado = "Juan Pérez",
+            idAsociado = "1",
+            identifier = "Juan Pérez",
             montoCuota = 100f
         ),
         QuotaAffiliate(
             idCuota = 2,
-            idAsociado = 2,
-            nombreAsociado = "María López",
+            idAsociado = "2",
+            identifier = "María López",
             montoCuota = 150f
         ),
         QuotaAffiliate(
             idCuota = 3,
-            idAsociado = 3,
-            nombreAsociado = "Carlos Ruiz",
+            idAsociado = "3",
+            identifier = "Carlos Ruiz",
             montoCuota = 120f
         )
     )
 
     private val mockLoanQuotas = listOf(
         LoanQuota(
-            id = 1,
+            id = "1",
             nombrePago = "Préstamo Vivienda",
             monto = 1000f
         ),
         LoanQuota(
-            id = 2,
+            id = "2",
             nombrePago = "Préstamo Vehículo",
             monto = 5000f
         )

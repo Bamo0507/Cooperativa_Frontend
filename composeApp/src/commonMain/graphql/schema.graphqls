@@ -7,6 +7,10 @@ type Query {
   getFinesById(accessToken: String!): [Fine!]!
 
   getUsersPayments(accessToken: String!): [UserPayment!]!
+
+  getPendingLoansQuotas(accessToken: String!): [LoanQuota!]!
+
+  getMonthlyAffiliateQuota(accessToken: String!): [MonthlyQuota!]!
 }
 
 # General
@@ -36,4 +40,27 @@ type UserPayment {
 type Fine {
   reason: String!
   quantity: Float!
+}
+
+type LoanQuota {
+  userId: String!
+  monto: Float!
+  fechaVencimiento: String!
+  montoPagado: Float!
+  multa: Float!
+  pagadaPor: String
+  tipo: String!
+  loanId: String!
+  pagada: Boolean!
+  numeroQuota: Int!
+  nombrePrestamo: String
+}
+
+type MonthlyQuota {
+  identifier: String!
+  userId: String!
+  monto: Float!
+  nombre: String!
+  fechaVencimiento: String!
+  extraordinaria: Boolean!
 }

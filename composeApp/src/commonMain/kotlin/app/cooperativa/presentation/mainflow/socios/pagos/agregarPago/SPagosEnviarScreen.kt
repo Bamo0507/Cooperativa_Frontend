@@ -18,16 +18,13 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.CloudUpload
-import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.Send
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Close
-import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material.icons.filled.CreditCard
 import androidx.compose.material.icons.filled.Receipt
 import androidx.compose.material.icons.filled.Wallet
 import androidx.compose.material3.AlertDialog
-import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.ExtendedFloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -258,7 +255,7 @@ fun SPagoEnviarScreen(
                     items = state.cuotasDisponibles,
                     selectedItem = cuotaToAdd,
                     onItemSelected = { cuotaToAdd = it },
-                    itemToString = { it.nombreAsociado },
+                    itemToString = { it.identifier },
                     placeholder = "Elige",
                     modifier = Modifier.fillMaxWidth(),
                     enableSearch = true,
@@ -301,7 +298,7 @@ fun SPagoEnviarScreen(
             items(state.selectedCuotas.size) { cuotaIndex ->
                 val cuota = state.selectedCuotas[cuotaIndex]
                 SelectedItemRow(
-                    title = cuota.nombreAsociado,
+                    title = cuota.identifier,
                     amountText = formatMoney(cuota.montoCuota),
                     leadingIcon = Icons.Filled.Receipt,
                     onRemove = { onRemoveCuota(cuota) },
