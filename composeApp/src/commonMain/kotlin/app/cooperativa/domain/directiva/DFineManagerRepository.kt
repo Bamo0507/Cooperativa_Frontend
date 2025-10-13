@@ -17,7 +17,7 @@ class DirectiveFineManagerRepository(
 
     override suspend fun getAllAffiliates(): List<Member> {
         return apollo.executeQuery(GettingAffiliatesQuery()) { data ->
-            data.getAllMemembers.map { node ->
+            data.getAllMembers.map { node ->
                 Member(
                     userId = node.userId,
                     name = node.name

@@ -1,7 +1,7 @@
 type Query {
   getHistory(accessToken: String!): History
 
-  getAllMemembers: [Member!]!
+  getAllMembers: [Member!]!
 
 #  Relacionados a pagos en socios
   getFinesById(accessToken: String!): [Fine!]!

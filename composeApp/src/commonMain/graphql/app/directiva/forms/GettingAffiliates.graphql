@@ -1,5 +1,5 @@
 query GettingAffiliates {
-    getAllMemembers {
+    getAllMembers {
         userId
         name
     }
