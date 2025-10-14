@@ -8,9 +8,8 @@ type Query {
 
   getUsersPayments(accessToken: String!): [UserPayment!]!
 
-  getPendingLoansQuotas(accessToken: String!): [LoanQuota!]!
-
-  getMonthlyAffiliateQuota(accessToken: String!): [MonthlyQuota!]!
+  getPendingLoansQuotas(accessToken: String!): [Quota!]!
+  getMonthlyAffiliateQuota(accessToken: String!): [Quota!]!
 }
 
 # General
@@ -45,30 +44,37 @@ type UserPayment {
   accountNum: String!
 }
 
+enum FineStatus {
+  PAID
+  UNPAID
+}
+
 type Fine {
+  id: String!
   reason: String!
-  quantity: Float!
+  amount: Float!
+  status: FineStatus!
 }
 
-type LoanQuota {
-  userId: String!
-  monto: Float!
-  fechaVencimiento: String!
-  montoPagado: Float!
-  multa: Float!
-  pagadaPor: String
-  tipo: String!
-  loanId: String!
-  pagada: Boolean!
-  numeroQuota: Int!
+enum QuotaType {
+  PRESTAMO
+  AFILIADO
+}
+
+"""Cuota (afiliado o préstamo)"""
+type Quota {
+  amount: Float!
+  expDate: String
+  identifier: String
+  isExtraordinary: Boolean
+  loanId: String
+  montoPagado: Float
+  multa: Float
   nombrePrestamo: String
-}
-
-type MonthlyQuota {
-  identifier: String!
+  nombreUsuario: String
+  payBy: String
+  payed: Boolean
+  quotaNumber: Int
+  quotaType: QuotaType!
   userId: String!
-  monto: Float!
-  nombre: String!
-  fechaVencimiento: String!
-  extraordinaria: Boolean!
 }
