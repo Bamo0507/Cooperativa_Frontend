@@ -6,6 +6,7 @@ import app.cooperativa.data.model.dto.QuotaAffiliate
 import app.cooperativa.graphql.GetFinesByIdQuery
 import app.cooperativa.graphql.GetMonthlyAffiliateQuotaQuery
 import app.cooperativa.graphql.GetPendingLoansQuotasQuery
+import app.cooperativa.graphql.type.FineStatus
 import com.apollographql.apollo3.ApolloClient
 
 interface SPagoEnviarRepository {
@@ -31,12 +32,16 @@ class SociosPagoEnviarRepository(
         val fines = response.data?.getFinesById
             ?: throw RuntimeException("Respuesta vacía (getFinesById)")
 
-        return fines.map { f ->
-            FinePayAffiliate(
-                fineName = f.reason,
-                fineAmount = f.quantity.toFloat()
-            )
-        }
+        // Filtra solo UNPAID y mapea al DTO con id + amount
+        return fines
+            .filter { it.status == FineStatus.UNPAID }
+            .map { f ->
+                FinePayAffiliate(
+                    id = f.id,
+                    fineName = f.reason,
+                    fineAmount = f.amount.toFloat()
+                )
+            }
     }
 
     // --- CUOTAS MENSUALES ---
@@ -49,16 +54,19 @@ class SociosPagoEnviarRepository(
             val msg = response.errors?.joinToString { it.message }.orEmpty()
             throw RuntimeException(msg.ifBlank { "Error GraphQL (getMonthlyAffiliateQuota)" })
         }
+
         val items = response.data?.getMonthlyAffiliateQuota
             ?: throw RuntimeException("Respuesta vacía (getMonthlyAffiliateQuota)")
 
-        // Mapeo a tu DTO actual (usamos el identifier como “nombreAsociado” y un id sintético)
-        return items.map { n ->
+        // Solo cuotas no pagadas y de tipo Afiliado
+        val pendientes = items.filter { it.payed != true && it.quotaType.rawValue == "Afiliado" }
+
+        return pendientes.map { q ->
             QuotaAffiliate(
-                idCuota = n.identifier.hashCode(),
-                idAsociado = n.userId,
-                identifier = n.identifier,
-                montoCuota = n.monto.toFloat()
+                idCuota = q.userId, // Segun comentarios debe coincidir con affiliate key
+                idAsociado = q.userId,
+                identifier = q.identifier ?: (q.nombreUsuario ?: "Afiliado"),
+                montoCuota = q.amount.toFloat()
             )
         }
     }
@@ -73,16 +81,20 @@ class SociosPagoEnviarRepository(
             val msg = response.errors?.joinToString { it.message }.orEmpty()
             throw RuntimeException(msg.ifBlank { "Error GraphQL (getPendingLoansQuotas)" })
         }
+
         val items = response.data?.getPendingLoansQuotas
             ?: throw RuntimeException("Respuesta vacía (getPendingLoansQuotas)")
 
-        return items.map { n ->
-            val display = n.nombrePrestamo ?: "Préstamo"
-            val label = "$display - cuota ${n.numeroQuota}"
+        // Solo cuotas no pagadas y de tipo Prestamo
+        val pendientes = items.filter { it.payed != true && it.quotaType.rawValue == "Prestamo" }
+
+        return pendientes.map { q ->
+            val display = q.nombrePrestamo ?: "Préstamo"
+            val label = if (q.quotaNumber != null) "$display - cuota ${q.quotaNumber}" else display
             LoanQuota(
-                id = n.loanId,
+                id = q.loanId ?: (q.identifier ?: display),
                 nombrePago = label,
-                monto = n.monto.toFloat()
+                monto = q.amount.toFloat()
             )
         }
     }
