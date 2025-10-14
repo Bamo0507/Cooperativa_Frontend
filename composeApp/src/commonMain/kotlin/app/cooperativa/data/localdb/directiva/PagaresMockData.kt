@@ -10,7 +10,7 @@ object PagaresMockData {
             solicitante = "Juan Pérez",
             nombrePrestamo = "Préstamo Vivienda",
             pagareKey = "PG-001",
-            estado = Estados.PENDING,
+            estado = Estados.ON_REVISION,
             comentariosRechazo = null
         ),
         Pagare(
@@ -18,7 +18,7 @@ object PagaresMockData {
             solicitante = "María López",
             nombrePrestamo = "Préstamo Auto",
             pagareKey = "PG-002",
-            estado = Estados.COMPLETED,
+            estado = Estados.ACCEPTED,
             comentariosRechazo = null
         ),
         Pagare(
@@ -34,7 +34,7 @@ object PagaresMockData {
             solicitante = "Ana Torres",
             nombrePrestamo = "Préstamo Personal",
             pagareKey = "PG-004",
-            estado = Estados.PENDING,
+            estado = Estados.ON_REVISION,
             comentariosRechazo = null
         ),
         Pagare(
@@ -42,14 +42,14 @@ object PagaresMockData {
             solicitante = "Luis Gómez",
             nombrePrestamo = "Préstamo PyME",
             pagareKey = "PG-005",
-            estado = Estados.PENDING,
+            estado = Estados.ON_REVISION,
             comentariosRechazo = null
         )
     )
 
     fun getAllPagares(): List<Pagare> = mockPagares
 
-    fun getPendingPagares(): List<Pagare> = mockPagares.filter { it.estado == Estados.PENDING }
+    fun getPendingPagares(): List<Pagare> = mockPagares.filter { it.estado == Estados.ON_REVISION }
 
     fun getPagareById(id: Int): Pagare? = mockPagares.find { it.idPagare == id }
 }

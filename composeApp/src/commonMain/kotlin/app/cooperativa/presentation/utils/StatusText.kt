@@ -8,16 +8,16 @@ import app.cooperativa.theme.CoopTheme
 @Composable
 fun getStatusColor(estado: Estados): Color {
     return when(estado){
-        Estados.COMPLETED -> CoopTheme.colorScheme.approved
-        Estados.PENDING -> CoopTheme.colorScheme.pending
-        Estados.ON_REVISION -> CoopTheme.colorScheme.rejected
+        Estados.ACCEPTED -> CoopTheme.colorScheme.approved
+        Estados.ON_REVISION -> CoopTheme.colorScheme.pending
+        Estados.REJECTED -> CoopTheme.colorScheme.rejected
     }
 }
 
 fun getStatusText(estado: Estados): String{
     return when(estado){
-        Estados.COMPLETED -> "Aprobado"
-        Estados.PENDING -> "En Revisión"
-        Estados.ON_REVISION -> "Rechazado"
+        Estados.ACCEPTED -> "Aprobado"
+        Estados.ON_REVISION -> "En Revisión"
+        Estados.REJECTED -> "Rechazado"
     }
 }

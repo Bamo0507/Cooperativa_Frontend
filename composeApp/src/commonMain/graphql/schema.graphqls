@@ -27,14 +27,22 @@ type History {
 
 # Socios - Pagos -------
 # Formulario de Pagos
+enum PaymentStatus {
+  ON_REVISION
+  REJECTED
+  ACCEPTED
+}
+
 type UserPayment {
-  commentary: String!
+  id: String!
+  name: String!
+  commentary: String
   paymentDate: String!
-  paymentId: String!
-  state: String!
+  state: PaymentStatus!
   ticketNum: String!
-  totalAmount: Float!
   photo: String!
+  totalAmount: Float!
+  accountNum: String!
 }
 
 type Fine {

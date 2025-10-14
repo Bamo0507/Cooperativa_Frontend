@@ -1,10 +1,10 @@
 package app.cooperativa.domain.socios
 
 import app.cooperativa.core.network.apollo.executeQuery
-import app.cooperativa.data.localdb.socios.SPagoStatusMockData
 import app.cooperativa.data.model.dto.Estados
 import app.cooperativa.data.model.dto.PagosStatus
 import app.cooperativa.graphql.GetUsersPaymentsQuery
+import app.cooperativa.graphql.type.PaymentStatus
 import com.apollographql.apollo3.ApolloClient
 
 interface SPagosStatusRepository {
@@ -21,8 +21,8 @@ class SociosPagosStatusRepository(
         ) { data ->
             data.getUsersPayments.map { node ->
                 PagosStatus(
-                    pagoId = node.ticketNum,
-                    nombrePago = node.commentary,
+                    pagoId = node.id,
+                    nombrePago = node.name,
                     estado = node.state.toEstado(),
                     dateOfPayment = node.paymentDate
                 )
@@ -31,11 +31,11 @@ class SociosPagosStatusRepository(
     }
 }
 
-/** Backend envía "PENDING" | "COMPLETED" | "ON_REVISION" (luego cambiará a REJECTED) */
-private fun String.toEstado(): Estados = when (uppercase()) {
-    "PENDING"     -> Estados.PENDING
-    "COMPLETED"   -> Estados.COMPLETED
-    "ON_REVISION" -> Estados.ON_REVISION // cuando cambien a REJECTED, se ajusta
-    "REJECTED"    -> Estados.ON_REVISION   // compat hacia futuro
-    else -> Estados.PENDING
+fun PaymentStatus.toEstado(): Estados {
+    return when (this) {
+        PaymentStatus.ON_REVISION -> Estados.ON_REVISION
+        PaymentStatus.REJECTED -> Estados.REJECTED
+        PaymentStatus.ACCEPTED -> Estados.ACCEPTED
+        else -> Estados.ON_REVISION
+    }
 }

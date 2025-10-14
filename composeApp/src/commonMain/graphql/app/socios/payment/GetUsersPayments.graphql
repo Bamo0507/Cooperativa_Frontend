@@ -1,9 +1,13 @@
 query GetUsersPayments($accessToken: String!) {
     getUsersPayments(accessToken: $accessToken) {
+        id
+        name
         commentary
         paymentDate
         state
         ticketNum
+        photo
         totalAmount
+        accountNum
     }
 }

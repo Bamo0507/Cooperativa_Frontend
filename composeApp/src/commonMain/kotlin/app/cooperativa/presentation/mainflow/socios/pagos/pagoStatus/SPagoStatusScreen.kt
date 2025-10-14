@@ -151,9 +151,9 @@ fun PagoStatusCard(
                 .fillMaxWidth()
                 .clickable {
                     when (estado) {
-                        Estados.ON_REVISION -> onWatchError(pagoId)
-                        Estados.COMPLETED -> showApprovedDialog = true
-                        Estados.PENDING -> showPendingDialog = true
+                        Estados.REJECTED -> onWatchError(pagoId)
+                        Estados.ACCEPTED -> showApprovedDialog = true
+                        Estados.ON_REVISION -> showPendingDialog = true
                     }
                 }
                 .padding(16.dp),
@@ -191,7 +191,7 @@ fun PagoStatusCard(
             }
 
             when (estado) {
-                Estados.ON_REVISION -> {
+                Estados.REJECTED -> {
                     Box(
                         modifier = Modifier.size(24.dp),
                         contentAlignment = Alignment.Center
@@ -204,7 +204,7 @@ fun PagoStatusCard(
                         )
                     }
                 }
-                Estados.COMPLETED -> {
+                Estados.ACCEPTED -> {
                     Box(
                         modifier = Modifier.size(24.dp),
                         contentAlignment = Alignment.Center
@@ -217,7 +217,7 @@ fun PagoStatusCard(
                         )
                     }
                 }
-                Estados.PENDING -> {
+                Estados.ON_REVISION -> {
                     Box(
                         modifier = Modifier.size(24.dp),
                         contentAlignment = Alignment.Center

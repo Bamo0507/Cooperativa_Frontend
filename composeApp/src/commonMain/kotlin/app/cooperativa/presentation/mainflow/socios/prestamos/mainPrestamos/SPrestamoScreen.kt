@@ -195,7 +195,7 @@ fun PrestamoStatusCard(
 
             Spacer(modifier = Modifier.weight(1f))
 
-            if (estado == Estados.COMPLETED){
+            if (estado == Estados.ACCEPTED){
                 CoopIconButton(
                     onClick = {}, //TODO: Agregar Descarga
                     colors = IconButtonDefaults.iconButtonColors(
@@ -271,9 +271,9 @@ fun PagareStatusCard(
 
 fun getPagareStatusText(estado: Estados): String{
     return when(estado){
-        Estados.COMPLETED -> "Aprobado"
-        Estados.PENDING -> "En Revisión"
-        Estados.ON_REVISION -> "Volver a Cargar"
+        Estados.ACCEPTED -> "Aprobado"
+        Estados.ON_REVISION -> "En Revisión"
+        Estados.REJECTED -> "Volver a Subir"
     }
 }
 

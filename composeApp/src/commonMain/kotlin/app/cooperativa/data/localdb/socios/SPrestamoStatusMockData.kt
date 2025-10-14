@@ -10,14 +10,14 @@ object SPrestamoStatusMockData {
             solicitudId = 1,
             solicitanteId = 1,
             prestamoNombre = "Negocio de Fresas",
-            estadoPrestamo = Estados.PENDING,
+            estadoPrestamo = Estados.ON_REVISION,
             linkDescargaPagare = ""
         ),
         PrestamosStatus(
             solicitudId = 2,
             solicitanteId = 2,
             prestamoNombre = "Moto Yamaha",
-            estadoPrestamo = Estados.COMPLETED,
+            estadoPrestamo = Estados.ACCEPTED,
             linkDescargaPagare = ""
         ),
         PrestamosStatus(
@@ -34,13 +34,13 @@ object SPrestamoStatusMockData {
             solicitudId = 1,
             solicitanteId = 1,
             prestamoNombre = "Negocio de Banano",
-            estadoPagare = Estados.PENDING,
+            estadoPagare = Estados.ON_REVISION,
         ),
         PagaresStatus(
             solicitudId = 2,
             solicitanteId = 2,
             prestamoNombre = "Moto BMW",
-            estadoPagare = Estados.COMPLETED,
+            estadoPagare = Estados.ACCEPTED,
         ),
         PagaresStatus(
             solicitudId = 3,

@@ -9,7 +9,7 @@ object SPagoStatusMockData {
             pagoId = "1",
             nombrePago="Pago Febrero Cuotas 2023",
             dateOfPayment = "2023-02-01",
-            estado = Estados.COMPLETED
+            estado = Estados.ACCEPTED
         ),
         PagosStatus(
             pagoId = "2",
@@ -21,7 +21,7 @@ object SPagoStatusMockData {
             pagoId = "3",
             nombrePago="Pago Diciembre Cuotas 2022",
             dateOfPayment = "2022-12-01",
-            estado = Estados.PENDING
+            estado = Estados.ON_REVISION
         )
     )
 
