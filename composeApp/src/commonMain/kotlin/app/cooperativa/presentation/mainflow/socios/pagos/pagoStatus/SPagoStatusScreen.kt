@@ -115,8 +115,8 @@ fun SPagosStatusScreen(
             ) {
                 items(payments.size){idx ->
                     PagoStatusCard(
-                        pagoId = payments[idx].pagoId,
                         nombrePago = payments[idx].nombrePago,
+                        commentary = payments[idx].commentary,
                         estado = payments[idx].estado,
                         dateOfPayment = payments[idx].dateOfPayment,
                         onWatchError = onWatchError
@@ -133,12 +133,12 @@ fun SPagosStatusScreen(
 fun PagoStatusCard(
     nombrePago: String,
     estado: Estados,
-    pagoId: String,
+    commentary: String?,
     dateOfPayment: String,
     onWatchError: (String) -> Unit,
     modifier: Modifier = Modifier
 ){
-    var colorText = getStatusColor(estado)
+    val colorText = getStatusColor(estado)
 
     var showApprovedDialog by remember { mutableStateOf(false) }
     var showPendingDialog by remember { mutableStateOf(false) }
@@ -151,7 +151,10 @@ fun PagoStatusCard(
                 .fillMaxWidth()
                 .clickable {
                     when (estado) {
-                        Estados.REJECTED -> onWatchError(pagoId)
+                        Estados.REJECTED -> onWatchError(
+                            commentary?.takeIf { it.isNotBlank() }
+                                ?: "Pago rechazado. Motivo no disponible."
+                        )
                         Estados.ACCEPTED -> showApprovedDialog = true
                         Estados.ON_REVISION -> showPendingDialog = true
                     }

@@ -24,7 +24,8 @@ class SociosPagosStatusRepository(
                     pagoId = node.id,
                     nombrePago = node.name,
                     estado = node.state.toEstado(),
-                    dateOfPayment = node.paymentDate
+                    dateOfPayment = node.paymentDate,
+                    commentary = node.commentary
                 )
             }
         }
