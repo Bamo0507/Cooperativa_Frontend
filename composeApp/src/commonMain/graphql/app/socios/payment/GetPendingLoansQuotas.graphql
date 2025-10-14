@@ -1,15 +1,18 @@
 query GetPendingLoansQuotas($accessToken: String!) {
     getPendingLoansQuotas(accessToken: $accessToken) {
-        userId
-        monto
-        fechaVencimiento
+        amount
+        expDate
+        identifier
+        isExtraordinary
+        loanId
         montoPagado
         multa
-        pagadaPor
-        tipo
-        loanId
-        pagada
-        numeroQuota
         nombrePrestamo
+        nombreUsuario
+        payBy
+        payed
+        quotaNumber
+        quotaType
+        userId
     }
 }
