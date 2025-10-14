@@ -1,10 +1,18 @@
 query GetMonthlyAffiliateQuota($accessToken: String!) {
     getMonthlyAffiliateQuota(accessToken: $accessToken) {
+        amount
+        expDate
         identifier
+        isExtraordinary
+        loanId
+        montoPagado
+        multa
+        nombrePrestamo
+        nombreUsuario
+        payBy
+        payed
+        quotaNumber
+        quotaType
         userId
-        monto
-        nombre
-        fechaVencimiento
-        extraordinaria
     }
 }
