@@ -4,5 +4,6 @@ data class PagosStatus(
     val pagoId: String,
     val nombrePago: String,
     val estado: Estados,
-    val dateOfPayment: String
+    val dateOfPayment: String,
+    val commentary: String? = null
 )

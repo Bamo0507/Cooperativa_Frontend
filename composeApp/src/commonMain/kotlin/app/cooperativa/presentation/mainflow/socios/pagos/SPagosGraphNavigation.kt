@@ -23,10 +23,10 @@ fun NavGraphBuilder.sPagosNavGraph(
             onAddPaymentClick = {
                 navController.navigate(SPagoEnviarDestination)
             },
-            onWatchError = { paymentId ->
+            onWatchError = { message ->
                 navController.navigateToSPagoError(
                     destination = SPagoErrorDestination(
-                        paymentId
+                        message
                     )
                 )
             }

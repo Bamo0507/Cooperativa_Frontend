@@ -21,6 +21,8 @@ data class SPagoEnviarState(
     val usuariosDisponibles: List<BasicUserInfo> = emptyList(),
     val aportesCapital: List<CapitalContribution> = emptyList(),
 
+    val paymentSentSuccesffully: Boolean = false,
+
     val montoActualDeclarado: Float = 0.0f,
 
     val bytesImagen: ByteArray? = null,

@@ -1,7 +1,7 @@
 package app.cooperativa.data.model.dto
 
 data class FinePayAffiliate (
-    val userId: Int,
+    val id: String,
     val fineName: String,
     val fineAmount: Float
 )

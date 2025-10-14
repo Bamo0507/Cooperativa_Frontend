@@ -1,0 +1,17 @@
+mutation CreateUserPayment(
+    $accessToken: String!,
+    $name: String!,
+    $totalAmount: Float!,
+    $ticketNumber: String!,
+    $accountNumber: String!,
+    $beingPayed: [PayedTo!]!,
+) {
+    response: createUserPayment(
+        accessToken: $accessToken,
+        name: $name,
+        totalAmount: $totalAmount,
+        ticketNumber: $ticketNumber,
+        accountNumber: $accountNumber,
+        beingPayed: $beingPayed,
+    )
+}

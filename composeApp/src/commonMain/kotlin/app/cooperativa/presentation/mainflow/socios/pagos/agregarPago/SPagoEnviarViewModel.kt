@@ -13,6 +13,7 @@ import kotlinx.coroutines.launch
 import app.cooperativa.data.model.dto.CapitalContribution
 import app.cooperativa.domain.localstorage.PreferencesLocalStorage
 import app.cooperativa.domain.share.convertHeicToJpeg
+import app.cooperativa.graphql.type.PayedTo
 import com.mohamedrejeb.calf.core.PlatformContext
 import com.mohamedrejeb.calf.io.KmpFile
 import com.mohamedrejeb.calf.io.getPath
@@ -22,7 +23,6 @@ import kotlinx.coroutines.flow.update
 class SPagoEnviarViewModel(
     private val repository: SPagoEnviarRepository,
     private val prefs: PreferencesLocalStorage,
-    private val userId: Int = 1 // TODO: Delete and use local storage inyection instead
 ) : ViewModel() {
     private val _uiState: MutableStateFlow<SPagoEnviarState> = MutableStateFlow(
         SPagoEnviarState()
@@ -88,21 +88,30 @@ class SPagoEnviarViewModel(
     }
 
     fun addCuota(cuota: QuotaAffiliate) {
-        _uiState.value = _uiState.value.copy(
-            selectedCuotas = _uiState.value.selectedCuotas + cuota
-        )
+        _uiState.update { state ->
+            state.copy(
+                selectedCuotas = state.selectedCuotas + cuota,
+                cuotasDisponibles = state.cuotasDisponibles - cuota
+            )
+        }
     }
 
     fun addLoanQuota(loan: LoanQuota) {
-        _uiState.value = _uiState.value.copy(
-            selectedLoanQuotas = _uiState.value.selectedLoanQuotas + loan
-        )
+        _uiState.update { state ->
+            state.copy(
+                selectedLoanQuotas = state.selectedLoanQuotas + loan,
+                prestamosDisponibles = state.prestamosDisponibles - loan
+            )
+        }
     }
 
     fun addFine(fine: FinePayAffiliate) {
-        _uiState.value = _uiState.value.copy(
-            selectedFines = _uiState.value.selectedFines + fine
-        )
+        _uiState.update { state ->
+            state.copy(
+                selectedFines = state.selectedFines + fine,
+                multasDisponibles = state.multasDisponibles - fine
+            )
+        }
     }
 
     fun addCapitalContribution(user: BasicUserInfo, amount: Float) {
@@ -111,69 +120,95 @@ class SPagoEnviarViewModel(
             userName = user.name,
             amount = amount
         )
-        _uiState.value = _uiState.value.copy(
-            aportesCapital = _uiState.value.aportesCapital + contribution
-        )
+        _uiState.update { state ->
+            state.copy(
+                aportesCapital = state.aportesCapital + contribution,
+                // quitar usuario de opciones para evitar duplicado
+                usuariosDisponibles = state.usuariosDisponibles.filter { it.userId != user.userId }
+            )
+        }
     }
 
     fun removeCuota(cuota: QuotaAffiliate) {
-        _uiState.value = _uiState.value.copy(
-            selectedCuotas = _uiState.value.selectedCuotas - cuota
-        )
+        _uiState.update { state ->
+            state.copy(
+                selectedCuotas = state.selectedCuotas - cuota,
+                // devolver la cuota a disponibles
+                cuotasDisponibles = state.cuotasDisponibles + cuota
+            )
+        }
     }
     fun removeLoanQuota(loan: LoanQuota) {
-        _uiState.value = _uiState.value.copy(
-            selectedLoanQuotas = _uiState.value.selectedLoanQuotas - loan
-        )
+        _uiState.update { state ->
+            state.copy(
+                selectedLoanQuotas = state.selectedLoanQuotas - loan,
+                prestamosDisponibles = state.prestamosDisponibles + loan
+            )
+        }
     }
     fun removeFine(fine: FinePayAffiliate) {
-        _uiState.value = _uiState.value.copy(
-            selectedFines = _uiState.value.selectedFines - fine
-        )
+        _uiState.update { state ->
+            state.copy(
+                selectedFines = state.selectedFines - fine,
+                multasDisponibles = state.multasDisponibles + fine
+            )
+        }
     }
     fun removeCapitalContribution(aporte: CapitalContribution) {
-        _uiState.value = _uiState.value.copy(
-            aportesCapital = _uiState.value.aportesCapital - aporte
-        )
+        _uiState.update { state ->
+            // reconstruimos una opción mínima para devolver al dropdown
+            val restoredUser = BasicUserInfo(userId = aporte.userId, name = aporte.userName)
+            state.copy(
+                aportesCapital = state.aportesCapital - aporte,
+                usuariosDisponibles = state.usuariosDisponibles + restoredUser
+            )
+        }
     }
 
-    private fun loadData() {
+    fun loadData() {
         viewModelScope.launch {
-            // Indica que se está cargando
-            _uiState.value = _uiState.value.copy(
-                isLoading = true,
-                errorMessage = null
-            )
-            try {
-                // Cargar si el usuario ya habia accedido
-                val hasSentPayment = prefs.hasSentPayment()
+            _uiState.update { it.copy(isLoading = true, errorMessage = null) }
 
-                _uiState.update {
-                    it.copy(
-                        hasSentPayment = hasSentPayment
-                    )
+            try {
+                val hasSentPayment = prefs.hasSentPayment()
+                val accessToken = prefs.getAccessToken().orEmpty()
+
+                // Si no hay token, dejamos todo vacío
+                if (accessToken.isBlank()) {
+                    _uiState.update {
+                        it.copy(
+                            hasSentPayment = hasSentPayment,
+                            cuotasDisponibles = emptyList(),
+                            prestamosDisponibles = emptyList(),
+                            multasDisponibles = emptyList(),
+                            usuariosDisponibles = emptyList(),
+                            isLoading = false,
+                            errorMessage = "No hay token de acceso"
+                        )
+                    }
+                    return@launch
                 }
 
-                // Carga de datos del repositorio
-                val cuotas = repository.getCuotasMensualesPendientes()
-                val prestamos = repository.getPrestamoCuotasByUser(userId)
-                val multas = repository.getPagoMultasByQuotasUser(listOf(userId))
-                val usuarios = repository.getAllUsers()
+                // Cargas reales
+                val cuotas = repository.getMonthlyAffiliateQuota(accessToken)
+                val prestamos = repository.getPendingLoansQuotas(accessToken)
+                val multas = repository.getFinesByAccessToken(accessToken)
 
-                // Actualiza el estado con los datos cargados
-                _uiState.value = _uiState.value.copy(
-                    isLoading = false,
-                    cuotasDisponibles = cuotas,
-                    prestamosDisponibles = prestamos,
-                    multasDisponibles = multas,
-                    usuariosDisponibles = usuarios
-                )
+                _uiState.update { current ->
+                    current.copy(
+                        hasSentPayment = hasSentPayment,
+                        // Filtra lo ya seleccionado para evitar duplicados visuales
+                        cuotasDisponibles = cuotas.filter { it !in current.selectedCuotas },
+                        prestamosDisponibles = prestamos.filter { it !in current.selectedLoanQuotas },
+                        multasDisponibles = multas.filter { it !in current.selectedFines },
+                        isLoading = false,
+                        errorMessage = null
+                    )
+                }
             } catch (e: Exception) {
-                // Manejo de error
-                _uiState.value = _uiState.value.copy(
-                    isLoading = false,
-                    errorMessage = e.message
-                )
+                _uiState.update {
+                    it.copy(isLoading = false, errorMessage = e.message ?: "Error al cargar datos")
+                }
             }
         }
     }
@@ -197,6 +232,70 @@ class SPagoEnviarViewModel(
                 )
             }
         }
+    }
+
+    fun submitPayment() {
+        viewModelScope.launch {
+            // Validación local (opcional pero útil)
+            val ok = validateDeclaredAmount()
+            if (!ok) return@launch
+
+            _uiState.update { it.copy(isLoading = true, errorMessage = null) }
+
+            try {
+                val accessToken = prefs.getAccessToken().orEmpty()
+
+                // Construir beingPayed
+                val payedItems = buildBeingPayed(_uiState.value)
+
+                // Ejecutar mutación
+                val response = repository.createUserPayment(
+                    accessToken = accessToken,
+                    name = _uiState.value.nombrePago.ifBlank { "Pago" },
+                    totalAmount = _uiState.value.montoActualDeclarado,
+                    ticketNumber = _uiState.value.numeroBoleta,
+                    accountNumber = _uiState.value.numberoCuenta,
+                    beingPayed = payedItems,
+                )
+
+                // Exito
+                _uiState.update { it.copy(isLoading = false, paymentSentSuccesffully = true) }
+            } catch (e: Exception) {
+                _uiState.update { it.copy(isLoading = false, errorMessage = e.message ?: "Error enviando pago") }
+            }
+        }
+    }
+
+    private fun buildBeingPayed(state: SPagoEnviarState): List<PayedTo> {
+        val fromCuotas = state.selectedCuotas.map { c ->
+            PayedTo(
+                modelKey = c.idCuota.toString(), // tú cargaste userId aquí
+                modelType = "AFILIADO",
+                amount = c.montoCuota.toDouble()
+            )
+        }
+        val fromLoans = state.selectedLoanQuotas.map { l ->
+            PayedTo(
+                modelKey = l.id.toString(),
+                modelType = "PRESTAMO",
+                amount = l.monto.toDouble()
+            )
+        }
+        val fromFines = state.selectedFines.map { f ->
+            PayedTo(
+                modelKey = f.id,
+                modelType = "FINE",
+                amount = f.fineAmount.toDouble()
+            )
+        }
+        val fromCapital = state.aportesCapital.map { a ->
+            PayedTo(
+                modelKey = a.userId.toString(),
+                modelType = "CAPITAL",
+                amount = a.amount.toDouble()
+            )
+        }
+        return fromCuotas + fromLoans + fromFines + fromCapital
     }
 
     /**

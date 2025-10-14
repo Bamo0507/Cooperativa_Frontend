@@ -7,7 +7,6 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -116,8 +115,8 @@ fun SPagosStatusScreen(
             ) {
                 items(payments.size){idx ->
                     PagoStatusCard(
-                        pagoId = payments[idx].pagoId,
                         nombrePago = payments[idx].nombrePago,
+                        commentary = payments[idx].commentary,
                         estado = payments[idx].estado,
                         dateOfPayment = payments[idx].dateOfPayment,
                         onWatchError = onWatchError
@@ -134,12 +133,12 @@ fun SPagosStatusScreen(
 fun PagoStatusCard(
     nombrePago: String,
     estado: Estados,
-    pagoId: String,
+    commentary: String?,
     dateOfPayment: String,
     onWatchError: (String) -> Unit,
     modifier: Modifier = Modifier
 ){
-    var colorText = getStatusColor(estado)
+    val colorText = getStatusColor(estado)
 
     var showApprovedDialog by remember { mutableStateOf(false) }
     var showPendingDialog by remember { mutableStateOf(false) }
@@ -152,9 +151,12 @@ fun PagoStatusCard(
                 .fillMaxWidth()
                 .clickable {
                     when (estado) {
-                        Estados.RECHAZADO -> onWatchError(pagoId)
-                        Estados.APROBADO -> showApprovedDialog = true
-                        Estados.PENDIENTE -> showPendingDialog = true
+                        Estados.REJECTED -> onWatchError(
+                            commentary?.takeIf { it.isNotBlank() }
+                                ?: "Pago rechazado. Motivo no disponible."
+                        )
+                        Estados.ACCEPTED -> showApprovedDialog = true
+                        Estados.ON_REVISION -> showPendingDialog = true
                     }
                 }
                 .padding(16.dp),
@@ -192,7 +194,7 @@ fun PagoStatusCard(
             }
 
             when (estado) {
-                Estados.RECHAZADO -> {
+                Estados.REJECTED -> {
                     Box(
                         modifier = Modifier.size(24.dp),
                         contentAlignment = Alignment.Center
@@ -205,7 +207,7 @@ fun PagoStatusCard(
                         )
                     }
                 }
-                Estados.APROBADO -> {
+                Estados.ACCEPTED -> {
                     Box(
                         modifier = Modifier.size(24.dp),
                         contentAlignment = Alignment.Center
@@ -218,7 +220,7 @@ fun PagoStatusCard(
                         )
                     }
                 }
-                Estados.PENDIENTE -> {
+                Estados.ON_REVISION -> {
                     Box(
                         modifier = Modifier.size(24.dp),
                         contentAlignment = Alignment.Center

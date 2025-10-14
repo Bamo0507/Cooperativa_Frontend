@@ -18,5 +18,4 @@ data class FineDetailUiState(
     val name: String,
     val date: LocalDate,
     val amount: String,
-    val type: FineType
 )

@@ -9,7 +9,7 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class SPagoErrorDestination(
-    val paymentId: String
+    val message: String
 )
 
 fun NavController.navigateToSPagoError(
@@ -22,13 +22,11 @@ fun NavController.navigateToSPagoError(
     )
 }
 
-fun NavGraphBuilder.spagoErrorScreen(
-    onBackClick: () -> Unit
-){
+fun NavGraphBuilder.spagoErrorScreen(onBackClick: () -> Unit){
     composable<SPagoErrorDestination> { backStackEntry ->
         val destination: SPagoErrorDestination = backStackEntry.toRoute()
         SPagoErrorRoute(
-            paymentId = destination.paymentId,
+            directiveMessage = destination.message,
             onBackClick = onBackClick
         )
     }

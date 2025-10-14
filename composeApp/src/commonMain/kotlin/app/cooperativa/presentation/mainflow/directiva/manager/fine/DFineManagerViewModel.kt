@@ -90,7 +90,7 @@ class DFineManagerViewModel(
         ) }
     }
 
-    fun updateAffiliate(member: String, userId: Int) {
+    fun updateAffiliate(member: String, userId: String) {
         _uiState.value = _uiState.value.copy(
             affiliateName = member,
             affiliateId = userId

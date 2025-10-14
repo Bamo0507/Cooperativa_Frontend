@@ -41,6 +41,7 @@ fun SPagoEnviarScreen_Preview() {
             onRemoveLoanQuota = {},
             onAddFine = {},
             onRemoveFine = {},
+            loadData = {},
             onAddCapitalContribution = { _, _ -> },
             onRemoveCapitalContribution = {}
         )

@@ -18,10 +18,13 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AccountCircle
+import androidx.compose.material.icons.filled.Description
 import androidx.compose.material.icons.filled.Groups
 import androidx.compose.material.icons.filled.Logout
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButtonDefaults
+import androidx.compose.material3.TextButton
+import androidx.compose.ui.platform.LocalUriHandler
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -95,6 +98,8 @@ fun DirectivaAccountScreen(
             verticalArrangement = Arrangement.Top,
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
+            val uriHandler = LocalUriHandler.current
+
             // Space down from header
             Spacer(modifier = Modifier.height(140.dp))
 
@@ -175,6 +180,39 @@ fun DirectivaAccountScreen(
 
             Spacer(modifier = Modifier.height(12.dp))
 
+            // Reglamento (abre documento externo)
+            CoopIconButton(
+                onClick = {
+                    uriHandler.openUri("https://docs.google.com/document/d/1MFyeO61mIqF7tCS0mNMbDVYPaw8Hmsrn/edit?usp=sharing&amp;ouid=112943840371733396643&amp;rtpof=true&amp;sd=true")
+                },
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(52.dp)
+                    .clip(RoundedCornerShape(12.dp)),
+                colors = IconButtonDefaults.iconButtonColors(
+                    containerColor = CoopTheme.colorScheme.primary.copy(alpha = 0.65f),
+                    contentColor = CoopTheme.colorScheme.onSurface
+                )
+            ) {
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.Center,
+                    modifier = Modifier.fillMaxWidth()
+                ) {
+                    Icon(
+                        imageVector = Icons.Default.Description,
+                        contentDescription = null
+                    )
+                    Spacer(modifier = Modifier.width(8.dp))
+                    CoopText(
+                        text = "Reglamento",
+                        fontWeight = FontWeight.Bold
+                    )
+                }
+            }
+
+            Spacer(modifier = Modifier.height(12.dp))
+
             // Cerrar sesión (destructive)
             CoopIconButton(
                 onClick = {
@@ -208,38 +246,6 @@ fun DirectivaAccountScreen(
             }
 
             Spacer(modifier = Modifier.weight(1f))
-
-            Column(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(top = 24.dp, bottom = 2.dp),
-                horizontalAlignment = Alignment.CenterHorizontally
-            ) {
-                Spacer(modifier = Modifier.height(8.dp))
-                Row(
-                    verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = Arrangement.Center
-                ) {
-                    CoopText(
-                        text = "Política de Privacidad",
-                        color = CoopTheme.colorScheme.onSurface.copy(alpha = 0.6f),
-                        modifier = Modifier.clickable { /* TODO: Open Privacy Policy */ },
-                        style = CoopTheme.typography.bodyMedium,
-                        fontWeight = FontWeight.Bold
-                    )
-                    CoopText(
-                        text = "  ·  ",
-                        color = CoopTheme.colorScheme.onSurface.copy(alpha = 0.3f)
-                    )
-                    CoopText(
-                        text = "Términos",
-                        color = CoopTheme.colorScheme.onSurface.copy(alpha = 0.6f),
-                        modifier = Modifier.clickable { /* TODO: Open Terms */ },
-                        style = CoopTheme.typography.bodyMedium,
-                        fontWeight = FontWeight.Bold
-                    )
-                }
-            }
         }
     }
 }

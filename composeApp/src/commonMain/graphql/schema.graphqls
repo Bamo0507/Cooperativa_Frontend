@@ -1,14 +1,97 @@
 type Query {
   getHistory(accessToken: String!): History
-  getAllMemembers: [Member!]!
+
+  getAllMembers: [Member!]!
+
+#  Relacionados a pagos en socios
+  getFinesById(accessToken: String!): [Fine!]!
+
+  getUsersPayments(accessToken: String!): [UserPayment!]!
+
+  getPendingLoansQuotas(accessToken: String!): [Quota!]!
+  getMonthlyAffiliateQuota(accessToken: String!): [Quota!]!
 }
 
+type Mutation {
+  createUserPayment(
+    accessToken: String!
+    name: String!
+    totalAmount: Float!
+    ticketNumber: String!
+    accountNumber: String!
+    beingPayed: [PayedTo!]!
+  ): String!
+}
+
+input PayedTo {
+  modelKey: String!
+  modelType: String!
+  amount: Float!
+}
+
+# General
 type Member {
-  usuarioId: Int!
+  userId: String!
   name: String!
 }
 
+# Socios - Historial
 type History {
   owedCapital: Float
   payedToCapital: Float
+}
+
+# Socios - Pagos -------
+# Formulario de Pagos
+enum PaymentStatus {
+  ON_REVISION
+  REJECTED
+  ACCEPTED
+}
+
+type UserPayment {
+  id: String!
+  name: String!
+  commentary: String
+  paymentDate: String!
+  state: PaymentStatus!
+  ticketNum: String!
+  photo: String!
+  totalAmount: Float!
+  accountNum: String!
+}
+
+enum FineStatus {
+  PAID
+  UNPAID
+}
+
+type Fine {
+  id: String!
+  reason: String!
+  amount: Float!
+  status: FineStatus!
+}
+
+enum QuotaType {
+  PRESTAMO
+  AFILIADO
+}
+
+"""Cuota (afiliado o préstamo)"""
+type Quota {
+  amount: Float!
+  expDate: String
+  identifier: String
+  isExtraordinary: Boolean
+  loanId: String
+  montoPagado: Float
+  multa: Float
+  nombrePrestamo: String
+  nombreUsuario: String
+  payBy: String
+  payed: Boolean
+  quotaNumber: Int
+  quotaType: QuotaType!
+  userId: String!
 }

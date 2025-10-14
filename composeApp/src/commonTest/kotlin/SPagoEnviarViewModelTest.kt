@@ -1,11 +1,11 @@
-//package app.cooperativa.presentation.mainflow.socios.pagos.agregarPago
+//package app.directiva.presentation.mainflow.socios.pagos.agregarPago
 //
-//import app.cooperativa.data.localdb.socios.SPagoEnviarMockData
-//import app.cooperativa.data.model.dto.BasicUserInfo
-//import app.cooperativa.data.model.dto.FinePayAffiliate
-//import app.cooperativa.data.model.dto.LoanQuota
-//import app.cooperativa.data.model.dto.QuotaAffiliate
-//import app.cooperativa.domain.socios.SPagoEnviarRepository
+//import app.directiva.data.localdb.socios.SPagoEnviarMockData
+//import app.directiva.data.model.dto.BasicUserInfo
+//import app.directiva.data.model.dto.FinePayAffiliate
+//import app.directiva.data.model.dto.LoanQuota
+//import app.directiva.data.model.dto.QuotaAffiliate
+//import app.directiva.domain.socios.SPagoEnviarRepository
 //import kotlinx.coroutines.Dispatchers
 //import kotlinx.coroutines.ExperimentalCoroutinesApi
 //import kotlinx.coroutines.test.StandardTestDispatcher

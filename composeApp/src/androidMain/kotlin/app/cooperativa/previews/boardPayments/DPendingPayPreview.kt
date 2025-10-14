@@ -1,12 +1,12 @@
-//package app.cooperativa.previews.boardPayments
+//package app.directiva.previews.boardPayments
 //
 //import android.content.res.Configuration
 //import androidx.compose.runtime.Composable
 //import androidx.compose.ui.tooling.preview.Devices
 //import androidx.compose.ui.tooling.preview.Preview
-//import app.cooperativa.data.localdb.directiva.PaymentMockData
-//import app.cooperativa.presentation.mainflow.directiva.pagos.pendingPaymentDetail.DPendingPayScreen
-//import app.cooperativa.theme.CoopTheme
+//import app.directiva.data.localdb.directiva.PaymentMockData
+//import app.directiva.presentation.mainflow.directiva.pagos.pendingPaymentDetail.DPendingPayScreen
+//import app.directiva.theme.CoopTheme
 //
 //@Preview(
 //    name = "DPendingPayScreen Light",

@@ -1,10 +1,10 @@
-//package app.cooperativa.previews.navigation
+//package app.directiva.previews.navigation
 //
 //import androidx.compose.runtime.Composable
 //import androidx.compose.ui.tooling.preview.Preview
 //import android.content.res.Configuration
-//import app.cooperativa.navigation.SociosNavigationBar
-//import app.cooperativa.theme.CoopTheme
+//import app.directiva.navigation.SociosNavigationBar
+//import app.directiva.theme.CoopTheme
 //
 //@Preview(name = "Light - Historial", showBackground = true)
 //@Composable

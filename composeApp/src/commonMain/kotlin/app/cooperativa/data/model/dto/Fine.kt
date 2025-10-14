@@ -13,5 +13,4 @@ data class FineDetail(
     val name: String = "",
     val date: LocalDate,
     val amount: Float,
-    val type: FineType
 )

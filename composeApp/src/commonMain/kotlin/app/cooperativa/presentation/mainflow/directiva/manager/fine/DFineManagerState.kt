@@ -1,6 +1,6 @@
 package app.cooperativa.presentation.mainflow.directiva.manager.fine
 
-import app.cooperativa.domain.directiva.Member
+import app.cooperativa.data.model.dto.Member
 
 data class DFineManagerState(
     val memberOptions: List<Member> = emptyList(),
@@ -10,7 +10,7 @@ data class DFineManagerState(
     val fineAmountText: String = "",
 
     val affiliateName: String = "",
-    val affiliateId: Int = 0,
+    val affiliateId: String = "",
 
     val isLoading: Boolean = false,
     val errorMessage: String? = null

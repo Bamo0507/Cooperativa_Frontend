@@ -6,6 +6,7 @@ import app.cooperativa.di.dataStore.preferencesModule
 import app.cooperativa.di.directiva.daccountmodule
 import app.cooperativa.di.directiva.dfinemanagermodule
 import app.cooperativa.di.directiva.dfinesmodule
+import app.cooperativa.di.directiva.dloanmanagermodule
 import app.cooperativa.di.directiva.dpagaresmodule
 import app.cooperativa.di.directiva.dpagosmodule
 import app.cooperativa.di.directiva.dpaymentsdetailmodule
@@ -15,7 +16,6 @@ import app.cooperativa.di.directiva.dsolicitudprestamomodule
 import app.cooperativa.di.socios.saccountmodule
 import app.cooperativa.di.socios.shistorialmodule
 import app.cooperativa.di.socios.spagoEnviarModule
-import app.cooperativa.di.socios.spagoErrorModule
 import app.cooperativa.di.socios.spagosStatusModule
 import app.cooperativa.di.socios.sprestamomodule
 import org.koin.core.context.startKoin
@@ -30,6 +30,7 @@ fun getKoinModules() = listOf(
     dsplashmodule,
     dpaymentsdetailmodule,
     dfinesmodule,
+    dloanmanagermodule,
     dpagaresmodule,
 
     shistorialmodule,
@@ -46,8 +47,6 @@ fun getKoinModules() = listOf(
     daccountmodule,
 
     dfinemanagermodule,
-
-    spagoErrorModule,
 
     coreNetworkModule,
 )

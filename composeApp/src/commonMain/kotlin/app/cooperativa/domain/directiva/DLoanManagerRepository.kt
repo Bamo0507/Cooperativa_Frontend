@@ -4,16 +4,15 @@ import app.cooperativa.core.network.apollo.executeQuery
 import app.cooperativa.data.model.dto.Member
 import app.cooperativa.graphql.GettingAffiliatesQuery
 import com.apollographql.apollo3.ApolloClient
-import com.apollographql.apollo3.api.ApolloResponse
 
-interface DFineManagerRepository {
+interface DLoanManagerRepository {
     suspend fun getAllAffiliates(): List<Member>
-    suspend fun submitFine() // TBD
+    suspend fun submitLoan() // TBD cuando exista la mutation
 }
 
-class DirectiveFineManagerRepository(
+class DirectiveLoanManagerRepository(
     private val apollo: ApolloClient
-) : DFineManagerRepository {
+) : DLoanManagerRepository {
 
     override suspend fun getAllAffiliates(): List<Member> {
         return apollo.executeQuery(GettingAffiliatesQuery()) { data ->
@@ -26,7 +25,7 @@ class DirectiveFineManagerRepository(
         }
     }
 
-    override suspend fun submitFine() {
-        // TODO cuando exista la mutation
+    override suspend fun submitLoan() {
+        // TODO: mutation cuando esté lista
     }
 }

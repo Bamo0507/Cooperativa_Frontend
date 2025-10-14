@@ -1,10 +1,10 @@
-//package app.cooperativa.previews.account
+//package app.directiva.previews.account
 //
 //import androidx.compose.runtime.Composable
 //import androidx.compose.ui.tooling.preview.Preview
-//import app.cooperativa.presentation.mainflow.directiva.account.mainAccount.DirectivaAccountScreen
-//import app.cooperativa.theme.CoopTheme
-//import app.cooperativa.theme.components.CoopSurface
+//import app.directiva.presentation.mainflow.directiva.account.mainAccount.DirectivaAccountScreen
+//import app.directiva.theme.CoopTheme
+//import app.directiva.theme.components.CoopSurface
 //
 //
 //@Preview(name = "Light Mode", showBackground = true)
