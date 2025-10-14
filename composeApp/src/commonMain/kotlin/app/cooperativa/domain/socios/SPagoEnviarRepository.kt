@@ -2,7 +2,9 @@ package app.cooperativa.domain.socios
 
 import app.cooperativa.data.model.dto.FinePayAffiliate
 import app.cooperativa.data.model.dto.LoanQuota
+import app.cooperativa.graphql.type.PayedTo
 import app.cooperativa.data.model.dto.QuotaAffiliate
+import app.cooperativa.graphql.CreateUserPaymentMutation
 import app.cooperativa.graphql.GetFinesByIdQuery
 import app.cooperativa.graphql.GetMonthlyAffiliateQuotaQuery
 import app.cooperativa.graphql.GetPendingLoansQuotasQuery
@@ -13,11 +15,20 @@ interface SPagoEnviarRepository {
     suspend fun getMonthlyAffiliateQuota(accessToken: String): List<QuotaAffiliate>
     suspend fun getPendingLoansQuotas(accessToken: String): List<LoanQuota>
     suspend fun getFinesByAccessToken(accessToken: String): List<FinePayAffiliate>
+    suspend fun createUserPayment(
+        accessToken: String,
+        name: String,
+        totalAmount: Float,
+        ticketNumber: String,
+        accountNumber: String,
+        beingPayed: List<PayedTo>,
+    ): String
 }
 
 class SociosPagoEnviarRepository(
     private val fineApollo: ApolloClient, // /graphql/fine
-    private val quotaApollo: ApolloClient // /graphql/quota
+    private val quotaApollo: ApolloClient, // /graphql/quota
+    private val paymentApollo: ApolloClient // /graphql/payment
 ) : SPagoEnviarRepository {
     override suspend fun getFinesByAccessToken(accessToken: String): List<FinePayAffiliate> {
         val response = fineApollo.query(
@@ -59,7 +70,7 @@ class SociosPagoEnviarRepository(
             ?: throw RuntimeException("Respuesta vacía (getMonthlyAffiliateQuota)")
 
         // Solo cuotas no pagadas y de tipo Afiliado
-        val pendientes = items.filter { it.payed != true && it.quotaType.rawValue == "Afiliado" }
+        val pendientes = items.filter { it.payed != true && it.quotaType.rawValue == "AFILIADO" }
 
         return pendientes.map { q ->
             QuotaAffiliate(
@@ -86,7 +97,7 @@ class SociosPagoEnviarRepository(
             ?: throw RuntimeException("Respuesta vacía (getPendingLoansQuotas)")
 
         // Solo cuotas no pagadas y de tipo Prestamo
-        val pendientes = items.filter { it.payed != true && it.quotaType.rawValue == "Prestamo" }
+        val pendientes = items.filter { it.payed != true && it.quotaType.rawValue == "PRESTAMO" }
 
         return pendientes.map { q ->
             val display = q.nombrePrestamo ?: "Préstamo"
@@ -97,5 +108,34 @@ class SociosPagoEnviarRepository(
                 monto = q.amount.toFloat()
             )
         }
+    }
+
+    // MUTATION 2 SEND PAYMENT
+    override suspend fun createUserPayment(
+        accessToken: String,
+        name: String,
+        totalAmount: Float,
+        ticketNumber: String,
+        accountNumber: String,
+        beingPayed: List<PayedTo>,
+    ): String {
+        val resp = paymentApollo.mutation(
+            CreateUserPaymentMutation(
+                accessToken = accessToken,
+                name = name,
+                totalAmount = totalAmount.toDouble(), // Apollo usa Double en scalars Float
+                ticketNumber = ticketNumber,
+                accountNumber = accountNumber,
+                beingPayed = beingPayed,
+            )
+        ).execute()
+
+        if (resp.hasErrors()) {
+            val msg = resp.errors?.joinToString { it.message }.orEmpty()
+            throw RuntimeException(msg.ifBlank { "Error GraphQL (createUserPayment)" })
+        }
+
+        // la mutación devuelve String!, con alias "response"
+        return resp.data?.response ?: throw RuntimeException("Respuesta vacía (createUserPayment)")
     }
 }

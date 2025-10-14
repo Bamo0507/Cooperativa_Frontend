@@ -12,6 +12,23 @@ type Query {
   getMonthlyAffiliateQuota(accessToken: String!): [Quota!]!
 }
 
+type Mutation {
+  createUserPayment(
+    accessToken: String!
+    name: String!
+    totalAmount: Float!
+    ticketNumber: String!
+    accountNumber: String!
+    beingPayed: [PayedTo!]!
+  ): String!
+}
+
+input PayedTo {
+  modelKey: String!
+  modelType: String!
+  amount: Float!
+}
+
 # General
 type Member {
   userId: String!

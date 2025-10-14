@@ -12,7 +12,8 @@ val spagoEnviarModule = module {
     single<SPagoEnviarRepository> {
         SociosPagoEnviarRepository(
             fineApollo = get<ApolloClient>(named("fine")),
-            quotaApollo = get<ApolloClient>(named("quota"))
+            quotaApollo = get<ApolloClient>(named("quota")),
+            paymentApollo = get<ApolloClient>(named("payment"))
         )
     }
 

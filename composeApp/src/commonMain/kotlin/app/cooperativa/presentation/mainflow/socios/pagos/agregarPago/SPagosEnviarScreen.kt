@@ -93,7 +93,9 @@ fun SPagoEnviarRoute(
         },
         onCuentaChange = viewModel::updateNumeroCuenta,
         onBoletaChange = viewModel::updateNumeroBoleta,
-        onSend = { viewModel.validateDeclaredAmount() },
+        onSend = {
+            viewModel.submitPayment()
+        },
         onAddCuota = viewModel::addCuota,
         onRemoveCuota = viewModel::removeCuota,
         onAddLoanQuota = viewModel::addLoanQuota,
@@ -127,6 +129,14 @@ fun SPagoEnviarScreen(
     onRemoveCapitalContribution: (CapitalContribution) -> Unit,
     modifier: Modifier = Modifier
 ) {
+    LaunchedEffect(
+        state.paymentSentSuccesffully
+    ){
+        if(state.paymentSentSuccesffully){
+            onBackClick()
+        }
+    }
+
     var showFirstTimeHelp by rememberSaveable { mutableStateOf(false) }
     LaunchedEffect(state.hasSentPayment) {
         showFirstTimeHelp = !state.hasSentPayment

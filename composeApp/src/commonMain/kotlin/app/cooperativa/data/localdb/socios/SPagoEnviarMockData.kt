@@ -7,19 +7,19 @@ import app.cooperativa.data.model.dto.QuotaAffiliate
 object SPagoEnviarMockData {
     private val mockCuotas = listOf(
         QuotaAffiliate(
-            idCuota = 1,
+            idCuota = "1",
             idAsociado = "1",
             identifier = "Juan Pérez",
             montoCuota = 100f
         ),
         QuotaAffiliate(
-            idCuota = 2,
+            idCuota = "2",
             idAsociado = "2",
             identifier = "María López",
             montoCuota = 150f
         ),
         QuotaAffiliate(
-            idCuota = 3,
+            idCuota = "3",
             idAsociado = "3",
             identifier = "Carlos Ruiz",
             montoCuota = 120f

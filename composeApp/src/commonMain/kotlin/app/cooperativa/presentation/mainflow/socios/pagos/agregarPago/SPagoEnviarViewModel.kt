@@ -13,6 +13,7 @@ import kotlinx.coroutines.launch
 import app.cooperativa.data.model.dto.CapitalContribution
 import app.cooperativa.domain.localstorage.PreferencesLocalStorage
 import app.cooperativa.domain.share.convertHeicToJpeg
+import app.cooperativa.graphql.type.PayedTo
 import com.mohamedrejeb.calf.core.PlatformContext
 import com.mohamedrejeb.calf.io.KmpFile
 import com.mohamedrejeb.calf.io.getPath
@@ -231,6 +232,70 @@ class SPagoEnviarViewModel(
                 )
             }
         }
+    }
+
+    fun submitPayment() {
+        viewModelScope.launch {
+            // Validación local (opcional pero útil)
+            val ok = validateDeclaredAmount()
+            if (!ok) return@launch
+
+            _uiState.update { it.copy(isLoading = true, errorMessage = null) }
+
+            try {
+                val accessToken = prefs.getAccessToken().orEmpty()
+
+                // Construir beingPayed
+                val payedItems = buildBeingPayed(_uiState.value)
+
+                // Ejecutar mutación
+                val response = repository.createUserPayment(
+                    accessToken = accessToken,
+                    name = _uiState.value.nombrePago.ifBlank { "Pago" },
+                    totalAmount = _uiState.value.montoActualDeclarado,
+                    ticketNumber = _uiState.value.numeroBoleta,
+                    accountNumber = _uiState.value.numberoCuenta,
+                    beingPayed = payedItems,
+                )
+
+                // Exito
+                _uiState.update { it.copy(isLoading = false, paymentSentSuccesffully = true) }
+            } catch (e: Exception) {
+                _uiState.update { it.copy(isLoading = false, errorMessage = e.message ?: "Error enviando pago") }
+            }
+        }
+    }
+
+    private fun buildBeingPayed(state: SPagoEnviarState): List<PayedTo> {
+        val fromCuotas = state.selectedCuotas.map { c ->
+            PayedTo(
+                modelKey = c.idCuota.toString(), // tú cargaste userId aquí
+                modelType = "AFILIADO",
+                amount = c.montoCuota.toDouble()
+            )
+        }
+        val fromLoans = state.selectedLoanQuotas.map { l ->
+            PayedTo(
+                modelKey = l.id.toString(),
+                modelType = "PRESTAMO",
+                amount = l.monto.toDouble()
+            )
+        }
+        val fromFines = state.selectedFines.map { f ->
+            PayedTo(
+                modelKey = f.id,
+                modelType = "FINE",
+                amount = f.fineAmount.toDouble()
+            )
+        }
+        val fromCapital = state.aportesCapital.map { a ->
+            PayedTo(
+                modelKey = a.userId.toString(),
+                modelType = "CAPITAL",
+                amount = a.amount.toDouble()
+            )
+        }
+        return fromCuotas + fromLoans + fromFines + fromCapital
     }
 
     /**
