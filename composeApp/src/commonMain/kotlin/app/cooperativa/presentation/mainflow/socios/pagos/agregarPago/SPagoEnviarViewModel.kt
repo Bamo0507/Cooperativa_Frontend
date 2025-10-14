@@ -164,7 +164,7 @@ class SPagoEnviarViewModel(
         }
     }
 
-    private fun loadData() {
+    fun loadData() {
         viewModelScope.launch {
             _uiState.update { it.copy(isLoading = true, errorMessage = null) }
 
