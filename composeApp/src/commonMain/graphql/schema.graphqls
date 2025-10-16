@@ -21,6 +21,12 @@ type Mutation {
     accountNumber: String!
     beingPayed: [PayedTo!]!
   ): String!
+
+  createFine(
+    affiliateKey: String!,
+    amount: Float!,
+    motive: String!
+  ): String!
 }
 
 input PayedTo {
