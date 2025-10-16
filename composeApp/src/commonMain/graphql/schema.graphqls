@@ -10,6 +10,9 @@ type Query {
 
   getPendingLoansQuotas(accessToken: String!): [Quota!]!
   getMonthlyAffiliateQuota(accessToken: String!): [Quota!]!
+
+#  Get All Payments
+  getAllPayments: [UserPayment!]!
 }
 
 type Mutation {
