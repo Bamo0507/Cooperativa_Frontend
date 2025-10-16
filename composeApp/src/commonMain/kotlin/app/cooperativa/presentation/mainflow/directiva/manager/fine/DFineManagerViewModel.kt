@@ -48,6 +48,41 @@ class DFineManagerViewModel(
         }
     }
 
+    fun submitFine(onSuccess: (() -> Unit)? = null) {
+        val state = _uiState.value
+
+        // Validaciones basicas
+        when {
+            state.affiliateId.isBlank() -> {
+                _uiState.update { it.copy(errorMessage = "Selecciona un asociado.") }
+                return
+            }
+            state.fineName.isBlank() -> {
+                _uiState.update { it.copy(errorMessage = "Ingresa la razón de la multa.") }
+                return
+            }
+            state.fineAmount <= 0f -> {
+                _uiState.update { it.copy(errorMessage = "El monto debe ser mayor a 0.") }
+                return
+            }
+        }
+
+        viewModelScope.launch {
+            _uiState.update { it.copy(isLoading = true, errorMessage = null) }
+            try {
+                repository.submitFine(
+                    affiliateKey = state.affiliateId,
+                    amount = state.fineAmount,
+                    motive  = state.fineName
+                )
+                _uiState.update { it.copy(isLoading = false) }
+                onSuccess?.invoke()
+            } catch (e: Exception) {
+                _uiState.update { it.copy(isLoading = false, errorMessage = e.message ?: "Error al crear la multa") }
+            }
+        }
+    }
+
     fun updateFineName(name: String) {
         val sanitized = name
             .replace("\n", " ")

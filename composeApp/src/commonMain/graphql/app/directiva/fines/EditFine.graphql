@@ -1,0 +1,13 @@
+mutation EditFine(
+    $fineKey: String!,
+    $newAmount: Float,
+    $newMotive: String,
+    $newStatus: FineStatus
+) {
+    editFine(
+        fineKey: $fineKey,
+        newAmount: $newAmount,
+        newMotive: $newMotive,
+        newStatus: $newStatus
+    )
+}

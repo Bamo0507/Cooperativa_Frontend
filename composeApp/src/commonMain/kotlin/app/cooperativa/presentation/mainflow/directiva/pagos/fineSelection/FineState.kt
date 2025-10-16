@@ -14,8 +14,7 @@ data class FineSelectionState(
 )
 
 data class FineDetailUiState(
-    val id: Int,
+    val id: String,
     val name: String,
-    val date: LocalDate,
-    val amount: String,
+    val amount: String
 )

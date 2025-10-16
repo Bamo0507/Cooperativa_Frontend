@@ -9,10 +9,10 @@ import org.koin.dsl.module
 
 val dfinemanagermodule = module {
     single<DFineManagerRepository> {
-        DirectiveFineManagerRepository(get<ApolloClient>(named("payment")))
+        DirectiveFineManagerRepository(
+            membersApollo = get<ApolloClient>(named("payment")),
+            fineApollo = get<ApolloClient>(named("fine"))
+        )
     }
-
-    factory {
-        DFineManagerViewModel(get())
-    }
+    factory { DFineManagerViewModel(get()) }
 }

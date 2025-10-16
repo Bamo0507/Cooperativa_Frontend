@@ -1,0 +1,11 @@
+mutation CreateFine(
+    $affiliateKey: String!,
+    $amount: Float!,
+    $motive: String!
+) {
+    createFine(
+        affiliateKey: $affiliateKey,
+        amount: $amount,
+        motive: $motive
+    )
+}

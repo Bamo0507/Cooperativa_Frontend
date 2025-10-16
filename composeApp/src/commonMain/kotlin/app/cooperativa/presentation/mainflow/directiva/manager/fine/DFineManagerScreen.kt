@@ -52,6 +52,7 @@ fun DFineManagerRoute(
         updateFineName = viewModel::updateFineName,
         updateFineAmount = viewModel::updateFineAmount,
         selectedAffiliate = viewModel::updateAffiliate,
+        onSubmit = { viewModel.submitFine { onBackClick() } },
         onBackClick = onBackClick
     )
 }
@@ -62,10 +63,16 @@ fun DFineManagerScreen(
     updateFineAmount: (amount: String) -> Unit,
     updateFineName: (name: String) -> Unit,
     selectedAffiliate: (affiliateName: String, affiliateId: String) -> Unit,
+    onSubmit: () -> Unit,
     state: DFineManagerState,
     onBackClick: () -> Unit,
     modifier: Modifier = Modifier
 ){
+    val canSubmit = state.affiliateId.isNotBlank() &&
+            state.fineName.isNotBlank() &&
+            state.fineAmount > 0f &&
+            !state.isLoading
+
     Scaffold(
         topBar = {
             CoopTopBar(
@@ -145,10 +152,10 @@ fun DFineManagerScreen(
                         contentAlignment = Alignment.BottomEnd,
                         modifier = Modifier
                             .fillMaxWidth()
-                            .padding(bottom = 20.dp)
                     ){
                         CoopButton(
-                            onClick = { /* TODO: submit */ },
+                            onClick = onSubmit,
+                            enabled = canSubmit
                         ){
                             Row(
                                 horizontalArrangement = Arrangement.SpaceAround,

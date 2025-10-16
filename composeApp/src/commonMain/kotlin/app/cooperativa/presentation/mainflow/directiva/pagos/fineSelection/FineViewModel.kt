@@ -10,55 +10,61 @@ import kotlinx.datetime.LocalDate
 
 class FineViewModel(
     private val repository: DFinesRepository,
-    private val userId: Int
+    private val accessKey: String
 ): ViewModel() {
+
     private val _uiState = MutableStateFlow(FineSelectionState())
     val uiState: StateFlow<FineSelectionState> = _uiState.asStateFlow()
 
-    init {
-        loadFines()
-    }
+    init { loadFines() }
 
     fun loadFines() = viewModelScope.launch {
         _uiState.update { it.copy(isLoading = true, errorMessage = null) }
         try {
-            val fine = repository.getFinesForUserById(userId)
-            val detailsUi = fine.fineDetails.map { d ->
+            val fines = repository.getFinesByAccessKey(accessKey)
+            val unpaid = fines.filter { it.status.rawValue == "UNPAID" }
+            val details = unpaid.map { f ->
                 FineDetailUiState(
-                    id = d.id,
-                    name = d.name,
-                    date = d.date,
-                    amount = d.amount.toString(),
+                    id = f.id,
+                    name = f.reason,
+                    amount = f.amount.toString()
                 )
             }
-            _uiState.update {
-                it.copy(
-                    userName = fine.userName,
-                    fineDetails = detailsUi,
-                    isLoading = false
-                )
-            }
+            _uiState.update { it.copy(fineDetails = details, isLoading = false) }
         } catch (e: Exception) {
             _uiState.update { it.copy(errorMessage = e.message, isLoading = false) }
         }
     }
 
-    fun onAmountChange(detailId: Int, newAmount: String) =
+    fun onAmountChange(fineKey: String, newAmount: String) =
         _uiState.update { state ->
             state.copy(
                 fineDetails = state.fineDetails.map {
-                    if (it.id == detailId) it.copy(amount = newAmount) else it
+                    if (it.id == fineKey) it.copy(amount = newAmount) else it
                 }
             )
         }
 
     fun onConfirmClick(onFinished: () -> Unit) = viewModelScope.launch {
-        _uiState.update { it.copy(isSaving = true) }
+        _uiState.update { it.copy(isSaving = true, errorMessage = null) }
         try {
-            // TODO: call repository.updateFineDetail or batch update
+            // Para cada multa, enviar editFine con status según regla (0 => PAID)
+            uiState.value.fineDetails.forEach { d ->
+                val amount = d.amount.toFloatOrNull() ?: 0f
+                val status = if (amount == 0f) app.cooperativa.graphql.type.FineStatus.PAID
+                else app.cooperativa.graphql.type.FineStatus.UNPAID
+
+                repository.editFine(
+                    fineKey   = d.id,
+                    newAmount = amount,
+                    newMotive = d.name,
+                    newStatus = status
+                )
+            }
+            _uiState.update { it.copy(isSaving = false) }
             onFinished()
         } catch (e: Exception) {
-            _uiState.update { it.copy(errorMessage = e.message, isSaving = false) }
+            _uiState.update { it.copy(isSaving = false, errorMessage = e.message) }
         }
     }
 }

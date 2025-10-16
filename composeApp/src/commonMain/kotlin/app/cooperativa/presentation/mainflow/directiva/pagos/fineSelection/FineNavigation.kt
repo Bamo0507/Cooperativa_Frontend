@@ -9,7 +9,7 @@ import androidx.navigation.toRoute
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class EditFineDestination(val userId: Int)
+data class EditFineDestination(val accessKey: String)
 
 fun NavController.navigateToEditFineScreen (
     destination: EditFineDestination,
@@ -28,7 +28,7 @@ fun NavGraphBuilder.editFineScreen(
     composable<EditFineDestination> { backStackEntry ->
         val destination: EditFineDestination = backStackEntry.toRoute()
         FineSelectionRoute(
-            userId = destination.userId,
+            accessKey = destination.accessKey,
             onBackClick = onBackClick,
             onConfirm = onConfirmClick
         )
