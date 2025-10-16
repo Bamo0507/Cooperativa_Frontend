@@ -27,6 +27,13 @@ type Mutation {
     amount: Float!,
     motive: String!
   ): String!
+
+  editFine(
+    fineKey: String!,
+    newAmount: Float,
+    newMotive: String,
+    newStatus: FineStatus
+  ): String!
 }
 
 input PayedTo {

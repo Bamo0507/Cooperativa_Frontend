@@ -41,10 +41,12 @@ fun NavGraphBuilder.dPaymentNavGraph(
                 )
             },
 
-            onFineClick = { fine ->
+            // For now, key is hard coded, will be replaced
+            // once query to retrieve all fines is created
+            onFineClick = {
                 navController.navigateToEditFineScreen(
                     destination = EditFineDestination(
-                        userId = fine
+                        accessKey = "77656D82A042ABA5AE02293A880479D3DACA6609331486E01F351285990F6235"
                     )
                 )
             }

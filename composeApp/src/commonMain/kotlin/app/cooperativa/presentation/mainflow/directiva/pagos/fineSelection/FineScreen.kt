@@ -19,18 +19,14 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import kotlinx.datetime.LocalDate
 import org.koin.compose.koinInject
 import org.koin.core.parameter.parametersOf
 import app.cooperativa.presentation.utils.LoadingScreen
 import app.cooperativa.presentation.utils.ErrorScreen
 import app.cooperativa.theme.CoopTheme
 import app.cooperativa.theme.components.CoopButton
-import app.cooperativa.theme.components.CoopOutlinedCard
 import app.cooperativa.theme.components.CoopTopBar
 import app.cooperativa.theme.components.CoopText
-import androidx.compose.foundation.isSystemInDarkTheme
-import androidx.compose.material3.Divider
 import app.cooperativa.theme.components.CoopOutlinedTextField
 
 /**
@@ -39,10 +35,10 @@ import app.cooperativa.theme.components.CoopOutlinedTextField
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun FineSelectionRoute(
-    userId: Int,
+    accessKey: String,
     onBackClick: () -> Unit,
     onConfirm: () -> Unit,
-    viewModel: FineViewModel = koinInject { parametersOf(userId) }
+    viewModel: FineViewModel = koinInject { parametersOf(accessKey) }
 ) {
     val state by viewModel.uiState.collectAsStateWithLifecycle()
 
@@ -70,7 +66,7 @@ fun FineSelectionScreen(
     state: FineSelectionState,
     onBackClick: () -> Unit,
     onConfirmClick: () -> Unit,
-    onAmountChange: (detailId: Int, String) -> Unit,
+    onAmountChange: (fineKey: String, String) -> Unit,
     modifier: Modifier = Modifier
 ) {
     Scaffold(
@@ -142,7 +138,8 @@ fun FineSelectionScreen(
 
             // Resumen de totales
             val total = state.fineDetails.sumOf { it.amount.toDoubleOrNull() ?: 0.0 }.toFloat()
-            Spacer(modifier = Modifier.height(4.dp))
+            Spacer(modifier = Modifier.weight(1f))
+
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceBetween,
@@ -164,7 +161,7 @@ fun FineSelectionScreen(
                 )
             }
 
-            Spacer(modifier = Modifier.height(12.dp))
+            Spacer(modifier = Modifier.height(8.dp))
 
             Row(
                 modifier = Modifier.fillMaxWidth(),
@@ -180,7 +177,7 @@ fun FineSelectionScreen(
                 }
             }
 
-            Spacer(modifier = Modifier.height(12.dp))
+            Spacer(modifier = Modifier.height(8.dp))
         }
     }
 }
