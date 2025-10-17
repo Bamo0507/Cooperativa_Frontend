@@ -37,6 +37,12 @@ type Mutation {
     newMotive: String,
     newStatus: FineStatus
   ): String!
+  
+  approveOrRejectPayment(
+    id: String!,
+    newState: String!,
+    commentary: String!
+  ): UserPayment!
 }
 
 input PayedTo {

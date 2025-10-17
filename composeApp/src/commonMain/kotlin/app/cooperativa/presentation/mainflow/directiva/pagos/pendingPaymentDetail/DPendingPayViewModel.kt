@@ -18,9 +18,7 @@ class DPendingPayViewModel(
     private val _uiState = MutableStateFlow(DPendingPayState(isLoading = true))
     val uiState = _uiState.asStateFlow()
 
-    init {
-        loadPayment()
-    }
+    init { loadPayment() }
 
     fun loadPayment() {
         viewModelScope.launch {
@@ -34,29 +32,64 @@ class DPendingPayViewModel(
         }
     }
 
-    // actualizar comentario
     fun onCommentChange(comment: String) {
         _uiState.update { it.copy(commentInput = comment) }
     }
 
-    fun openRejectDialog() {
-        _uiState.update { it.copy(showRejectDialog = true) }
-    }
+    fun openRejectDialog() { _uiState.update { it.copy(showRejectDialog = true) } }
+    fun closeRejectDialog() { _uiState.update { it.copy(showRejectDialog = false) } }
 
-    fun closeRejectDialog() {
-        _uiState.update { it.copy(showRejectDialog = false) }
-    }
-
-    // aprobar pago
+    // APROBAR
     fun onApprove() {
-        // TODO: lógica de aprobación
+        viewModelScope.launch {
+            val current = _uiState.value.payment ?: return@launch
+            _uiState.update { it.copy(isLoading = true, errorMessage = null) }
+            try {
+                val updated = repository.approveOrRejectPayment(
+                    id = current.id,
+                    newState = "ACCEPTED",
+                    commentary = "Pago revisado y aprobado"
+                )
+                _uiState.update {
+                    it.copy(
+                        isLoading = false,
+                        payment = updated,
+                        showRejectDialog = false,
+                        navigateBack = true
+                    )
+                }
+            } catch (e: Exception) {
+                _uiState.update { it.copy(isLoading = false, errorMessage = e.message) }
+            }
+        }
     }
 
-    // negar pago
+    // RECHAZAR
     fun onReject() {
-        // TODO: lógica de rechazo (usar uiState.value.commentInput)
-        // Al terminar, cierra el diálogo:
-        _uiState.update { it.copy(showRejectDialog = false) }
-    }
+        viewModelScope.launch {
+            val current = _uiState.value.payment ?: return@launch
+            val comment  = _uiState.value.commentInput
+            if (comment.isBlank()) return@launch
 
+            _uiState.update { it.copy(isLoading = true, errorMessage = null) }
+            try {
+                val updated = repository.approveOrRejectPayment(
+                    id = current.id,
+                    newState = "REJECTED",
+                    commentary = comment
+                )
+                _uiState.update {
+                    it.copy(
+                        isLoading = false,
+                        payment = updated,
+                        showRejectDialog = false,
+                        commentInput = "",
+                        navigateBack = true
+                    )
+                }
+            } catch (e: Exception) {
+                _uiState.update { it.copy(isLoading = false, errorMessage = e.message) }
+            }
+        }
+    }
 }
