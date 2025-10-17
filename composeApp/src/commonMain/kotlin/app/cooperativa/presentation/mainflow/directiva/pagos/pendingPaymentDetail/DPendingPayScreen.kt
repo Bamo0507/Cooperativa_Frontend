@@ -52,7 +52,7 @@ import org.koin.core.parameter.parametersOf
 
 @Composable
 fun DPendingPayRoute(
-    paymentId: Int,
+    paymentId: String,
     onBackClick: () -> Unit,
     viewModel: DPendingPayViewModel = koinInject { parametersOf(paymentId) }
 ) {
@@ -318,7 +318,7 @@ private fun DPendingBasicInfoCard(payment: Payment) {
             Spacer(Modifier.height(4.dp))
             InfoRow(
                 label = "Monto total",
-                value = app.cooperativa.utils.formatMoney(total),
+                value = if(total != 0f) formatMoney(total) else formatMoney(payment.totalAmount),
                 valueColor = CoopTheme.colorScheme.onSecondary
             )
         }

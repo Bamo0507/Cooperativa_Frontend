@@ -9,7 +9,7 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class DPaidPayDestination(
-    val paymentId: Int
+    val paymentId: String
 )
 
 fun NavController.navigateToDPaidPayScreen(

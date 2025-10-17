@@ -32,7 +32,7 @@ class DirectivePaymentsRepository(
             .filter { it.state == PaymentStatus.ON_REVISION || it.state == PaymentStatus.ACCEPTED }
             .map { p ->
                 BasicInfoPayment(
-                    id = p.id.hashCode(),
+                    id = p.id,
                     paymentName = p.name,
                     username = "User - ${p.totalAmount}",
                     dateOfPayment = p.paymentDate,
