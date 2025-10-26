@@ -14,6 +14,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.size
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Edit
@@ -107,7 +108,8 @@ fun DPaymentsScreen(
                 modifier = modifier
                     .background(CoopTheme.colorScheme.surface)
                     .padding(padding)
-                    .padding(vertical = 6.dp, horizontal = 24.dp)
+                    .padding(horizontal = 24.dp)
+                    .padding(top = 6.dp)
             ) {
                 // Chips para filtrar pestañas
                 FilterChipsRow(
@@ -130,7 +132,7 @@ fun DPaymentsScreen(
                         } else {
                             LazyColumn(
                                 modifier = Modifier.fillMaxSize(),
-                                contentPadding = PaddingValues(vertical = 8.dp),
+                                contentPadding = PaddingValues(top = 8.dp),
                                 verticalArrangement = Arrangement.spacedBy(8.dp)
                             ) {
                                 items(state.pendingPayments) { basic ->
@@ -144,6 +146,9 @@ fun DPaymentsScreen(
                                             .fillMaxWidth()
                                             .padding(vertical = 2.dp)
                                     )
+                                }
+                                item {
+                                    Spacer(modifier = Modifier.height(6.dp))
                                 }
                             }
                         }
@@ -161,7 +166,7 @@ fun DPaymentsScreen(
                         } else {
                             LazyColumn(
                                 modifier = Modifier.fillMaxSize(),
-                                contentPadding = PaddingValues(vertical = 8.dp),
+                                contentPadding = PaddingValues(top = 8.dp),
                                 verticalArrangement = Arrangement.spacedBy(8.dp)
                             ) {
                                 items(state.paidPayments) { basic ->
@@ -175,6 +180,9 @@ fun DPaymentsScreen(
                                             .fillMaxWidth()
                                             .padding(vertical = 2.dp)
                                     )
+                                }
+                                item {
+                                    Spacer(modifier = Modifier.height(6.dp))
                                 }
                             }
                         }
@@ -192,7 +200,7 @@ fun DPaymentsScreen(
                         } else {
                             LazyColumn(
                                 modifier = Modifier.fillMaxSize(),
-                                contentPadding = PaddingValues(vertical = 8.dp),
+                                contentPadding = PaddingValues(top = 8.dp),
                                 verticalArrangement = Arrangement.spacedBy(8.dp)
                             ) {
                                 items(state.fines) { fine ->
@@ -203,6 +211,9 @@ fun DPaymentsScreen(
                                             .padding(vertical = 4.dp),
                                         onFineClick = onFineClick
                                     )
+                                }
+                                item {
+                                   Spacer(modifier = Modifier.height(6.dp))
                                 }
                             }
                         }
@@ -242,6 +253,7 @@ fun PaymentItem(
                     text = paymentName,
                     fontWeight = FontWeight.Bold,
                     style = CoopTheme.typography.bodyMedium,
+                    color = CoopTheme.colorScheme.onSurface,
                     maxLines = 1,
                     overflow = TextOverflow.Ellipsis
                 )
@@ -249,6 +261,7 @@ fun PaymentItem(
                 CoopText(
                     text = affiliatedName,
                     style = CoopTheme.typography.bodyMedium,
+                    color = CoopTheme.colorScheme.onSurface,
                     maxLines = 1,
                     overflow = TextOverflow.Ellipsis
                 )
@@ -256,6 +269,7 @@ fun PaymentItem(
                 CoopText(
                     text = dateOfPayment,
                     style = CoopTheme.typography.bodySmall,
+                    color = CoopTheme.colorScheme.onSurface,
                     maxLines = 1,
                     overflow = TextOverflow.Ellipsis
                 )
@@ -301,7 +315,8 @@ fun FilterChipsRow(
                 label = {
                     CoopText(
                         text = chip,
-                        fontWeight = if (isSelected) FontWeight.Bold else FontWeight.Normal
+                        fontWeight = if (isSelected) FontWeight.Bold else FontWeight.Normal,
+                        color = if (isSelected) CoopTheme.colorScheme.surface else CoopTheme.colorScheme.onSurface,
                     )
                 },
                 colors = FilterChipDefaults.filterChipColors(
@@ -394,6 +409,7 @@ fun FineSimplifiedCard(
                             CoopText(
                                 text = detail.name,
                                 style = CoopTheme.typography.bodyMedium,
+                                color = CoopTheme.colorScheme.onSurface,
                                 maxLines = 1,
                                 overflow = TextOverflow.Ellipsis,
                                 modifier = Modifier.weight(1f)
@@ -423,14 +439,18 @@ private fun NoResultsView() {
     ) {
         Image(
             painter = painterResource(Res.drawable.ic_no_results),
-            contentDescription = "Sin resultados"
+            contentDescription = "Sin resultados",
+            modifier = Modifier.size(128.dp)
         )
         CoopText(
             text = "No hay resultados",
             fontWeight = FontWeight.Bold,
             style = CoopTheme.typography.titleMedium,
+            color = CoopTheme.colorScheme.onSurface,
             textAlign = TextAlign.Center,
-            modifier = Modifier.padding(vertical = 6.dp)
+            modifier = Modifier
+                .offset(y = (-8).dp)
+                .padding(vertical = 6.dp)
         )
         Spacer(modifier = Modifier.height(16.dp))
     }
