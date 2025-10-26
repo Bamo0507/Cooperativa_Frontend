@@ -68,7 +68,7 @@ fun DHubScreen(
                     CoopIcon(
                         Icons.Outlined.ReceiptLong,
                         contentDescription = "Multa",
-                        tint = CoopTheme.colorScheme.onPrimary,
+                        tint = CoopTheme.colorScheme.onSecondary,
                         modifier = Modifier.size(72.dp)
                     )
                     Spacer(modifier = Modifier.height(12.dp))
@@ -86,7 +86,7 @@ fun DHubScreen(
             }
 
             HorizontalDivider(
-                color = CoopTheme.colorScheme.onPrimary
+                color = CoopTheme.colorScheme.onSecondary
             )
 
             // Box for loan form
@@ -104,7 +104,7 @@ fun DHubScreen(
                     CoopIcon(
                         Icons.Outlined.RequestQuote,
                         contentDescription = "Prestamo",
-                        tint = CoopTheme.colorScheme.onPrimary,
+                        tint = CoopTheme.colorScheme.onSecondary,
                         modifier = Modifier.size(72.dp)
                     )
                     Spacer(modifier = Modifier.height(12.dp))

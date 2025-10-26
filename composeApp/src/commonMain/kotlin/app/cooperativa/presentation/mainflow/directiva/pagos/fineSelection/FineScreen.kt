@@ -103,7 +103,7 @@ fun FineSelectionScreen(
                 CoopText(
                     text = "Multas (${state.fineDetails.size})",
                     style = MaterialTheme.typography.labelLarge,
-                    color = CoopTheme.colorScheme.secondary
+                    color = CoopTheme.colorScheme.onSecondary
                 )
             }
 

@@ -195,6 +195,7 @@ private fun LabeledField(
         CoopText(
             label,
             style = CoopTheme.typography.bodyLarge,
+            color = CoopTheme.colorScheme.onSurface,
             fontWeight = FontWeight.Bold
         )
         content()

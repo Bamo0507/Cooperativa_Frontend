@@ -316,7 +316,7 @@ fun FilterChipsRow(
                     CoopText(
                         text = chip,
                         fontWeight = if (isSelected) FontWeight.Bold else FontWeight.Normal,
-                        color = if (isSelected) CoopTheme.colorScheme.surface else CoopTheme.colorScheme.onSurface,
+                        color = if (isSelected) CoopTheme.colorScheme.secondary else CoopTheme.colorScheme.onSecondary,
                     )
                 },
                 colors = FilterChipDefaults.filterChipColors(
