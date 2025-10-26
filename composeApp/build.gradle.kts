@@ -36,12 +36,17 @@ kotlin {
             implementation(libs.androidx.activity.compose)
             implementation(libs.koin.android)
             implementation(libs.koin.androidx.compose)
+            implementation(libs.ktor.client.cio)
+        }
+        iosMain.dependencies {
+            implementation(libs.ktor.client.darwin)
         }
         commonMain.dependencies {
             implementation(compose.runtime)
             implementation(compose.foundation)
             implementation(compose.material3)
             implementation(compose.ui)
+            implementation(libs.ktor.client.logging)
             implementation(compose.components.resources)
             implementation(compose.components.uiToolingPreview)
             implementation(libs.androidx.lifecycle.viewmodel)
@@ -51,13 +56,9 @@ kotlin {
             implementation(libs.kotlinx.serialization.json)
             implementation(libs.koin.core)
             implementation(libs.koin.compose)
-            implementation(libs.datastore)
-            implementation(libs.datastore.preferences)
             implementation(libs.compose.material.icons.extended)
-
             implementation(libs.datastore)
             implementation(libs.datastore.preferences)
-
             implementation(libs.calf.file.picker)
             implementation(libs.calf.file.picker.coil)
             implementation(libs.coil.compose)
@@ -66,7 +67,6 @@ kotlin {
             implementation(libs.apollo.normalized.cache)
 
             implementation(libs.ktor.client.core)
-            implementation(libs.ktor.client.cio)
             implementation(libs.ktor.client.content.negotiation)
             implementation(libs.ktor.serialization.kotlinx.json)
         }
