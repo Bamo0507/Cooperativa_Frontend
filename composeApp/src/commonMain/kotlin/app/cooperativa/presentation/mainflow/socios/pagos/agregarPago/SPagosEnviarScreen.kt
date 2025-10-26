@@ -195,6 +195,7 @@ fun SPagoEnviarScreen(
                     CoopText(
                         text = "Información Básica",
                         style = CoopTheme.typography.titleMedium,
+                        color = CoopTheme.colorScheme.onSurface,
                         modifier = Modifier.padding(top = 8.dp, bottom = 4.dp),
                         fontWeight = FontWeight.Bold
                     )
@@ -271,6 +272,7 @@ fun SPagoEnviarScreen(
                     CoopText(
                         text = "Cuotas",
                         style = CoopTheme.typography.titleMedium,
+                        color = CoopTheme.colorScheme.onSurface,
                         modifier = Modifier.padding(top = 12.dp, bottom = 8.dp),
                         fontWeight = FontWeight.Bold
                     )
@@ -292,8 +294,8 @@ fun SPagoEnviarScreen(
                     CoopOutlinedTextField(
                         value = cuotaToAdd?.montoCuota?.toString() ?: "",
                         onValueChange = {},
-                        label = { CoopText("Monto") },
-                        placeholder = { CoopText("Monto") },
+                        label = { CoopText("Monto", color = CoopTheme.colorScheme.onSurface) },
+                        placeholder = { CoopText("Monto", color = CoopTheme.colorScheme.onSurface) },
                         prefix = { Text("Q ") },
                         readOnly = true,
                         enabled = true,
@@ -317,7 +319,7 @@ fun SPagoEnviarScreen(
                         Row(verticalAlignment = Alignment.CenterVertically) {
                             Icon(Icons.Filled.Add, contentDescription = null)
                             Spacer(modifier = Modifier.width(8.dp))
-                            CoopText("Agregar cuota", color = CoopTheme.colorScheme.onPrimary, style = CoopTheme.typography.bodyMedium)
+                            CoopText("Agregar cuota", style = CoopTheme.typography.bodyMedium)
                         }
                     }
                 }
@@ -339,6 +341,7 @@ fun SPagoEnviarScreen(
                     CoopText(
                         text = "Préstamos",
                         style = CoopTheme.typography.titleMedium,
+                        color = CoopTheme.colorScheme.onSurface,
                         modifier = Modifier.padding(top = 12.dp, bottom = 8.dp),
                         fontWeight = FontWeight.Bold
                     )
@@ -360,8 +363,8 @@ fun SPagoEnviarScreen(
                     CoopOutlinedTextField(
                         value = loanToAdd?.monto?.toString() ?: "",
                         onValueChange = {},
-                        label = { CoopText("Monto") },
-                        placeholder = { CoopText("Monto") },
+                        label = { CoopText("Monto", color = CoopTheme.colorScheme.onSurface) },
+                        placeholder = { CoopText("Monto", color = CoopTheme.colorScheme.onSurface) },
                         prefix = { Text("Q ") },
                         readOnly = true,
                         enabled = true,
@@ -385,7 +388,7 @@ fun SPagoEnviarScreen(
                         Row(verticalAlignment = Alignment.CenterVertically) {
                             Icon(Icons.Filled.Add, contentDescription = null)
                             Spacer(modifier = Modifier.width(8.dp))
-                            CoopText("Agregar préstamo", color = CoopTheme.colorScheme.onPrimary, style = CoopTheme.typography.bodyMedium)
+                            CoopText("Agregar préstamo", style = CoopTheme.typography.bodyMedium)
                         }
                     }
                 }
@@ -407,6 +410,7 @@ fun SPagoEnviarScreen(
                     CoopText(
                         text = "Multas",
                         style = CoopTheme.typography.titleMedium,
+                        color = CoopTheme.colorScheme.onSurface,
                         modifier = Modifier.padding(top = 12.dp, bottom = 8.dp),
                         fontWeight = FontWeight.Bold,
                     )
@@ -428,8 +432,8 @@ fun SPagoEnviarScreen(
                     CoopOutlinedTextField(
                         value = fineToAdd?.fineAmount?.toString() ?: "",
                         onValueChange = {},
-                        label = { CoopText("Monto") },
-                        placeholder = { CoopText("Monto") },
+                        label = { CoopText("Monto", color = CoopTheme.colorScheme.onSurface) },
+                        placeholder = { CoopText("Monto", color = CoopTheme.colorScheme.onSurface) },
                         prefix = { Text("Q ") },
                         readOnly = true,
                         enabled = true,
@@ -453,7 +457,7 @@ fun SPagoEnviarScreen(
                         Row(verticalAlignment = Alignment.CenterVertically) {
                             Icon(Icons.Filled.Add, contentDescription = null)
                             Spacer(modifier = Modifier.width(8.dp))
-                            CoopText("Agregar multa", color = CoopTheme.colorScheme.onPrimary, style = CoopTheme.typography.bodyMedium)
+                            CoopText("Agregar multa", style = CoopTheme.typography.bodyMedium)
                         }
                     }
                 }
@@ -475,6 +479,7 @@ fun SPagoEnviarScreen(
                     CoopText(
                         text = "Aportes de Capital",
                         style = CoopTheme.typography.titleMedium,
+                        color = CoopTheme.colorScheme.onSurface,
                         modifier = Modifier.padding(top = 12.dp, bottom = 8.dp),
                         fontWeight = FontWeight.Bold
                     )
@@ -527,7 +532,7 @@ fun SPagoEnviarScreen(
                         Row(verticalAlignment = Alignment.CenterVertically) {
                             Icon(Icons.Filled.Add, contentDescription = null)
                             Spacer(modifier = Modifier.width(8.dp))
-                            CoopText("Agregar aporte", color = CoopTheme.colorScheme.onPrimary, style = CoopTheme.typography.bodyMedium)
+                            CoopText("Agregar aporte", style = CoopTheme.typography.bodyMedium)
                         }
                     }
                 }
@@ -574,7 +579,8 @@ fun SPagoEnviarScreen(
                         Spacer(modifier = Modifier.width(8.dp))
                         CoopText(
                             text = if (state.bytesImagen == null) "Cargar imagen" else "Cambiar imagen",
-                            style = CoopTheme.typography.bodyLarge
+                            style = CoopTheme.typography.bodyLarge,
+                            color = CoopTheme.colorScheme.onSurface
                         )
                     }
                 }
@@ -622,7 +628,7 @@ private fun FirstTimeHelpDialog(onDismiss: () -> Unit) {
             Icon(
                 imageVector = Icons.Default.CloudUpload,
                 contentDescription = null,
-                tint = CoopTheme.colorScheme.onPrimary,
+                tint = CoopTheme.colorScheme.onSecondary,
                 modifier = Modifier.size(36.dp)
             )
         },
@@ -674,7 +680,7 @@ private fun AmountMismatchDialog(onDismiss: () -> Unit) {
             Image(
                 painter = painterResource(Res.drawable.ic_payment_error),
                 contentDescription = null,
-                modifier = Modifier.size(48.dp)
+                modifier = Modifier.size(56.dp)
             )
         },
         title = {
@@ -734,6 +740,7 @@ private fun SelectedItemRow(
             CoopText(
                 text = title,
                 style = CoopTheme.typography.bodyLarge,
+                color = CoopTheme.colorScheme.onSurface,
                 maxLines = 2,
                 overflow = TextOverflow.Ellipsis,
                 modifier = Modifier.weight(1f).padding(vertical = 8.dp),
@@ -743,6 +750,7 @@ private fun SelectedItemRow(
             CoopText(
                 text = amountText,
                 style = CoopTheme.typography.bodyLarge,
+                color = CoopTheme.colorScheme.onSurface,
                 textAlign = TextAlign.End,
                 modifier = Modifier
                     .widthIn(min = 84.dp)
@@ -753,7 +761,7 @@ private fun SelectedItemRow(
                 Icon(
                     Icons.Default.Close,
                     contentDescription = "Eliminar",
-                    tint = CoopTheme.colorScheme.onPrimary,
+                    tint = CoopTheme.colorScheme.onSecondary,
                 )
             }
         }

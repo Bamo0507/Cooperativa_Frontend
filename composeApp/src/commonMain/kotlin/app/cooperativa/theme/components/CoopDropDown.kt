@@ -84,6 +84,7 @@ fun <T> CoopDropdown(
             style = CoopTheme.typography.bodyMedium,
             // permite que textos largos bajen a otra línea (sin ellipsis),
             // y mantiene la fila centrada verticalmente
+            color = CoopTheme.colorScheme.onSurface,
             maxLines = optionMaxLines
         )
     },
@@ -94,7 +95,7 @@ fun <T> CoopDropdown(
     anchorBorderColor: Color = CoopTheme.colorScheme.primary,
     anchorTextColor: Color = CoopTheme.colorScheme.onSurface,
     anchorPlaceholderColor: Color = CoopTheme.colorScheme.onSurface.copy(alpha = 0.7f),
-    chevronTint: Color = CoopTheme.colorScheme.onPrimary,
+    chevronTint: Color = CoopTheme.colorScheme.onSecondary,
     menuContainerColor: Color = CoopTheme.colorScheme.surfaceVariant,
     menuBorderColor: Color = CoopTheme.colorScheme.surfaceVariant,
     selectedRowBg: Color = CoopTheme.colorScheme.primary.copy(alpha = 0.08f),

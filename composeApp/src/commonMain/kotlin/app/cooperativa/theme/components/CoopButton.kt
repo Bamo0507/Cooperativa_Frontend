@@ -24,8 +24,8 @@ fun CoopButton(
     colors: ButtonColors = ButtonDefaults.buttonColors(
         containerColor = CoopTheme.colorScheme.primary,
         contentColor = CoopTheme.colorScheme.onPrimary,
-        disabledContainerColor = CoopTheme.colorScheme.primary.copy(alpha = 0.45f),
-        disabledContentColor = CoopTheme.colorScheme.onPrimary.copy(alpha = 0.45f)
+        disabledContainerColor = CoopTheme.colorScheme.primary.copy(alpha = 0.65f),
+        disabledContentColor = CoopTheme.colorScheme.onPrimary.copy(alpha = 0.65f)
     ),
     elevation: ButtonElevation? = ButtonDefaults.buttonElevation(),
     border: BorderStroke = BorderStroke(1.dp, CoopTheme.colorScheme.secondary.copy(alpha = 0.1f)),
