@@ -9,6 +9,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import kotlinx.serialization.Serializable
 
 class LoginViewModel(
     private val loginRepository: LoginRepository,
@@ -66,7 +67,7 @@ class LoginViewModel(
 
                 is LoginResult.Failure -> {
                     _state.update {
-                        it.copy(isLoading = false, error = "Usuario o contraseña incorrectos")
+                        it.copy(isLoading = false, error = "Usuario o contraseña incorrectos")
                     }
                 }
             }

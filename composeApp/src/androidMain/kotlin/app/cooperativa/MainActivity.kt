@@ -3,6 +3,7 @@ package app.cooperativa
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.activity.enableEdgeToEdge
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.tooling.preview.Preview
 import app.cooperativa.di.getKoinModules
@@ -17,6 +18,8 @@ class MainActivity : ComponentActivity() {
             androidContext(this@MainActivity)
             modules(getKoinModules())
         }
+
+        enableEdgeToEdge()
 
         setContent {
             App()
