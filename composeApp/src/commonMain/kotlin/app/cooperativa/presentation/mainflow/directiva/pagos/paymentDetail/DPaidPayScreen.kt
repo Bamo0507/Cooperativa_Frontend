@@ -30,7 +30,7 @@ import org.koin.core.parameter.parametersOf
 
 @Composable
 fun DPaidPayRoute(
-    paymentId: Int,
+    paymentId: String,
     onBackClick: () -> Unit,
     viewModel: DPaidPayViewModel = koinInject { parametersOf(paymentId) }
 ) {

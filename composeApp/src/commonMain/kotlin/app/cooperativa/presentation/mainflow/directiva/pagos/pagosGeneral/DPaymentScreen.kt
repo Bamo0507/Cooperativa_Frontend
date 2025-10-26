@@ -57,9 +57,9 @@ import cooperativa.composeapp.generated.resources.ic_no_results
  */
 @Composable
 fun DPaymentsRoute(
-    onPendingPaymentClick: (Int) -> Unit,
-    onPaidPaymentClick: (Int) -> Unit,
-    onFineClick: (Int) -> Unit,
+    onPendingPaymentClick: (String) -> Unit,
+    onPaidPaymentClick: (String) -> Unit,
+    onFineClick: (String) -> Unit,
     viewModel: DPaymentsViewModel = koinInject()
 ) {
     val state by viewModel.uiState.collectAsStateWithLifecycle()
@@ -83,9 +83,9 @@ fun DPaymentsScreen(
     state: DPaymentsState,
     onTabSelected: (Int) -> Unit,
     onSearchQueryChange: (String) -> Unit,
-    onPendingPaymentClick: (Int) -> Unit,
-    onPaidPaymentClick: (Int) -> Unit,
-    onFineClick: (Int) -> Unit,
+    onPendingPaymentClick: (String) -> Unit,
+    onPaidPaymentClick: (String) -> Unit,
+    onFineClick: (String) -> Unit,
     loadData: () -> Unit,
     modifier: Modifier = Modifier
 ) {
@@ -217,11 +217,11 @@ fun DPaymentsScreen(
 
 @Composable
 fun PaymentItem(
-    idPayment: Int,
+    idPayment: String,
     paymentName: String,
     affiliatedName: String,
     dateOfPayment: String,
-    onPaymentClick: (Int) -> Unit,
+    onPaymentClick: (String) -> Unit,
     modifier: Modifier = Modifier
 ) {
     CoopOutlinedCard(
@@ -337,7 +337,7 @@ fun FilterChipsRow(
 @Composable
 fun FineSimplifiedCard(
     fine: Fine,
-    onFineClick: (Int) -> Unit,
+    onFineClick: (String) -> Unit,
     modifier: Modifier = Modifier
 ) {
     Column(modifier = modifier.fillMaxWidth()) {

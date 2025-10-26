@@ -74,7 +74,7 @@ class SociosPagoEnviarRepository(
 
         return pendientes.map { q ->
             QuotaAffiliate(
-                idCuota = q.userId, // Segun comentarios debe coincidir con affiliate key
+                idCuota = q.userId,
                 idAsociado = q.userId,
                 identifier = q.identifier ?: (q.nombreUsuario ?: "Afiliado"),
                 montoCuota = q.amount.toFloat()

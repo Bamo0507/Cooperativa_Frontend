@@ -12,7 +12,7 @@ import kotlinx.coroutines.launch
 
 class DPaidPayViewModel(
     private val repository: DPaymentsDetailRepository,
-    private val paymentId: Int
+    private val paymentId: String
 ): ViewModel() {
     private val _uiState: MutableStateFlow<DPaidPayState> = MutableStateFlow(DPaidPayState())
     val uiState get() = _uiState.asStateFlow()
@@ -28,8 +28,6 @@ class DPaidPayViewModel(
                     isLoading = true
                 )
             }
-
-            delay(1500)
 
             try {
                 val p = repository.getPaymentById(paymentId)

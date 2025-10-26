@@ -7,5 +7,6 @@ data class DPendingPayState(
     val commentInput: String = "",
     val isLoading: Boolean = false,
     val errorMessage: String? = null,
-    val showRejectDialog: Boolean = false
+    val showRejectDialog: Boolean = false,
+    val navigateBack: Boolean = false
 )

@@ -1,0 +1,21 @@
+mutation ApproveOrRejectPayment(
+    $id: String!,
+    $newState: String!,
+    $commentary: String!
+) {
+    approveOrRejectPayment(
+        id: $id,
+        newState: $newState,
+        commentary: $commentary
+    ) {
+        id
+        state
+        commentary
+        accountNum
+        name
+        paymentDate
+        photo
+        ticketNum
+        totalAmount
+    }
+}

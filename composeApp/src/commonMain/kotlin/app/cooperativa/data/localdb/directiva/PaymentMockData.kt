@@ -1,4 +1,3 @@
-/* <<<<<<<<<<<<<<  ✨ Windsurf Command 🌟 >>>>>>>>>>>>>>>> */
 package app.cooperativa.data.localdb.directiva
 
 import kotlinx.datetime.LocalDate
@@ -14,7 +13,7 @@ object PaymentMockData {
 
     private val mockPayments = listOf(
         Payment(
-            id = 1,
+            id = "1",
             paymentName = "Pago Préstamo Casa",
             userName = "Juan Alberto Martínez Orellana",
             paymentDate = LocalDate(2025, 5, 1),
@@ -38,11 +37,12 @@ object PaymentMockData {
             ),
             dateOfPayment = LocalDate(2025, 5, 1).toString(),
             paymentImage = "https://example.com/images/house_loan.png",
+            totalAmount = 250.0f,
             isPaymentPending = true
         ),
 
         Payment(
-            id = 2,
+            id = "2",
             paymentName = "Pago Tarjeta Crédito",
             userName = "María Fernanda López",
             paymentDate = LocalDate(2025, 4, 28),
@@ -63,11 +63,12 @@ object PaymentMockData {
             loanPayments = null,
             dateOfPayment = LocalDate(2025, 4, 28).toString(),
             paymentImage = "https://example.com/images/credit_card.png",
+            totalAmount = 300.0f,
             isPaymentPending = false
         ),
 
         Payment(
-            id = 3,
+            id = "3",
             paymentName = "Pago Préstamo Vehículo",
             userName = "Carlos Eduardo Gómez",
             paymentDate = LocalDate(2025, 5, 3),
@@ -84,11 +85,12 @@ object PaymentMockData {
             ),
             dateOfPayment = LocalDate(2025, 5, 3).toString(),
             paymentImage = "https://example.com/images/car_loan.png",
+            totalAmount = 300.0f,
             isPaymentPending = true
         ),
 
         Payment(
-            id = 4,
+            id = "4",
             paymentName = "Pago Servicio Internet",
             userName = "Ana Patricia Morales",
             paymentDate = LocalDate(2025, 4, 30),
@@ -103,11 +105,12 @@ object PaymentMockData {
             loanPayments = null,
             dateOfPayment = LocalDate(2025, 4, 30).toString(),
             paymentImage = "https://example.com/images/internet_bill.png",
+            totalAmount = 40.0f,
             isPaymentPending = false
         ),
 
         Payment(
-            id = 5,
+            id = "5",
             paymentName = "Pago Préstamo Estudiantil",
             userName = "Luis Fernando Castillo",
             paymentDate = LocalDate(2025, 5, 5),
@@ -131,11 +134,12 @@ object PaymentMockData {
             ),
             dateOfPayment = LocalDate(2025, 5, 5).toString(),
             paymentImage = "https://example.com/images/student_loan.png",
+            totalAmount = 100.0f,
             isPaymentPending = false
         ),
 
         Payment(
-            id = 6,
+            id = "6",
             paymentName = "Pago Multa Tardanza",
             userName = "Andrea Paola Jiménez",
             paymentDate = LocalDate(2025, 5, 6),
@@ -150,11 +154,12 @@ object PaymentMockData {
             ),
             dateOfPayment = LocalDate(2025, 5, 6).toString(),
             paymentImage = "https://example.com/images/late_fee.png",
+            totalAmount = 20.0f,
             isPaymentPending = true
         ),
 
         Payment(
-            id = 7,
+            id = "7",
             paymentName = "Pago Aporte Mensual",
             userName = "Roberto Carlos Mejía",
             paymentDate = LocalDate(2025, 5, 7),
@@ -168,11 +173,12 @@ object PaymentMockData {
             ),
             dateOfPayment = LocalDate(2025, 5, 7).toString(),
             paymentImage = "https://example.com/images/contribution.png",
+            totalAmount = 50.0f,
             isPaymentPending = false
         ),
 
         Payment(
-            id = 8,
+            id = "8",
             paymentName = "Pago Completo Prueba",
             userName = "Sofía Gabriela Hernández",
             paymentDate = LocalDate(2025, 5, 8),
@@ -214,6 +220,7 @@ object PaymentMockData {
                 )
             ),
             paymentImage = "https://example.com/images/full_payment.png",
+            totalAmount = 660.0f,
             isPaymentPending = true,
             dateOfPayment = LocalDate(2025, 5, 8).toString(),
         ),
@@ -236,6 +243,6 @@ object PaymentMockData {
      * Busca un pago por su ID.
      * @return el Payment correspondiente, o null si no existe.
      */
-    fun getPaymentById(id: Int): Payment? =
+    fun getPaymentById(id: String): Payment? =
         mockPayments.find { it.id == id }
 }

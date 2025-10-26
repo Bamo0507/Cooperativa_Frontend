@@ -3,12 +3,14 @@ package app.cooperativa.data.model.dto
 import kotlinx.datetime.LocalDate
 
 data class Payment(
-    val id: Int,
+    val id: String,
 
     val paymentName: String,
     val userName: String,
     val paymentDate: LocalDate,
     val dateOfPayment: String,
+
+    val totalAmount: Float,
 
     val quotas: List<Quotas>? = null,
     val loanPayments: List<LoanPayment>? = null,

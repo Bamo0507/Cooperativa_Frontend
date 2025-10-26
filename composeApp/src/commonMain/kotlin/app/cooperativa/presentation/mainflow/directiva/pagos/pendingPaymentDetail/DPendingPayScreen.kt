@@ -24,6 +24,7 @@ import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -52,11 +53,17 @@ import org.koin.core.parameter.parametersOf
 
 @Composable
 fun DPendingPayRoute(
-    paymentId: Int,
+    paymentId: String,
     onBackClick: () -> Unit,
     viewModel: DPendingPayViewModel = koinInject { parametersOf(paymentId) }
 ) {
     val state by viewModel.uiState.collectAsStateWithLifecycle()
+
+    LaunchedEffect(state.navigateBack) {
+        if (state.navigateBack) {
+            onBackClick()
+        }
+    }
 
     when {
         state.isLoading -> {
@@ -71,6 +78,7 @@ fun DPendingPayRoute(
         state.payment != null -> {
             DPendingPayScreen(
                 payment = state.payment!!,
+                isLoading = state.isLoading,
                 commentInput = state.commentInput,
                 showRejectDialog = state.showRejectDialog,
                 onCommentChange = viewModel::onCommentChange,
@@ -86,6 +94,7 @@ fun DPendingPayRoute(
 
 @Composable
 fun DPendingPayScreen(
+    isLoading: Boolean,
     payment: Payment,
     commentInput: String,
     showRejectDialog: Boolean,
@@ -190,12 +199,21 @@ fun DPendingPayScreen(
                 horizontalArrangement = Arrangement.SpaceBetween,
                 modifier = Modifier.fillMaxWidth().padding(vertical = 8.dp, horizontal = 16.dp)
             ) {
-                CoopOutlinedButton(onClick = onOpenRejectDialog, shape = RoundedCornerShape(16.dp)) {
+                CoopOutlinedButton(
+                    onClick = onOpenRejectDialog,
+                    shape = RoundedCornerShape(16.dp),
+                    enabled = !showRejectDialog && !isLoading,
+                ) {
                     CoopIcon(Icons.Default.Close, "Rechazar")
                     Spacer(Modifier.width(4.dp))
                     CoopText("Negar")
                 }
-                CoopButton(onClick = onApprove, shape = RoundedCornerShape(16.dp), colors = ButtonDefaults.buttonColors(containerColor = CoopTheme.colorScheme.primary)) {
+                CoopButton(
+                    onClick = onApprove,
+                    shape = RoundedCornerShape(16.dp),
+                    colors = ButtonDefaults.buttonColors(containerColor = CoopTheme.colorScheme.primary),
+                    enabled = !isLoading
+                ) {
                     CoopIcon(Icons.Default.Check, "Aprobar", tint = CoopTheme.colorScheme.onPrimary)
                     Spacer(Modifier.width(4.dp))
                     CoopText("Aprobar", color = CoopTheme.colorScheme.onPrimary)
@@ -318,7 +336,7 @@ private fun DPendingBasicInfoCard(payment: Payment) {
             Spacer(Modifier.height(4.dp))
             InfoRow(
                 label = "Monto total",
-                value = app.cooperativa.utils.formatMoney(total),
+                value = if(total != 0f) formatMoney(total) else formatMoney(payment.totalAmount),
                 valueColor = CoopTheme.colorScheme.onSecondary
             )
         }

@@ -1,0 +1,13 @@
+query GetAllPayments {
+    getAllPayments {
+        id
+        name
+        paymentDate
+        state
+        totalAmount
+        ticketNum
+        accountNum
+        photo
+        commentary
+    }
+}

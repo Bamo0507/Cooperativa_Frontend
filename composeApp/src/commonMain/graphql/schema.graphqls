@@ -10,6 +10,9 @@ type Query {
 
   getPendingLoansQuotas(accessToken: String!): [Quota!]!
   getMonthlyAffiliateQuota(accessToken: String!): [Quota!]!
+
+#  Get All Payments
+  getAllPayments: [UserPayment!]!
 }
 
 type Mutation {
@@ -34,6 +37,12 @@ type Mutation {
     newMotive: String,
     newStatus: FineStatus
   ): String!
+  
+  approveOrRejectPayment(
+    id: String!,
+    newState: String!,
+    commentary: String!
+  ): UserPayment!
 }
 
 input PayedTo {
