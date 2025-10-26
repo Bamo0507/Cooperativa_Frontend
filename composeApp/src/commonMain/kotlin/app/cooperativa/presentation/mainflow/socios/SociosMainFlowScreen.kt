@@ -26,7 +26,6 @@ import app.cooperativa.presentation.mainflow.socios.historial.SHistorialNavGraph
 import app.cooperativa.presentation.mainflow.socios.historial.mainHistorial.SHistorialDestination
 import app.cooperativa.presentation.mainflow.socios.historial.sHistorialNavGraph
 import app.cooperativa.presentation.mainflow.socios.pagos.sPagosNavGraph
-import app.cooperativa.presentation.mainflow.socios.prestamos.sPrestamosNavGraph
 
 @Composable
 fun SociosMainFlowScreen(
@@ -80,10 +79,6 @@ fun SociosMainFlowScreen(
         ){
             //Declare all the navigation graphs for Affiliates
             sHistorialNavGraph()
-
-            sPrestamosNavGraph(
-                navController = navController
-            )
 
             sAccountNavGraph(
                 onLogOutClick = onLogOutClick,
