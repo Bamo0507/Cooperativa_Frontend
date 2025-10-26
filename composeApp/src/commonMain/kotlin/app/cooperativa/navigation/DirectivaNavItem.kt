@@ -15,8 +15,6 @@ import app.cooperativa.presentation.mainflow.directiva.manager.DManagerNavGraph
 import app.cooperativa.presentation.mainflow.directiva.manager.hub.DHubDestination
 import app.cooperativa.presentation.mainflow.directiva.pagos.DPaymentNavGraph
 import app.cooperativa.presentation.mainflow.directiva.pagos.pagosGeneral.GeneralPaymentDestination
-import app.cooperativa.presentation.mainflow.directiva.prestamos.DLoanNavGraph
-import app.cooperativa.presentation.mainflow.directiva.prestamos.prestamosGeneral.PrestamoNavigationDestination
 
 // Lista de items
 val navigationItemsDirectiva = listOf(
@@ -25,12 +23,6 @@ val navigationItemsDirectiva = listOf(
         selectedIcon = Icons.Filled.AttachMoney,
         unselectedIcon = Icons.Outlined.AttachMoney,
         destination = DPaymentNavGraph
-    ),
-    NavBarItem(
-        title = "Préstamos",
-        selectedIcon = Icons.Filled.Folder,
-        unselectedIcon = Icons.Outlined.Folder,
-        destination = DLoanNavGraph
     ),
     NavBarItem(
         title = "Gestión",
@@ -49,7 +41,6 @@ val navigationItemsDirectiva = listOf(
 // Top-level destinations, los dejas temporalmente todos iguales
 val topLevelDestinationsDirectiva = listOf(
     GeneralPaymentDestination::class,
-    PrestamoNavigationDestination::class,
     DirectivaAccountDestination::class,
     DHubDestination::class
 )
