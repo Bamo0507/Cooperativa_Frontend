@@ -81,17 +81,18 @@ fun FineSelectionScreen(
     ) { padding ->
         Column(
             modifier = modifier
+                .fillMaxSize()
                 .verticalScroll(rememberScrollState())
                 .padding(padding)
                 .padding(vertical = 20.dp, horizontal = 24.dp),
             verticalArrangement = Arrangement.spacedBy(12.dp)
         ) {
-            CoopText(
-                text = "Usuario: ${state.userName}",
-                fontWeight = FontWeight.Bold,
-                style = MaterialTheme.typography.titleMedium,
-                color = CoopTheme.colorScheme.onSurface
-            )
+//            CoopText(
+//                text = "Usuario: ${state.userName}",
+//                fontWeight = FontWeight.Bold,
+//                style = MaterialTheme.typography.titleMedium,
+//                color = CoopTheme.colorScheme.onSurface
+//            )
 
             Box(
                 modifier = Modifier
@@ -161,7 +162,6 @@ fun FineSelectionScreen(
                 )
             }
 
-            Spacer(modifier = Modifier.height(8.dp))
 
             Row(
                 modifier = Modifier.fillMaxWidth(),
@@ -176,8 +176,6 @@ fun FineSelectionScreen(
                     Text("Guardar")
                 }
             }
-
-            Spacer(modifier = Modifier.height(8.dp))
         }
     }
 }
