@@ -8,11 +8,13 @@ import kotlinx.serialization.Serializable
 data object SPagoEnviarDestination
 
 fun NavGraphBuilder.spagosEnviarScreen(
-    onBackClick: () -> Unit
+    onBackClick: () -> Unit,
+    onBackWithConfettiClick: () -> Unit
 ){
     composable<SPagoEnviarDestination> {
         SPagoEnviarRoute(
-            onBackClick = onBackClick
+            onBackClick = onBackClick,
+            onBackWithConfettiClick = onBackWithConfettiClick
         )
     }
 }

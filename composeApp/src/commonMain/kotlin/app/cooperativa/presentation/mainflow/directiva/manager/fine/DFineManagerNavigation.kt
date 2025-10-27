@@ -8,11 +8,13 @@ import kotlinx.serialization.Serializable
 data object DFineManagerDestination
 
 fun NavGraphBuilder.fineForm(
-    onBackClick: () -> Unit
+    onBackClick: () -> Unit,
+    onBackWithConfettiClick: () -> Unit
 ){
     composable<DFineManagerDestination> {
         DFineManagerRoute(
-            onBackClick = onBackClick
+            onBackClick = onBackClick,
+            onBackWithConfettiClick = onBackWithConfettiClick
         )
     }
 }

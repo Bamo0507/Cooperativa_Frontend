@@ -99,6 +99,7 @@ fun SplashScreen() {
                 fontWeight = FontWeight.Bold,
                 letterSpacing = 2.sp
             ),
+            color = CoopTheme.colorScheme.onSurface,
             modifier = Modifier
                 .align(Alignment.Center)
                 .drawWithCache {

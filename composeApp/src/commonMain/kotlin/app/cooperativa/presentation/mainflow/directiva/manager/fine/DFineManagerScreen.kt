@@ -42,6 +42,7 @@ import org.koin.compose.koinInject
 @Composable
 fun DFineManagerRoute(
     onBackClick: () -> Unit,
+    onBackWithConfettiClick: () -> Unit,
     viewModel: DFineManagerViewModel = koinInject()
 ){
     val state by viewModel.uiState.collectAsStateWithLifecycle()
@@ -52,7 +53,7 @@ fun DFineManagerRoute(
         updateFineName = viewModel::updateFineName,
         updateFineAmount = viewModel::updateFineAmount,
         selectedAffiliate = viewModel::updateAffiliate,
-        onSubmit = { viewModel.submitFine { onBackClick() } },
+        onSubmit = { viewModel.submitFine { onBackWithConfettiClick() } },
         onBackClick = onBackClick
     )
 }

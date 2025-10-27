@@ -3,6 +3,7 @@ package app.cooperativa.presentation.mainflow.socios.pagos
 import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.navigation
+import app.cooperativa.navigation.utils.NavResultKeys
 import app.cooperativa.presentation.mainflow.socios.pagos.agregarPago.SPagoEnviarDestination
 import app.cooperativa.presentation.mainflow.socios.pagos.agregarPago.spagosEnviarScreen
 import app.cooperativa.presentation.mainflow.socios.pagos.pagoError.SPagoErrorDestination
@@ -34,6 +35,13 @@ fun NavGraphBuilder.sPagosNavGraph(
 
         spagosEnviarScreen(
             onBackClick = {
+                navController.navigateUp()
+            },
+            onBackWithConfettiClick = {
+                navController.previousBackStackEntry
+                    ?.savedStateHandle
+                    ?.set(NavResultKeys.CONFETTI, true)
+
                 navController.navigateUp()
             }
         )

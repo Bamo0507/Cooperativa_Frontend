@@ -23,14 +23,16 @@ fun NavController.navigateToPendingPaymentScreen(
 }
 
 fun NavGraphBuilder.pendingPaymentScreen(
-    onBackClick: () -> Unit
+    onBackClick: () -> Unit,
+    onBackWithConfettiClick: () -> Unit
 ){
     composable<PendingPaymentDestination>{ backStackEntry ->
         val destination: PendingPaymentDestination = backStackEntry.toRoute()
 
         DPendingPayRoute(
             paymentId = destination.paymentId,
-            onBackClick = onBackClick
+            onBackClick = onBackClick,
+            onBackWithConfettiClick = onBackWithConfettiClick
         )
     }
 }
