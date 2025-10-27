@@ -3,6 +3,7 @@ package app.cooperativa.presentation.mainflow.directiva.manager
 import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.navigation
+import app.cooperativa.navigation.utils.NavResultKeys
 import app.cooperativa.presentation.mainflow.directiva.manager.fine.DFineManagerDestination
 import app.cooperativa.presentation.mainflow.directiva.manager.fine.fineForm
 import app.cooperativa.presentation.mainflow.directiva.manager.hub.DHubDestination
@@ -29,6 +30,13 @@ fun NavGraphBuilder.dManagerNavGraph(
 
         fineForm(
             onBackClick = {
+                navController.navigateUp()
+            },
+            onBackWithConfettiClick = {
+                navController.previousBackStackEntry
+                    ?.savedStateHandle
+                    ?.set(NavResultKeys.CONFETTI, true)
+
                 navController.navigateUp()
             }
         )

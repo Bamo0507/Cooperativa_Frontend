@@ -78,6 +78,7 @@ import org.koin.compose.koinInject
 @Composable
 fun SPagoEnviarRoute(
     onBackClick: () -> Unit,
+    onBackWithConfettiClick: () -> Unit,
     viewModel: SPagoEnviarViewModel = koinInject()
 ){
     val state by viewModel.uiState.collectAsStateWithLifecycle()
@@ -96,6 +97,7 @@ fun SPagoEnviarRoute(
         onSend = {
             viewModel.submitPayment()
         },
+        onBackWithConfettiClick = onBackWithConfettiClick,
         onAddCuota = viewModel::addCuota,
         onRemoveCuota = viewModel::removeCuota,
         onAddLoanQuota = viewModel::addLoanQuota,
@@ -112,6 +114,7 @@ fun SPagoEnviarRoute(
 fun SPagoEnviarScreen(
     state: SPagoEnviarState,
     onBackClick: () -> Unit,
+    onBackWithConfettiClick: () -> Unit,
     onPickImage: (KmpFile) -> Unit,
     onNombreChange: (String) -> Unit,
     onMontoChange: (String) -> Unit,
@@ -133,7 +136,7 @@ fun SPagoEnviarScreen(
         state.paymentSentSuccesffully
     ){
         if(state.paymentSentSuccesffully){
-            onBackClick()
+            onBackWithConfettiClick()
         }
     }
 

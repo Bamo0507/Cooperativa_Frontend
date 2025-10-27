@@ -55,13 +55,14 @@ import org.koin.core.parameter.parametersOf
 fun DPendingPayRoute(
     paymentId: String,
     onBackClick: () -> Unit,
+    onBackWithConfettiClick: () -> Unit,
     viewModel: DPendingPayViewModel = koinInject { parametersOf(paymentId) }
 ) {
     val state by viewModel.uiState.collectAsStateWithLifecycle()
 
     LaunchedEffect(state.navigateBack) {
         if (state.navigateBack) {
-            onBackClick()
+            onBackWithConfettiClick()
         }
     }
 

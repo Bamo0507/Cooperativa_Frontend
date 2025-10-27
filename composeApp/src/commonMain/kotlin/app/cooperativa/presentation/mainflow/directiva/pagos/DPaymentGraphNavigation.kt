@@ -3,6 +3,7 @@ package app.cooperativa.presentation.mainflow.directiva.pagos
 import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.navigation
+import app.cooperativa.navigation.utils.NavResultKeys
 import app.cooperativa.presentation.mainflow.directiva.pagos.fineSelection.EditFineDestination
 import app.cooperativa.presentation.mainflow.directiva.pagos.fineSelection.editFineScreen
 import app.cooperativa.presentation.mainflow.directiva.pagos.fineSelection.navigateToEditFineScreen
@@ -56,6 +57,13 @@ fun NavGraphBuilder.dPaymentNavGraph(
         pendingPaymentScreen(
             onBackClick = {
                 navController.navigateUp()
+            },
+            onBackWithConfettiClick = {
+                navController.previousBackStackEntry
+                    ?.savedStateHandle
+                    ?.set(NavResultKeys.CONFETTI, true)
+
+                navController.navigateUp()
             }
         )
 
@@ -72,6 +80,10 @@ fun NavGraphBuilder.dPaymentNavGraph(
                 navController.navigateUp()
             },
             onConfirmClick = {
+                navController.previousBackStackEntry
+                    ?.savedStateHandle
+                    ?.set(NavResultKeys.CONFETTI, true)
+
                 navController.navigateUp()
             }
         )

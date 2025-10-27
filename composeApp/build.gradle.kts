@@ -63,6 +63,8 @@ kotlin {
             implementation(libs.calf.file.picker.coil)
             implementation(libs.coil.compose)
 
+            implementation(libs.confetti)
+
             implementation(libs.apollo.runtime)
             implementation(libs.apollo.normalized.cache)
 

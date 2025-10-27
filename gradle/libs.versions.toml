@@ -1,12 +1,12 @@
 [versions]
-agp = "8.5.2"
+agp = "8.6.0"
 android-compileSdk = "36"
 android-minSdk = "24"
 android-targetSdk = "36"
 androidx-activityCompose = "1.9.3"
 androidx-lifecycle = "2.8.4"
 compose-multiplatform = "1.7.0"
-kotlin = "2.0.21"
+kotlin = "2.2.0"
 datetime = "0.6.2"
 assertk = "0.28.1"
 navigationCompose = "2.8.0-alpha10"
@@ -20,6 +20,7 @@ calf-file-picker-coil = "0.5.1"
 coil = "3.0.0"
 apollo = "3.8.5"
 ktor = "2.3.4"
+confetti = "0.5.1"
 
 [libraries]
 kotlin-test = { module = "org.jetbrains.kotlin:kotlin-test", version.ref = "kotlin" }
@@ -56,6 +57,8 @@ ktor-serialization-kotlinx-json = { group = "io.ktor", name = "ktor-serializatio
 ktor-client-darwin = { group = "io.ktor", name = "ktor-client-darwin", version.ref = "ktor" }
 ktor-client-logging = { group = "io.ktor", name = "ktor-client-logging", version.ref = "ktor" }
 ktor-client-cio = { group = "io.ktor", name = "ktor-client-cio", version.ref = "ktor" }
+
+confetti = { module = "io.github.vinceglb:confettikit", version.ref = "confetti"}
 
 [plugins]
 androidApplication = { id = "com.android.application", version.ref = "agp" }

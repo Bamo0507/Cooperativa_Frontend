@@ -6,6 +6,7 @@ import app.cooperativa.presentation.mainflow.socios.pagos.agregarPago.SPagoEnvia
 import app.cooperativa.presentation.mainflow.socios.pagos.agregarPago.SPagoEnviarState
 import app.cooperativa.theme.CoopTheme
 import app.cooperativa.data.model.dto.*
+import java.util.Collections.emptyList
 
 @Preview(showBackground = true, name = "Presentar Pago – Simple")
 @Composable
@@ -43,7 +44,8 @@ fun SPagoEnviarScreen_Preview() {
             onRemoveFine = {},
             loadData = {},
             onAddCapitalContribution = { _, _ -> },
-            onRemoveCapitalContribution = {}
+            onRemoveCapitalContribution = {},
+            onBackWithConfettiClick = {}
         )
     }
 }
