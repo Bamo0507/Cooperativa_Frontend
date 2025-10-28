@@ -91,7 +91,7 @@ fun SAccountScreen(
                     Brush.verticalGradient(
                         colors = listOf(
                             Color.Transparent,
-                            CoopTheme.colorScheme.tertiary.copy(alpha = 0.35f)
+                            CoopTheme.colorScheme.onSecondary.copy(alpha = 0.35f)
                         )
                     )
                 )
