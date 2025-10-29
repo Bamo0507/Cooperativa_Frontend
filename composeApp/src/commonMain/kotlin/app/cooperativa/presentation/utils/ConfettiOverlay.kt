@@ -5,14 +5,11 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.zIndex
-import app.cooperativa.theme.CoopTheme
 import io.github.vinceglb.confettikit.compose.ConfettiKit
 import io.github.vinceglb.confettikit.core.Party
 import io.github.vinceglb.confettikit.core.Position
 import io.github.vinceglb.confettikit.core.emitter.Emitter
-import kotlin.math.roundToInt
 import kotlinx.coroutines.delay
 import kotlin.time.Duration.Companion.milliseconds
 
