@@ -14,7 +14,6 @@ object FineMockData {
                 FineDetail(
                     id = "1",
                     name = "Mora Pago Casa",
-                    date = LocalDate(2025, 5, 1),
                     amount = 25.0f,
                 )
             )
@@ -26,25 +25,21 @@ object FineMockData {
                 FineDetail(
                     id = "2",
                     name = "Mora Pago Tarjeta",
-                    date = LocalDate(2025, 4, 28),
                     amount = 15.0f,
                 ),
                 FineDetail(
                     id = "3",
                     name = "Penalización Extra",
-                    date = LocalDate(2025, 5, 30),
                     amount = 10.0f,
                 ),
                 FineDetail(
                     id = "4",
                     name = "Mora Pago Vehículo",
-                    date = LocalDate(2025, 5, 3),
                     amount = 30.0f,
                 ),
                 FineDetail(
                     id = "5",
                     name = "Mora Pago Vehículo",
-                    date = LocalDate(2025, 6, 3),
                     amount = 30.0f,
                 )
             )
@@ -56,13 +51,11 @@ object FineMockData {
                 FineDetail(
                     id = "4",
                     name = "Mora Pago Vehículo",
-                    date = LocalDate(2025, 5, 3),
                     amount = 30.0f,
                 ),
                 FineDetail(
                     id = "5",
                     name = "Mora Pago Vehículo",
-                    date = LocalDate(2025, 6, 3),
                     amount = 30.0f,
                 )
             )
@@ -74,7 +67,6 @@ object FineMockData {
                 FineDetail(
                     id = "6",
                     name = "Recargo por reconexión",
-                    date = LocalDate(2025, 4, 30),
                     amount = 8.0f,
                 )
             )
@@ -86,7 +78,6 @@ object FineMockData {
                 FineDetail(
                     id = "7",
                     name = "Mora Estudiantil",
-                    date = LocalDate(2025, 5, 5),
                     amount = 20.0f,
                 )
             )
