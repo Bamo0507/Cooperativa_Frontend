@@ -5,16 +5,24 @@ import app.cooperativa.data.localdb.directiva.PaymentMockData
 import app.cooperativa.data.model.dto.Fine
 import app.cooperativa.data.model.dto.FineDetail
 import app.cooperativa.data.model.ui.BasicInfoPayment
+import app.cooperativa.graphql.EditFineMutation
 import app.cooperativa.graphql.GetAllPaymentsQuery
 import app.cooperativa.graphql.GetFinesQuery
 import app.cooperativa.graphql.type.FineStatus
 import app.cooperativa.graphql.type.PaymentStatus
 import com.apollographql.apollo3.ApolloClient
+import com.apollographql.apollo3.api.Optional
 import kotlinx.datetime.LocalDate
 
 interface DPaymentsRepository {
     suspend fun getAllPaymentsBasicInfo(): List<BasicInfoPayment>
     suspend fun getAllFines(): List<Fine>
+    suspend fun editFine(
+        fineId: String,
+        newAmount: Float? = null,
+        newMotive: String? = null,
+        newStatus: FineStatus
+    ): Unit
 }
 
 class DirectivePaymentsRepository(
@@ -73,5 +81,26 @@ class DirectivePaymentsRepository(
                 fineDetails = details
             )
         }.filter { it.fineDetails.isNotEmpty() }
+    }
+
+    override suspend fun editFine(
+        fineId: String,
+        newAmount: Float?,
+        newMotive: String?,
+        newStatus: FineStatus
+    ) {
+        val resp = fineApollo.mutation(
+            EditFineMutation(
+                fineKey = fineId,
+                newAmount = newAmount?.let { Optional.Present(it.toDouble()) } ?: Optional.Absent,
+                newMotive = newMotive?.let { Optional.Present(it) } ?: Optional.Absent,
+                newStatus = newStatus?.let { Optional.Present(it) } ?: Optional.Absent
+            )
+        ).execute()
+
+        if (resp.hasErrors()) {
+            val msg = resp.errors?.joinToString { it.message }.orEmpty()
+            throw RuntimeException(msg.ifBlank { "Error GraphQL (editFine)" })
+        }
     }
 }

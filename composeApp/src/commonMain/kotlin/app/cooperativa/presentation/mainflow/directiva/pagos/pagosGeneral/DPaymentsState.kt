@@ -13,5 +13,18 @@ data class DPaymentsState(
     val allPendingPayments: List<BasicInfoPayment> = emptyList(),
     val allFinesList: List<Fine> = emptyList(),
     val isLoading: Boolean = false,
-    val errorMessage: String? = null
+    val errorMessage: String? = null,
+
+    // Diálogo de edición
+    val isEditDialogVisible: Boolean = false,
+    val editFineId: String? = null,
+    val editUserId: String? = null,
+    val editReason: String = "",
+    val editAmountText: String = "",
+
+    val isSubmittingEdit: Boolean = false,
+    val editErrorMessage: String? = null,
+
+    // Confetti overlay
+    val showConfetti: Boolean = false
 )
