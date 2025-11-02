@@ -21,7 +21,6 @@ data object GeneralPaymentDestination
 fun NavGraphBuilder.boardGeneralPayment(
     onPendingPaymentClick: (String) -> Unit,
     onPaidPaymentClick: (String) -> Unit,
-    onFineClick: (String) -> Unit
 ) {
     composable<GeneralPaymentDestination> { backStackEntry ->
         var showConfetti by rememberSaveable { mutableStateOf(false) }
@@ -42,7 +41,6 @@ fun NavGraphBuilder.boardGeneralPayment(
             DPaymentsRoute(
                 onPendingPaymentClick = onPendingPaymentClick,
                 onPaidPaymentClick = onPaidPaymentClick,
-                onFineClick = onFineClick
             )
 
             ConfettiOverlay(
