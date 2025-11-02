@@ -54,20 +54,15 @@ class DPaymentsViewModel(
         }
     }
 
-    /**
-     * Cambia la pestaña activa y resetea búsqueda y contenidos filtrados.
-     */
     fun onTabSelected(index: Int) {
         _uiState.update { it.copy(selectedTabIndex = index, searchQuery = "") }
         when (index) {
+            0 -> _uiState.update { it.copy(pendingPayments = it.allPendingPayments) }
             1 -> _uiState.update { it.copy(paidPayments = it.allPaidPayments) }
             2 -> _uiState.update { it.copy(fines = it.allFinesList) }
         }
     }
 
-    /**
-     * Actualiza el texto de búsqueda y filtra las listas correspondientes.
-     */
     fun onSearchQueryChange(query: String) {
         _uiState.update { it.copy(searchQuery = query) }
         val q = query.trim().lowercase()
@@ -76,10 +71,10 @@ class DPaymentsViewModel(
             0 -> {
                 val filtered =
                     if (q.isEmpty()) state.allPendingPayments
-                    else state.pendingPayments.filter {
+                    else state.allPendingPayments.filter {
                         it.paymentName.lowercase().contains(q) ||
-                        it.username.lowercase().contains(q) ||
-                        it.dateOfPayment.lowercase().contains(q)
+                                it.username.lowercase().contains(q) ||
+                                it.dateOfPayment.lowercase().contains(q)
                     }
                 _uiState.update { it.copy(pendingPayments = filtered) }
             }
@@ -87,9 +82,9 @@ class DPaymentsViewModel(
                 val filtered =
                     if (q.isEmpty()) state.allPaidPayments
                     else state.allPaidPayments.filter {
-                        it.paymentName.lowercase().contains(q)
-                            || it.username.lowercase().contains(q)
-                                || it.dateOfPayment.lowercase().contains(q)
+                        it.paymentName.lowercase().contains(q) ||
+                                it.username.lowercase().contains(q) ||
+                                it.dateOfPayment.lowercase().contains(q)
                     }
                 _uiState.update { it.copy(paidPayments = filtered) }
             }

@@ -8,7 +8,12 @@ import org.koin.core.qualifier.named
 import org.koin.dsl.module
 
 val dpagosmodule = module {
-    single<DPaymentsRepository> { DirectivePaymentsRepository(get<ApolloClient>(named("payment"))) }
+    single<DPaymentsRepository> {
+        DirectivePaymentsRepository(
+            get<ApolloClient>(named("payment")),
+            get<ApolloClient>(named("fine"))
+        )
+    }
 
     factory { DPaymentsViewModel(get()) }
 }

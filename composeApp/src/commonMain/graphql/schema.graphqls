@@ -13,6 +13,9 @@ type Query {
 
 #  Get All Payments
   getAllPayments: [UserPayment!]!
+
+#  Get All Fines
+  getFines: [UsersWithFines!]!
 }
 
 type Mutation {
@@ -55,6 +58,12 @@ input PayedTo {
 type Member {
   userId: String!
   name: String!
+}
+
+type UsersWithFines {
+  userId: String!
+  completeName: String!
+  fines: [Fine!]!
 }
 
 # Socios - Historial

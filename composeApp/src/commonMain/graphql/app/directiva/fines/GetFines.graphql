@@ -1,0 +1,12 @@
+query GetFines {
+    getFines {
+        userId
+        completeName
+        fines {
+            id
+            reason
+            amount
+            status
+        }
+    }
+}
