@@ -150,6 +150,9 @@ fun SPagoEnviarScreen(
             showAmountMismatchDialog = true
         }
     }
+    var showMissingInfoDialog by rememberSaveable { mutableStateOf(false) }
+
+
     // File picker for selecting or changing the proof‑of‑payment image
     val picker = rememberFilePickerLauncher(
         type = FilePickerFileType.Image,
@@ -173,7 +176,26 @@ fun SPagoEnviarScreen(
                 ExtendedFloatingActionButton(
                     icon = { Icon(Icons.Default.Send, contentDescription = "Enviar") },
                     text = { Text("Enviar") },
-                    onClick = onSend,
+                    onClick = {
+                        val basicInfoComplete =
+                            state.nombrePago.isNotBlank() &&
+                            state.montoPagoText.isNotBlank() &&
+                            state.montoPago > 0f &&
+                            state.numberoCuenta.isNotBlank() &&
+                            state.numeroBoleta.isNotBlank()
+
+                        val hasAnyItem =
+                            state.selectedCuotas.isNotEmpty() ||
+                            state.selectedLoanQuotas.isNotEmpty() ||
+                            state.selectedFines.isNotEmpty() ||
+                            state.aportesCapital.isNotEmpty()
+
+                        if (!basicInfoComplete || !hasAnyItem) {
+                            showMissingInfoDialog = true
+                        } else {
+                            onSend()
+                        }
+                    },
                     containerColor = CoopTheme.colorScheme.primary,
                     contentColor = CoopTheme.colorScheme.onPrimary
                 )
@@ -599,6 +621,11 @@ fun SPagoEnviarScreen(
         if (showAmountMismatchDialog) {
             AmountMismatchDialog(onDismiss = { showAmountMismatchDialog = false })
         }
+        if (showMissingInfoDialog) {
+            MissingInformation(onDismiss = { showMissingInfoDialog = false })
+        }
+
+
     }
 }
 
@@ -698,6 +725,51 @@ private fun AmountMismatchDialog(onDismiss: () -> Unit) {
         text = {
             CoopText(
                 text = "El total que declaraste no coincide con la suma de los pagos.\nRevisa los montos antes de continuar.",
+                style = CoopTheme.typography.bodyMedium,
+                color = CoopTheme.colorScheme.onSurface,
+                textAlign = TextAlign.Center
+            )
+        },
+        confirmButton = {
+            Box(
+                modifier = Modifier.fillMaxWidth(),
+                contentAlignment = Alignment.Center
+            ) {
+                CoopButton(onClick = onDismiss) {
+                    CoopText(
+                        text = "Entendido",
+                        color = CoopTheme.colorScheme.onPrimary
+                    )
+                }
+            }
+        },
+        containerColor = CoopTheme.colorScheme.surface
+    )
+}
+
+@Composable
+private fun MissingInformation(onDismiss: () -> Unit) {
+    AlertDialog(
+        onDismissRequest = onDismiss,
+        icon = {
+            Image(
+                painter = painterResource(Res.drawable.ic_payment_error),
+                contentDescription = null,
+                modifier = Modifier.size(56.dp)
+            )
+        },
+        title = {
+            CoopText(
+                text = "Información Incompleta",
+                style = CoopTheme.typography.titleMedium,
+                color = CoopTheme.colorScheme.onSurface,
+                textAlign = TextAlign.Center,
+                fontWeight = FontWeight.Bold
+            )
+        },
+        text = {
+            CoopText(
+                text = "Revisa que todos los campos de 'Información Básica' estén completos, y que hayas agregado al menos un ítem.",
                 style = CoopTheme.typography.bodyMedium,
                 color = CoopTheme.colorScheme.onSurface,
                 textAlign = TextAlign.Center
