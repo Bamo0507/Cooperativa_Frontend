@@ -25,4 +25,8 @@ val coreNetworkModule = module {
         apollo("https://dev.cooperativa-isp.cc/graphql/quota")
     }
 
+    // Cliente para /graphql/loan
+    single(named("loan")){
+        apollo("https://dev.cooperativa-isp.cc/graphql/loan")
+    }
 }

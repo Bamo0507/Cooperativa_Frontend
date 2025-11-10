@@ -1,5 +1,6 @@
 type Query {
   getHistory(accessToken: String!): History
+  getUserLoans(accessToken: String!): [Loan!]
 
   getAllMembers: [Member!]!
 
@@ -52,6 +53,18 @@ input PayedTo {
   modelKey: String!
   modelType: String!
   amount: Float!
+}
+
+type Loan {
+  id: String!
+  presentedByName: String!
+  reason: String!
+  total: Float!
+  payed: Float!
+  debt: Float!
+  interestRate: Float!
+  quotas: Int!
+  status: String!
 }
 
 # General

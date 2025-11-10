@@ -5,8 +5,10 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material3.FilterChip
@@ -19,7 +21,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import app.cooperativa.data.model.dto.Prestamo
+import app.cooperativa.data.model.dto.Loan
 import app.cooperativa.presentation.utils.ErrorScreen
 import app.cooperativa.presentation.utils.LoadingScreen
 import app.cooperativa.theme.CoopTheme
@@ -27,7 +29,6 @@ import app.cooperativa.theme.components.CoopOutlinedButton
 import app.cooperativa.theme.components.CoopOutlinedCard
 import app.cooperativa.theme.components.CoopText
 import app.cooperativa.theme.components.CoopTopBar
-import app.cooperativa.utils.PrestamoUtils
 import app.cooperativa.utils.formatMoney
 import org.koin.compose.koinInject
 
@@ -49,7 +50,6 @@ fun SHistorialScreen(
     state: SHistorialState,
     loadData: () -> Unit,
     onTabSelected: (Int) -> Unit,
-    prestamoUtils: PrestamoUtils = PrestamoUtils,
     modifier: Modifier = Modifier
 ){
     Scaffold(
@@ -125,13 +125,9 @@ fun SHistorialScreen(
                             contentPadding = PaddingValues(vertical = 8.dp),
                             verticalArrangement = Arrangement.spacedBy(16.dp)
                         ) {
-                            items(state.prestamos.size) { prestamo ->
-                                PrestamoItem(
-                                    prestamo = state.prestamos[prestamo],
-                                    prestamoUtils = prestamoUtils
-                                )
+                            items(state.prestamos.size) { i ->
+                                LoanItem(loan = state.prestamos[i])
                             }
-
                         }
                     }
                 }
@@ -198,60 +194,38 @@ fun HistorialChipsRow(
 }
 
 @Composable
-fun PrestamoItem(
-    prestamo: Prestamo,
-    prestamoUtils: PrestamoUtils,
+fun LoanItem(
+    loan: Loan,
     modifier: Modifier = Modifier
-){
-    CoopOutlinedCard(
-        modifier = modifier
-    ){
-        Column(
-            modifier = Modifier.padding(16.dp)
-        ) {
-            // Title
+) {
+    CoopOutlinedCard(modifier = modifier) {
+        Column(modifier = Modifier.padding(16.dp)) {
+            // Title: motivo
             CoopText(
-                text = prestamo.nombre,
+                text = loan.reason,
                 style = CoopTheme.typography.bodyLarge,
                 fontWeight = FontWeight.ExtraBold,
-                color = CoopTheme.colorScheme.onSurface,
-                modifier = Modifier.padding(bottom = 8.dp)
+                color = CoopTheme.colorScheme.onSurface
             )
 
-            //Amount
+            Spacer(modifier = Modifier.height(8.dp))
+
+            // Totales
             CoopText(
-                text = formatMoney(prestamo.montoTotal),
+                text = "Total: ${formatMoney(loan.total)}",
                 style = CoopTheme.typography.bodyMedium,
-                fontWeight = FontWeight.Bold,
-                color = CoopTheme.colorScheme.onSurface,
-                modifier = Modifier.padding(bottom = 12.dp)
+                color = CoopTheme.colorScheme.onSurface
             )
-
-            //Rest of information
-            Column(
-                verticalArrangement = Arrangement.spacedBy(4.dp),
-                modifier = Modifier.padding(bottom = 6.dp),
-            ) {
-                CoopText(
-                    text = "Cuotas: ${prestamoUtils.countPaidInstallments(prestamo)}/${prestamo.plazoMeses}",
-                    style = CoopTheme.typography.bodyMedium,
-                    color = CoopTheme.colorScheme.onSurface
-                )
-
-                CoopText(
-                    text = "Pagado: ${formatMoney(prestamoUtils.totalPaidAmount(prestamo))}",
-                    style = CoopTheme.typography.bodyMedium,
-                    color = CoopTheme.colorScheme.onSurface
-                )
-
-                CoopText(
-                    text = "Deuda total: ${formatMoney(prestamoUtils.remainingAmount(prestamo))}",
-                    style = CoopTheme.typography.bodyMedium,
-                    color = CoopTheme.colorScheme.onSurface
-                )
-            }
-
+            CoopText(
+                text = "Pagado: ${formatMoney(loan.payed)}",
+                style = CoopTheme.typography.bodyMedium,
+                color = CoopTheme.colorScheme.onSurface
+            )
+            CoopText(
+                text = "Deuda: ${formatMoney(loan.debt)}",
+                style = CoopTheme.typography.bodyMedium,
+                color = CoopTheme.colorScheme.onSurface
+            )
         }
     }
-
 }

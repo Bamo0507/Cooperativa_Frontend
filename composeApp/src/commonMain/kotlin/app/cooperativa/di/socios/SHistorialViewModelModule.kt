@@ -10,7 +10,8 @@ import org.koin.dsl.module
 val shistorialmodule = module {
     single<SHistorialRepository> {
         SociosHistorialRepository(
-            apollo = get<ApolloClient>(named("payment"))
+            apolloPayment = get<ApolloClient>(named("payment")),
+            apolloLoan = get<ApolloClient>(named("loan"))
         )
     }
 

@@ -1,0 +1,13 @@
+query GetUserLoans($accessToken: String!) {
+    getUserLoans(accessToken: $accessToken) {
+        id
+        presentedByName
+        reason
+        total
+        payed
+        debt
+        interestRate
+        quotas
+        status
+    }
+}
