@@ -35,6 +35,14 @@ type Mutation {
     motive: String!
   ): String!
 
+  createUserLoan(
+    affiliateKey: String!,
+    totalQuota: Int!,
+    baseNeededPayment: Float!,
+    interestRate: Float!,
+    reason: String!
+  ): String!
+
   editFine(
     fineKey: String!,
     newAmount: Float,
