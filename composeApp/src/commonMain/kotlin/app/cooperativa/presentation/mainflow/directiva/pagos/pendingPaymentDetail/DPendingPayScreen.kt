@@ -29,7 +29,9 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
@@ -39,6 +41,7 @@ import app.cooperativa.presentation.mainflow.directiva.pagos.pendingPaymentDetai
 import app.cooperativa.presentation.mainflow.directiva.pagos.pendingPaymentDetail.DPendingPayState
 import app.cooperativa.presentation.utils.ErrorScreen
 import app.cooperativa.presentation.utils.LoadingScreen
+import app.cooperativa.presentation.utils.TicketFullScreenViewer
 import app.cooperativa.theme.CoopTheme
 import app.cooperativa.theme.components.CoopButton
 import app.cooperativa.theme.components.CoopIcon
@@ -48,6 +51,7 @@ import app.cooperativa.theme.components.CoopOutlinedTextField
 import app.cooperativa.theme.components.CoopText
 import app.cooperativa.theme.components.CoopTopBar
 import app.cooperativa.utils.formatMoney
+import coil3.compose.AsyncImage
 import org.koin.compose.koinInject
 import org.koin.core.parameter.parametersOf
 
@@ -78,10 +82,15 @@ fun DPendingPayRoute(
         }
         state.payment != null -> {
             DPendingPayScreen(
+                ticketUrl = state.ticketUrl,
+                ticketBytes = state.ticketBytes,
+                showTicketViewer = state.showTicketViewer,
                 payment = state.payment!!,
                 isLoading = state.isLoading,
                 commentInput = state.commentInput,
                 showRejectDialog = state.showRejectDialog,
+                onCloseTicketViewer = viewModel::closeTicketViewer,
+                onOpenTicketViewer = viewModel::openTicketViewer,
                 onCommentChange = viewModel::onCommentChange,
                 onApprove = viewModel::onApprove,
                 onReject = viewModel::onReject,
@@ -95,6 +104,11 @@ fun DPendingPayRoute(
 
 @Composable
 fun DPendingPayScreen(
+    ticketUrl: String?,
+    ticketBytes: ByteArray?,
+    onCloseTicketViewer: () -> Unit,
+    onOpenTicketViewer: () -> Unit,
+    showTicketViewer: Boolean,
     isLoading: Boolean,
     payment: Payment,
     commentInput: String,
@@ -125,6 +139,8 @@ fun DPendingPayScreen(
                 .padding(vertical = 6.dp, horizontal = 8.dp)
                 .verticalScroll(rememberScrollState())
         ) {
+            val hasTicket = (ticketUrl != null) || (ticketBytes != null)
+
             DPendingBasicInfoCard(payment)
 
             // Secciones derivadas de beingPayed
@@ -169,28 +185,39 @@ fun DPendingPayScreen(
             }
 
             // Imagen
-            Box(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(160.dp)
-                    .padding(16.dp)
-                    .background(CoopTheme.colorScheme.surface, RoundedCornerShape(16.dp))
-                    .border(1.dp, CoopTheme.colorScheme.primary, RoundedCornerShape(16.dp)),
-                contentAlignment = Alignment.Center
-            ) {
-                CoopIcon(
-                    Icons.Default.Wallpaper,
-                    contentDescription = "Imagen boleta",
-                    tint = CoopTheme.colorScheme.primary,
-                    modifier = Modifier.size(100.dp)
+            if (hasTicket) {
+                AsyncImage(
+                    model = ticketUrl ?: ticketBytes,
+                    contentDescription = "Comprobante",
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(200.dp)
+                        .padding(16.dp)
+                        .clip(RoundedCornerShape(16.dp)),
+                    contentScale = ContentScale.Crop
                 )
+            } else {
+                Box(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(160.dp)
+                        .padding(16.dp)
+                        .background(CoopTheme.colorScheme.surface, RoundedCornerShape(16.dp))
+                        .border(1.dp, CoopTheme.colorScheme.primary, RoundedCornerShape(16.dp)),
+                    contentAlignment = Alignment.Center
+                ) {
+                    CoopIcon(
+                        Icons.Default.Wallpaper,
+                        contentDescription = "Imagen boleta",
+                        tint = CoopTheme.colorScheme.primary,
+                        modifier = Modifier.size(100.dp)
+                    )
+                }
             }
 
             // Boton de ver boleta
             CoopButton(
-                onClick = {
-                    /* TODO */
-                },
+                onClick = { onOpenTicketViewer() },
                 modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp),
                 shape = RoundedCornerShape(16.dp),
                 colors = ButtonDefaults.buttonColors(
@@ -239,6 +266,13 @@ fun DPendingPayScreen(
                     onCommentChange = onCommentChange,
                     onConfirm = onReject,
                     onDismiss = onCloseRejectDialog
+                )
+            }
+
+            if (showTicketViewer) {
+                TicketFullScreenViewer(
+                    model = ticketUrl ?: ticketBytes,
+                    onDismiss = onCloseTicketViewer
                 )
             }
         }

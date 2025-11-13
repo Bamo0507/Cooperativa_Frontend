@@ -10,5 +10,12 @@ val dpaymentsdetailmodule = module {
     single<DPaymentsDetailRepository> {
         DirectivePaymentsDetailRepository(get(named("payment")))
     }
-    factory { (paymentId: String) -> DPaidPayViewModel(get(), paymentId) }
+    factory { (paymentId: String) ->
+        DPaidPayViewModel(
+            repository = get(),
+            ticketRepo = get(),
+            prefs = get(),
+            paymentId = paymentId
+        )
+    }
 }

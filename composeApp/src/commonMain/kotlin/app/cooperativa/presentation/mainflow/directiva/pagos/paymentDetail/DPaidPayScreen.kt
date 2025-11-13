@@ -29,6 +29,7 @@ import org.koin.core.parameter.parametersOf
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
+import app.cooperativa.presentation.utils.TicketFullScreenViewer
 import coil3.compose.AsyncImage
 
 @Composable
@@ -47,13 +48,23 @@ fun DPaidPayRoute(
         )
         state.payment != null -> DPaidPayScreen(
             payment = state.payment!!,
-            onBackClick = onBackClick
+            onBackClick = onBackClick,
+            ticketUrl = state.ticketUrl,
+            ticketBytes = state.ticketBytes,
+            showTicketViewer = state.showTicketViewer,
+            onCloseTicketViewer = viewModel::closeTicketViewer,
+            onOpenTicketViewer = viewModel::openTicketViewer,
         )
     }
 }
 
 @Composable
 fun DPaidPayScreen(
+    ticketUrl: String?,
+    ticketBytes: ByteArray?,
+    onCloseTicketViewer: () -> Unit,
+    onOpenTicketViewer: () -> Unit,
+    showTicketViewer: Boolean,
     payment: Payment,
     onBackClick: () -> Unit,
     onViewTicket: (String) -> Unit = {},
@@ -76,6 +87,8 @@ fun DPaidPayScreen(
                 .padding(vertical = 6.dp, horizontal = 8.dp)
                 .verticalScroll(rememberScrollState())
         ) {
+            val hasTicket = (ticketUrl != null) || (ticketBytes != null)
+
             // Resumen del pago
             CoopOutlinedCard(
                 modifier = Modifier
@@ -173,10 +186,10 @@ fun DPaidPayScreen(
                 )
             }
 
-            // Boleta (imagen)
-            if (payment.photoPath.isNotBlank()) {
+            // Imagen
+            if (hasTicket) {
                 AsyncImage(
-                    model = payment.photoPath,
+                    model = ticketUrl ?: ticketBytes,
                     contentDescription = "Comprobante",
                     modifier = Modifier
                         .fillMaxWidth()
@@ -206,7 +219,7 @@ fun DPaidPayScreen(
 
             // Boton de ver boleta
             CoopButton(
-                onClick = { onViewTicket(payment.photoPath) },
+                onClick = { onOpenTicketViewer() },
                 modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp),
                 shape = RoundedCornerShape(16.dp),
                 colors = ButtonDefaults.buttonColors(
@@ -218,6 +231,13 @@ fun DPaidPayScreen(
                     style = CoopTheme.typography.bodyLarge,
                     color = CoopTheme.colorScheme.onPrimary,
                     fontWeight = FontWeight.Bold
+                )
+            }
+
+            if (showTicketViewer) {
+                TicketFullScreenViewer(
+                    model = ticketUrl ?: ticketBytes,
+                    onDismiss = onCloseTicketViewer
                 )
             }
         }

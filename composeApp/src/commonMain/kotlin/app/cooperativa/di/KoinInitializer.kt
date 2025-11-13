@@ -31,6 +31,8 @@ fun getKoinModules() = listOf(
     dataStoreModule,
     preferencesModule,
 
+    generalmodule,
+
     authModule,
 
     saccountmodule,
