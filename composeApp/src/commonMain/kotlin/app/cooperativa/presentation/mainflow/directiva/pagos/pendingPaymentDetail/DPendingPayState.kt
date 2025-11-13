@@ -8,5 +8,8 @@ data class DPendingPayState(
     val isLoading: Boolean = false,
     val errorMessage: String? = null,
     val showRejectDialog: Boolean = false,
-    val navigateBack: Boolean = false
+    val navigateBack: Boolean = false,
+    val ticketUrl: String? = null,
+    val ticketBytes: ByteArray? = null,
+    val showTicketViewer: Boolean = false,
 )

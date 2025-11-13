@@ -1,26 +1,17 @@
 package app.cooperativa.data.model.dto
 
-import kotlinx.datetime.LocalDate
+import app.cooperativa.graphql.type.PaymentStatus
 
 data class Payment(
     val id: String,
-
-    val paymentName: String,
-    val userName: String,
-    val paymentDate: LocalDate,
-    val dateOfPayment: String,
-
+    val name: String,
+    val presentedByName: String,
+    val commentary: String?,
+    val paymentDate: String,
+    val state: PaymentStatus,
+    val ticketNum: String,
+    val photoPath: String,
     val totalAmount: Float,
-
-    val quotas: List<Quotas>? = null,
-    val loanPayments: List<LoanPayment>? = null,
-    val finePayments: List<FinePayment>? = null,
-    val contributionPayments: List<Contribution>? = null,
-
-    val paymentImage: String,
-
-    val isPaymentPending: Boolean = true,
-
-    val accountNumber: String? = null,
-    val receiptNumber: String? = null
+    val accountNum: String,
+    val beingPayed: List<PayedToEntry> = emptyList()
 )

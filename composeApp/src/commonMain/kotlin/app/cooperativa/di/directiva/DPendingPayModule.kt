@@ -19,6 +19,8 @@ val dpendingpaymodule = module {
     factory { (paymentId: String) ->
         DPendingPayViewModel(
             repository = get(),
+            ticketRepo = get(),
+            prefs = get(),
             paymentId = paymentId
         )
     }

@@ -22,11 +22,12 @@ type Query {
 type Mutation {
   createUserPayment(
     accessToken: String!
+    comprobantePath: String!
     name: String!
     totalAmount: Float!
     ticketNumber: String!
     accountNumber: String!
-    beingPayed: [PayedTo!]!
+    beingPayed: [PayedToInput!]!
   ): String!
 
   createFine(
@@ -57,7 +58,13 @@ type Mutation {
   ): UserPayment!
 }
 
-input PayedTo {
+input PayedToInput {
+  modelKey: String!
+  modelType: String!
+  amount: Float!
+}
+
+type PayedTo {
   modelKey: String!
   modelType: String!
   amount: Float!
@@ -108,9 +115,11 @@ type UserPayment {
   paymentDate: String!
   state: PaymentStatus!
   ticketNum: String!
-  photo: String!
+  photoPath: String!
   totalAmount: Float!
   accountNum: String!
+  presentedByName: String!
+  beingPayed: [PayedTo!]!
 }
 
 enum FineStatus {

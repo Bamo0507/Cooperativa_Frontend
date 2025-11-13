@@ -23,12 +23,15 @@ import androidx.compose.material.icons.filled.Wallpaper
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
@@ -38,6 +41,7 @@ import app.cooperativa.presentation.mainflow.directiva.pagos.pendingPaymentDetai
 import app.cooperativa.presentation.mainflow.directiva.pagos.pendingPaymentDetail.DPendingPayState
 import app.cooperativa.presentation.utils.ErrorScreen
 import app.cooperativa.presentation.utils.LoadingScreen
+import app.cooperativa.presentation.utils.TicketFullScreenViewer
 import app.cooperativa.theme.CoopTheme
 import app.cooperativa.theme.components.CoopButton
 import app.cooperativa.theme.components.CoopIcon
@@ -46,8 +50,8 @@ import app.cooperativa.theme.components.CoopOutlinedCard
 import app.cooperativa.theme.components.CoopOutlinedTextField
 import app.cooperativa.theme.components.CoopText
 import app.cooperativa.theme.components.CoopTopBar
-import app.cooperativa.theme.utils.dateToString
 import app.cooperativa.utils.formatMoney
+import coil3.compose.AsyncImage
 import org.koin.compose.koinInject
 import org.koin.core.parameter.parametersOf
 
@@ -78,10 +82,15 @@ fun DPendingPayRoute(
         }
         state.payment != null -> {
             DPendingPayScreen(
+                ticketUrl = state.ticketUrl,
+                ticketBytes = state.ticketBytes,
+                showTicketViewer = state.showTicketViewer,
                 payment = state.payment!!,
                 isLoading = state.isLoading,
                 commentInput = state.commentInput,
                 showRejectDialog = state.showRejectDialog,
+                onCloseTicketViewer = viewModel::closeTicketViewer,
+                onOpenTicketViewer = viewModel::openTicketViewer,
                 onCommentChange = viewModel::onCommentChange,
                 onApprove = viewModel::onApprove,
                 onReject = viewModel::onReject,
@@ -95,6 +104,11 @@ fun DPendingPayRoute(
 
 @Composable
 fun DPendingPayScreen(
+    ticketUrl: String?,
+    ticketBytes: ByteArray?,
+    onCloseTicketViewer: () -> Unit,
+    onOpenTicketViewer: () -> Unit,
+    showTicketViewer: Boolean,
     isLoading: Boolean,
     payment: Payment,
     commentInput: String,
@@ -110,7 +124,7 @@ fun DPendingPayScreen(
     Scaffold(
         topBar = {
             CoopTopBar(
-                title = payment.paymentName,
+                title = payment.name,
                 leadingArrow = true,
                 onBackClick = onBackClick,
                 modifier = Modifier.padding(bottom = 4.dp)
@@ -125,60 +139,85 @@ fun DPendingPayScreen(
                 .padding(vertical = 6.dp, horizontal = 8.dp)
                 .verticalScroll(rememberScrollState())
         ) {
+            val hasTicket = (ticketUrl != null) || (ticketBytes != null)
+
             DPendingBasicInfoCard(payment)
 
-            // Cuotas
-            payment.quotas.orEmpty().takeIf { it.isNotEmpty() }?.let { list ->
+            // Secciones derivadas de beingPayed
+            val cuotas = payment.beingPayed.orEmpty().filter { it.modelType == "QUOTA" }
+            cuotas.takeIf { it.isNotEmpty() }?.let { list ->
                 DPendingSection(
                     title = "Cuotas",
-                    values = list.map { dateToString(it.date) to formatMoney(it.amount) }
+                    values = list.mapIndexed { index, item ->
+                        (index + 1).toString() to formatMoney(item.amount)
+                    }
                 )
             }
-            // Préstamos
-            payment.loanPayments.orEmpty().takeIf { it.isNotEmpty() }?.let { list ->
+
+            val prestamos = payment.beingPayed.orEmpty().filter { it.modelType == "LOAN" }
+            prestamos.takeIf { it.isNotEmpty() }?.let { list ->
                 DPendingSection(
                     title = "Préstamos",
-                    values = list.map { dateToString(it.date) to formatMoney(it.amountPayed) }
+                    values = list.mapIndexed { index, item ->
+                        (index + 1).toString() to formatMoney(item.amount)
+                    }
                 )
             }
-            // Multas
-            payment.finePayments.orEmpty().takeIf { it.isNotEmpty() }?.let { list ->
+
+            val multas = payment.beingPayed.orEmpty().filter { it.modelType == "FINE" }
+            multas.takeIf { it.isNotEmpty() }?.let { list ->
                 DPendingSection(
                     title = "Multas",
-                    values = list.map { it.fineName to formatMoney(it.amount) }
+                    values = list.mapIndexed { index, item ->
+                        (index + 1).toString() to formatMoney(item.amount)
+                    }
                 )
             }
-            // Aportes
-            payment.contributionPayments.orEmpty().takeIf { it.isNotEmpty() }?.let { list ->
+
+            val aportes = payment.beingPayed.orEmpty().filter { it.modelType == "QUOTA" }
+            aportes.takeIf { it.isNotEmpty() }?.let { list ->
                 DPendingSection(
                     title = "Aportes",
-                    values = list.map { it.user to formatMoney(it.amount) }
+                    values = list.mapIndexed { index, item ->
+                        (index + 1).toString() to formatMoney(item.amount)
+                    }
                 )
             }
 
             // Imagen
-            Box(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(160.dp)
-                    .padding(16.dp)
-                    .background(CoopTheme.colorScheme.surface, RoundedCornerShape(16.dp))
-                    .border(1.dp, CoopTheme.colorScheme.primary, RoundedCornerShape(16.dp)),
-                contentAlignment = Alignment.Center
-            ) {
-                CoopIcon(
-                    Icons.Default.Wallpaper,
-                    contentDescription = "Imagen boleta",
-                    tint = CoopTheme.colorScheme.primary,
-                    modifier = Modifier.size(100.dp)
+            if (hasTicket) {
+                AsyncImage(
+                    model = ticketUrl ?: ticketBytes,
+                    contentDescription = "Comprobante",
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(200.dp)
+                        .padding(16.dp)
+                        .clip(RoundedCornerShape(16.dp)),
+                    contentScale = ContentScale.Crop
                 )
+            } else {
+                Box(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(160.dp)
+                        .padding(16.dp)
+                        .background(CoopTheme.colorScheme.surface, RoundedCornerShape(16.dp))
+                        .border(1.dp, CoopTheme.colorScheme.primary, RoundedCornerShape(16.dp)),
+                    contentAlignment = Alignment.Center
+                ) {
+                    CoopIcon(
+                        Icons.Default.Wallpaper,
+                        contentDescription = "Imagen boleta",
+                        tint = CoopTheme.colorScheme.primary,
+                        modifier = Modifier.size(100.dp)
+                    )
+                }
             }
 
             // Boton de ver boleta
             CoopButton(
-                onClick = {
-                    /* TODO */
-                },
+                onClick = { onOpenTicketViewer() },
                 modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp),
                 shape = RoundedCornerShape(16.dp),
                 colors = ButtonDefaults.buttonColors(
@@ -227,6 +266,13 @@ fun DPendingPayScreen(
                     onCommentChange = onCommentChange,
                     onConfirm = onReject,
                     onDismiss = onCloseRejectDialog
+                )
+            }
+
+            if (showTicketViewer) {
+                TicketFullScreenViewer(
+                    model = ticketUrl ?: ticketBytes,
+                    onDismiss = onCloseTicketViewer
                 )
             }
         }
@@ -319,25 +365,20 @@ private fun RejectPaymentDialog(
 
 @Composable
 private fun DPendingBasicInfoCard(payment: Payment) {
-    val total = (
-            payment.quotas.orEmpty().sumOf { it.amount.toDouble() } +
-                    payment.loanPayments.orEmpty().sumOf { it.amountPayed.toDouble() } +
-                    payment.finePayments.orEmpty().sumOf { it.amount.toDouble() } +
-                    payment.contributionPayments.orEmpty().sumOf { it.amount.toDouble() }
-            ).toFloat()
+    val totalFromItems = payment.beingPayed.orEmpty().sumOf { it.amount.toDouble() }.toFloat()
 
     CoopOutlinedCard(modifier = Modifier.padding(vertical = 10.dp, horizontal = 16.dp)) {
         Column(Modifier.padding(16.dp), verticalArrangement = Arrangement.spacedBy(8.dp)) {
-            InfoRow("Nombre del pago", payment.paymentName)
-            InfoRow("Presentado por",  payment.userName)
-            InfoRow("Fecha presentada", dateToString(payment.paymentDate))
-            InfoRow("Nº de boleta",    payment.receiptNumber ?: "—")
-            InfoRow("Nº de cuenta",    payment.accountNumber ?: "—")
+            InfoRow("Nombre del pago", payment.name)
+            InfoRow("Presentado por",  payment.presentedByName)
+            InfoRow("Fecha presentada", payment.paymentDate)
+            InfoRow("Nº de boleta",    payment.ticketNum)
+            InfoRow("Nº de cuenta",    payment.accountNum)
 
             Spacer(Modifier.height(4.dp))
             InfoRow(
                 label = "Monto total",
-                value = if(total != 0f) formatMoney(total) else formatMoney(payment.totalAmount),
+                value = if (totalFromItems > 0f) formatMoney(totalFromItems) else formatMoney(payment.totalAmount),
                 valueColor = CoopTheme.colorScheme.onSecondary
             )
         }
