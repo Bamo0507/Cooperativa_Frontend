@@ -2,12 +2,18 @@ query GetAllPayments {
     getAllPayments {
         id
         name
+        presentedByName
         paymentDate
-        state
-        totalAmount
-        ticketNum
-        accountNum
         photoPath
+        state
+        ticketNum
+        totalAmount
+        accountNum
         commentary
+        beingPayed {
+            modelKey
+            modelType
+            amount
+        }
     }
 }

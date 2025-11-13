@@ -1,21 +1,19 @@
-mutation ApproveOrRejectPayment(
-    $id: String!,
-    $newState: String!,
-    $commentary: String!
-) {
-    approveOrRejectPayment(
-        id: $id,
-        newState: $newState,
-        commentary: $commentary
-    ) {
+mutation ApproveOrRejectPayment($id: String!, $newState: String!, $commentary: String!) {
+    approveOrRejectPayment(id: $id, newState: $newState, commentary: $commentary) {
         id
-        state
-        commentary
-        accountNum
         name
+        presentedByName
         paymentDate
         photoPath
+        state
         ticketNum
         totalAmount
+        accountNum
+        commentary
+        beingPayed {
+            modelKey
+            modelType
+            amount
+        }
     }
 }

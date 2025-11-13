@@ -47,7 +47,7 @@ class DirectivePaymentsRepository(
                 BasicInfoPayment(
                     id = p.id,
                     paymentName = p.name,
-                    username = "User - ${p.totalAmount}",
+                    username = p.presentedByName,
                     dateOfPayment = p.paymentDate,
                     isPaymentPending = (p.state == PaymentStatus.ON_REVISION)
                 )

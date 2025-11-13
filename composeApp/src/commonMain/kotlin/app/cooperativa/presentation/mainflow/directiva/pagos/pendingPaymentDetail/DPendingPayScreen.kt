@@ -23,6 +23,7 @@ import androidx.compose.material.icons.filled.Wallpaper
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -46,7 +47,6 @@ import app.cooperativa.theme.components.CoopOutlinedCard
 import app.cooperativa.theme.components.CoopOutlinedTextField
 import app.cooperativa.theme.components.CoopText
 import app.cooperativa.theme.components.CoopTopBar
-import app.cooperativa.theme.utils.dateToString
 import app.cooperativa.utils.formatMoney
 import org.koin.compose.koinInject
 import org.koin.core.parameter.parametersOf
@@ -110,7 +110,7 @@ fun DPendingPayScreen(
     Scaffold(
         topBar = {
             CoopTopBar(
-                title = payment.paymentName,
+                title = payment.name,
                 leadingArrow = true,
                 onBackClick = onBackClick,
                 modifier = Modifier.padding(bottom = 4.dp)
@@ -127,32 +127,44 @@ fun DPendingPayScreen(
         ) {
             DPendingBasicInfoCard(payment)
 
-            // Cuotas
-            payment.quotas.orEmpty().takeIf { it.isNotEmpty() }?.let { list ->
+            // Secciones derivadas de beingPayed
+            val cuotas = payment.beingPayed.orEmpty().filter { it.modelType == "QUOTA" }
+            cuotas.takeIf { it.isNotEmpty() }?.let { list ->
                 DPendingSection(
                     title = "Cuotas",
-                    values = list.map { dateToString(it.date) to formatMoney(it.amount) }
+                    values = list.mapIndexed { index, item ->
+                        (index + 1).toString() to formatMoney(item.amount)
+                    }
                 )
             }
-            // Préstamos
-            payment.loanPayments.orEmpty().takeIf { it.isNotEmpty() }?.let { list ->
+
+            val prestamos = payment.beingPayed.orEmpty().filter { it.modelType == "LOAN" }
+            prestamos.takeIf { it.isNotEmpty() }?.let { list ->
                 DPendingSection(
                     title = "Préstamos",
-                    values = list.map { dateToString(it.date) to formatMoney(it.amountPayed) }
+                    values = list.mapIndexed { index, item ->
+                        (index + 1).toString() to formatMoney(item.amount)
+                    }
                 )
             }
-            // Multas
-            payment.finePayments.orEmpty().takeIf { it.isNotEmpty() }?.let { list ->
+
+            val multas = payment.beingPayed.orEmpty().filter { it.modelType == "FINE" }
+            multas.takeIf { it.isNotEmpty() }?.let { list ->
                 DPendingSection(
                     title = "Multas",
-                    values = list.map { it.fineName to formatMoney(it.amount) }
+                    values = list.mapIndexed { index, item ->
+                        (index + 1).toString() to formatMoney(item.amount)
+                    }
                 )
             }
-            // Aportes
-            payment.contributionPayments.orEmpty().takeIf { it.isNotEmpty() }?.let { list ->
+
+            val aportes = payment.beingPayed.orEmpty().filter { it.modelType == "QUOTA" }
+            aportes.takeIf { it.isNotEmpty() }?.let { list ->
                 DPendingSection(
                     title = "Aportes",
-                    values = list.map { it.user to formatMoney(it.amount) }
+                    values = list.mapIndexed { index, item ->
+                        (index + 1).toString() to formatMoney(item.amount)
+                    }
                 )
             }
 
@@ -319,25 +331,20 @@ private fun RejectPaymentDialog(
 
 @Composable
 private fun DPendingBasicInfoCard(payment: Payment) {
-    val total = (
-            payment.quotas.orEmpty().sumOf { it.amount.toDouble() } +
-                    payment.loanPayments.orEmpty().sumOf { it.amountPayed.toDouble() } +
-                    payment.finePayments.orEmpty().sumOf { it.amount.toDouble() } +
-                    payment.contributionPayments.orEmpty().sumOf { it.amount.toDouble() }
-            ).toFloat()
+    val totalFromItems = payment.beingPayed.orEmpty().sumOf { it.amount.toDouble() }.toFloat()
 
     CoopOutlinedCard(modifier = Modifier.padding(vertical = 10.dp, horizontal = 16.dp)) {
         Column(Modifier.padding(16.dp), verticalArrangement = Arrangement.spacedBy(8.dp)) {
-            InfoRow("Nombre del pago", payment.paymentName)
-            InfoRow("Presentado por",  payment.userName)
-            InfoRow("Fecha presentada", dateToString(payment.paymentDate))
-            InfoRow("Nº de boleta",    payment.receiptNumber ?: "—")
-            InfoRow("Nº de cuenta",    payment.accountNumber ?: "—")
+            InfoRow("Nombre del pago", payment.name)
+            InfoRow("Presentado por",  payment.presentedByName)
+            InfoRow("Fecha presentada", payment.paymentDate)
+            InfoRow("Nº de boleta",    payment.ticketNum)
+            InfoRow("Nº de cuenta",    payment.accountNum)
 
             Spacer(Modifier.height(4.dp))
             InfoRow(
                 label = "Monto total",
-                value = if(total != 0f) formatMoney(total) else formatMoney(payment.totalAmount),
+                value = if (totalFromItems > 0f) formatMoney(totalFromItems) else formatMoney(payment.totalAmount),
                 valueColor = CoopTheme.colorScheme.onSecondary
             )
         }

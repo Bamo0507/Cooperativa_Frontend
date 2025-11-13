@@ -64,6 +64,12 @@ input PayedToInput {
   amount: Float!
 }
 
+type PayedTo {
+  modelKey: String!
+  modelType: String!
+  amount: Float!
+}
+
 type Loan {
   id: String!
   presentedByName: String!
@@ -113,7 +119,7 @@ type UserPayment {
   totalAmount: Float!
   accountNum: String!
   presentedByName: String!
-  beingPayed: [PayedToInput!]!
+  beingPayed: [PayedTo!]!
 }
 
 enum FineStatus {

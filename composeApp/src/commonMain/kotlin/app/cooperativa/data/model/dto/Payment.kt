@@ -1,7 +1,6 @@
 package app.cooperativa.data.model.dto
 
 import app.cooperativa.graphql.type.PaymentStatus
-import kotlinx.datetime.LocalDate
 
 data class Payment(
     val id: String,
@@ -14,5 +13,5 @@ data class Payment(
     val photoPath: String,
     val totalAmount: Float,
     val accountNum: String,
-    val beingPayed: List<PayedToInput> = emptyList()
+    val beingPayed: List<PayedToEntry> = emptyList()
 )

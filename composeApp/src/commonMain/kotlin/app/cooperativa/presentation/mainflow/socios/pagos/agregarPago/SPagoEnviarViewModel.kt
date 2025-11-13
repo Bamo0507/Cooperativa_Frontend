@@ -11,7 +11,6 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import app.cooperativa.data.model.dto.CapitalContribution
-import app.cooperativa.data.model.dto.PayedToInput
 import app.cooperativa.domain.localstorage.PreferencesLocalStorage
 import app.cooperativa.domain.share.convertToJpeg
 import app.cooperativa.graphql.type.PayedToInput
@@ -243,7 +242,7 @@ class SPagoEnviarViewModel(
 
                 repository.createUserPayment(
                     accessToken = accessToken,
-                    comprobantePath = ticketId, // ← clave
+                    comprobantePath = ticketId,
                     name = _uiState.value.nombrePago.ifBlank { "Pago" },
                     totalAmount = _uiState.value.montoActualDeclarado,
                     ticketNumber = _uiState.value.numeroBoleta,
@@ -263,14 +262,14 @@ class SPagoEnviarViewModel(
         val fromCuotas = state.selectedCuotas.map { c ->
             PayedToInput(
                 modelKey = c.idCuota.toString(),
-                modelType = "AFILIADO",
+                modelType = "QUOTA",
                 amount = c.montoCuota.toDouble()
             )
         }
         val fromLoans = state.selectedLoanQuotas.map { l ->
             PayedToInput(
                 modelKey = l.id.toString(),
-                modelType = "PRESTAMO",
+                modelType = "LOAN",
                 amount = l.monto.toDouble()
             )
         }
@@ -284,7 +283,7 @@ class SPagoEnviarViewModel(
         val fromCapital = state.aportesCapital.map { a ->
             PayedToInput(
                 modelKey = a.userId.toString(),
-                modelType = "CAPITAL",
+                modelType = "QUOTA",
                 amount = a.amount.toDouble()
             )
         }
