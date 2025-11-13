@@ -210,7 +210,8 @@ fun SPagoEnviarScreen(
             )
         } else if (state.errorMessage != null) {
             ErrorScreen(
-                message = "Error al cargar información.",
+//                message = "Error al cargar información.",
+                message = state.errorMessage,
                 onRetry = loadData
             )
         } else {

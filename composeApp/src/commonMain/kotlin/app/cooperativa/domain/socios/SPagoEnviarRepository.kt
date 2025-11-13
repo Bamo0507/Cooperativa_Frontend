@@ -13,9 +13,13 @@ import app.cooperativa.graphql.type.FineStatus
 import com.apollographql.apollo3.ApolloClient
 import io.ktor.client.HttpClient
 import io.ktor.client.call.body
+import io.ktor.client.request.forms.MultiPartFormDataContent
+import io.ktor.client.request.forms.formData
 import io.ktor.client.request.post
 import io.ktor.client.request.setBody
 import io.ktor.http.ContentType
+import io.ktor.http.Headers
+import io.ktor.http.HttpHeaders
 import io.ktor.http.contentType
 import io.ktor.http.isSuccess
 
@@ -43,12 +47,29 @@ class SociosPagoEnviarRepository(
 ) : SPagoEnviarRepository {
     override suspend fun uploadTicket(accessToken: String, jpegBytes: ByteArray): String {
         val url = "https://dev.cooperativa-isp.cc/general/upload_ticket_payment"
+
         val resp = http.post(url) {
-            url {
-                parameters.append("access_token", accessToken)
-            }
-            contentType(ContentType.Image.JPEG)
-            setBody(jpegBytes) // cuerpo = bytes JPEG
+            url { parameters.append("access_token", accessToken) }
+
+            // NO pongas contentType a nivel de request. Deja que multipart lo establezca.
+            setBody(
+                MultiPartFormDataContent(
+                    formData {
+                        // Nombre de campo típico: "file" (ajústalo si tu backend usa otro nombre)
+                        append(
+                            key = "file",
+                            value = jpegBytes,
+                            headers = Headers.build {
+                                append(
+                                    HttpHeaders.ContentDisposition,
+                                    """form-data; name="file"; filename="ticket.jpeg""""
+                                )
+                                append(HttpHeaders.ContentType, ContentType.Image.JPEG.toString())
+                            }
+                        )
+                    }
+                )
+            )
         }
 
         if (!resp.status.isSuccess()) {

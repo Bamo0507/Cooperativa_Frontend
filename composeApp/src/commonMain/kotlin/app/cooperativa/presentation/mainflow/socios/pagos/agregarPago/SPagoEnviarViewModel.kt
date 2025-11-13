@@ -170,7 +170,9 @@ class SPagoEnviarViewModel(
 
             try {
                 val hasSentPayment = prefs.hasSentPayment()
-                val accessToken = prefs.getAccessToken().orEmpty()
+//                val accessToken = prefs.getAccessToken().orEmpty()
+                //TODO: remove until backend fixes problems
+                val accessToken = "51AD3720C2EBE517575CF9C3E74A61A5F78A6F08B28B8CA5692830633C9665B2"
 
                 // Si no hay token, dejamos todo vacío
                 if (accessToken.isBlank()) {
