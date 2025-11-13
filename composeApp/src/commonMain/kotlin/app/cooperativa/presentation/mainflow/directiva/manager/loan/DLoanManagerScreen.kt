@@ -23,6 +23,7 @@ import org.koin.compose.koinInject
 @Composable
 fun DLoanManagerRoute(
     onBackClick: () -> Unit,
+    onBackWithConfettiClick: () -> Unit,
     viewModel: DLoanManagerViewModel = koinInject()
 ) {
     val state by viewModel.uiState.collectAsStateWithLifecycle()
@@ -33,7 +34,12 @@ fun DLoanManagerRoute(
         updateLoanReason = viewModel::updateLoanReason,
         updateAmount = viewModel::updateAmount,
         updateInterest = viewModel::updateInterest,
+        updateTotalQuota = viewModel::updateTotalQuota,
         selectedAffiliate = viewModel::updateAffiliate,
+        onSubmit = {
+            viewModel.submitLoan()
+            onBackWithConfettiClick()
+        },
         onBackClick = onBackClick
     )
 }
@@ -45,10 +51,19 @@ fun DLoanManagerScreen(
     updateLoanReason: (String) -> Unit,
     updateAmount: (String) -> Unit,
     updateInterest: (String) -> Unit,
+    updateTotalQuota: (String) -> Unit,
     selectedAffiliate: (affiliateName: String, affiliateId: String) -> Unit,
+    onSubmit: () -> Unit,
     onBackClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
+    val formValid =
+        state.affiliateId.isNotBlank() &&
+                state.loanReason.isNotBlank() &&
+                state.amount > 0f &&
+                state.interest >= 0f &&
+                state.totalQuota > 0
+
     Scaffold(
         topBar = {
             CoopTopBar(
@@ -106,7 +121,7 @@ fun DLoanManagerScreen(
                             value = state.amountText,
                             onValueChange = updateAmount,
                             placeholder = { Text("0.00") },
-                            prefix = { Text("Q ") },
+                            prefix = { Text(text = "Q ", color = CoopTheme.colorScheme.onSurface) },
                             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Decimal),
                             singleLine = true,
                             digitsOnly = true,
@@ -122,7 +137,7 @@ fun DLoanManagerScreen(
                             value = state.interestText,
                             onValueChange = updateInterest,
                             placeholder = { Text("0.00") },
-                            prefix = { Text("% ") },
+                            prefix = { Text("% ", color = CoopTheme.colorScheme.onSurface) },
                             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Decimal),
                             singleLine = true,
                             digitsOnly = true,
@@ -133,13 +148,32 @@ fun DLoanManagerScreen(
                         )
                     }
 
+                    LabeledField("Cuotas") {
+                        CoopOutlinedTextField(
+                            value = state.totalQuotaText,
+                            onValueChange = updateTotalQuota,
+                            placeholder = { Text("0") },
+                            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
+                            singleLine = true,
+                            digitsOnly = true,
+                            allowDecimal = false,
+                            allowNegative = false,
+                            unfocusedBorderColor = CoopTheme.colorScheme.primary
+                        )
+                    }
+
                     Spacer(Modifier.weight(1f))
 
                     Box(
                         contentAlignment = Alignment.BottomEnd,
-                        modifier = Modifier.fillMaxWidth().padding(bottom = 20.dp)
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(bottom = 20.dp)
                     ) {
-                        CoopButton(onClick = { /* TODO: submit */ }) {
+                        CoopButton(
+                            onClick = onSubmit,
+                            enabled = formValid && !state.isLoading
+                        ) {
                             Row(
                                 horizontalArrangement = Arrangement.SpaceAround,
                                 verticalAlignment = Alignment.CenterVertically
@@ -150,7 +184,7 @@ fun DLoanManagerScreen(
                                     tint = CoopTheme.colorScheme.onPrimary
                                 )
                                 Spacer(Modifier.width(12.dp))
-                                CoopText(
+                                Text(
                                     text = "Registrar",
                                     color = CoopTheme.colorScheme.onPrimary,
                                     style = CoopTheme.typography.bodyMedium

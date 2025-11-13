@@ -8,11 +8,13 @@ import kotlinx.serialization.Serializable
 data object DLoanManagerDestination
 
 fun NavGraphBuilder.loanForm(
-    onBackClick: () -> Unit
+    onBackClick: () -> Unit,
+    onBackWithConfettiClick: () -> Unit,
 ){
     composable<DLoanManagerDestination> {
         DLoanManagerRoute(
-            onBackClick = onBackClick
+            onBackClick = onBackClick,
+            onBackWithConfettiClick = onBackWithConfettiClick
         )
     }
 }

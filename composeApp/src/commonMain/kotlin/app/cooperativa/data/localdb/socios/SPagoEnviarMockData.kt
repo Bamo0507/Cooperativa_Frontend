@@ -3,6 +3,7 @@ package app.cooperativa.data.localdb.socios
 import app.cooperativa.data.model.dto.BasicUserInfo
 import app.cooperativa.data.model.dto.LoanQuota
 import app.cooperativa.data.model.dto.QuotaAffiliate
+import app.cooperativa.data.model.dto.FinePayAffiliate
 
 object SPagoEnviarMockData {
     private val mockCuotas = listOf(
@@ -54,6 +55,30 @@ object SPagoEnviarMockData {
         )
     )
 
+    // Multas por usuario (solo a modo de ejemplo)
+    private val mockFinesByUser: Map<Int, List<FinePayAffiliate>> = mapOf(
+        1 to listOf(
+            FinePayAffiliate(
+                id = "F-101",
+                fineName = "Mora por atraso de pago (Enero)",
+                fineAmount = 25f
+            ),
+            FinePayAffiliate(
+                id = "F-102",
+                fineName = "Mora por atraso de pago (Febrero)",
+                fineAmount = 30f
+            )
+        ),
+        2 to listOf(
+            FinePayAffiliate(
+                id = "F-201",
+                fineName = "Mora por atraso de pago (Marzo)",
+                fineAmount = 20f
+            )
+        ),
+        3 to emptyList()
+    )
+
     fun getCuotasMensualesPendientes(): List<QuotaAffiliate> =
         mockCuotas
 
@@ -63,4 +88,17 @@ object SPagoEnviarMockData {
 
     fun getAllUsers(): List<BasicUserInfo> =
         mockUsers
+
+    /**
+     * Devuelve las multas relacionadas a los userIds proporcionados.
+     * Si un usuario no tiene multas registradas, se ignora.
+     */
+    fun getPagoMultasByQuotasUser(userIds: List<Int>): List<FinePayAffiliate> =
+        userIds.flatMap { mockFinesByUser[it].orEmpty() }
+
+    /**
+     * Conveniencia: devuelve multas para un único usuario.
+     */
+    fun getPagoMultasByUser(userId: Int): List<FinePayAffiliate> =
+        getPagoMultasByQuotasUser(listOf(userId))
 }

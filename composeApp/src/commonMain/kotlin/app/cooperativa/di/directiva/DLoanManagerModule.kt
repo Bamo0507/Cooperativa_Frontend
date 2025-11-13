@@ -9,7 +9,10 @@ import org.koin.dsl.module
 
 val dloanmanagermodule = module {
     single<DLoanManagerRepository> {
-        DirectiveLoanManagerRepository(get<ApolloClient>(named("payment")))
+        DirectiveLoanManagerRepository(
+            apolloPayment = get<ApolloClient>(named("payment")),
+            apolloLoan = get<ApolloClient>(named("loan"))
+        )
     }
     factory { DLoanManagerViewModel(get()) }
 }

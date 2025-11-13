@@ -44,6 +44,13 @@ fun NavGraphBuilder.dManagerNavGraph(
         loanForm(
             onBackClick = {
                 navController.navigateUp()
+            },
+            onBackWithConfettiClick = {
+                navController.previousBackStackEntry
+                    ?.savedStateHandle
+                    ?.set(NavResultKeys.CONFETTI, true)
+
+                navController.navigateUp()
             }
         )
     }

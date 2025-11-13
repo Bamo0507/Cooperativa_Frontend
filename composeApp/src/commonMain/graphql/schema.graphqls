@@ -1,5 +1,6 @@
 type Query {
   getHistory(accessToken: String!): History
+  getUserLoans(accessToken: String!): [Loan!]
 
   getAllMembers: [Member!]!
 
@@ -34,6 +35,14 @@ type Mutation {
     motive: String!
   ): String!
 
+  createUserLoan(
+    affiliateKey: String!,
+    totalQuota: Int!,
+    baseNeededPayment: Float!,
+    interestRate: Float!,
+    reason: String!
+  ): String!
+
   editFine(
     fineKey: String!,
     newAmount: Float,
@@ -52,6 +61,18 @@ input PayedTo {
   modelKey: String!
   modelType: String!
   amount: Float!
+}
+
+type Loan {
+  id: String!
+  presentedByName: String!
+  reason: String!
+  total: Float!
+  payed: Float!
+  debt: Float!
+  interestRate: Float!
+  quotas: Int!
+  status: String!
 }
 
 # General

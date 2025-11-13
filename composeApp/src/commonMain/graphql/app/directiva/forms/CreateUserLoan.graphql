@@ -1,0 +1,15 @@
+mutation CreateUserLoan(
+    $affiliateKey: String!,
+    $totalQuota: Int!,
+    $baseNeededPayment: Float!,
+    $interestRate: Float!,
+    $reason: String!
+) {
+    createUserLoan(
+        affiliateKey: $affiliateKey,
+        totalQuota: $totalQuota,
+        baseNeededPayment: $baseNeededPayment,
+        interestRate: $interestRate,
+        reason: $reason
+    )
+}

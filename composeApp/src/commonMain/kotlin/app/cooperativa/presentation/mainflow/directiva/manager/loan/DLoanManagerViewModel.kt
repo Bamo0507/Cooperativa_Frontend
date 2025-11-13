@@ -58,6 +58,12 @@ class DLoanManagerViewModel(
         _uiState.update { it.copy(interestText = clean, interest = parsed) }
     }
 
+    fun updateTotalQuota(text: String) {
+        val digits = text.filter { it.isDigit() }.take(3) // tope sensato
+        val parsed = digits.toIntOrNull() ?: 0
+        _uiState.update { it.copy(totalQuotaText = digits, totalQuota = parsed) }
+    }
+
     private fun sanitizeDecimal(input: String, maxDecimals: Int): String {
         val normalized = input.replace(',', '.')
         var dotSeen = false
@@ -76,6 +82,38 @@ class DLoanManagerViewModel(
                         append('.'); dotSeen = true; decimals = 0
                     }
                 }
+            }
+        }
+    }
+
+    private fun isFormValid(state: DLoanManagerState): Boolean {
+        return state.affiliateId.isNotBlank() &&
+                state.loanReason.isNotBlank() &&
+                state.amount > 0f &&
+                state.interest >= 0f &&
+                state.totalQuota > 0
+    }
+
+    fun submitLoan() {
+        val s = _uiState.value
+        if (!isFormValid(s)) {
+            _uiState.update { it.copy(errorMessage = "Completa los campos requeridos") }
+            return
+        }
+
+        viewModelScope.launch {
+            _uiState.update { it.copy(isLoading = true, errorMessage = null) }
+            try {
+                repository.submitLoan(
+                    affiliateKey = s.affiliateId,
+                    totalQuota = s.totalQuota,
+                    baseNeededPayment = s.amount,
+                    interestRate = s.interest, // 12.00 => 12%
+                    reason = s.loanReason
+                )
+                _uiState.update { it.copy(isLoading = false) }
+            } catch (e: Exception) {
+                _uiState.update { it.copy(isLoading = false, errorMessage = e.message ?: "Error al crear el préstamo") }
             }
         }
     }

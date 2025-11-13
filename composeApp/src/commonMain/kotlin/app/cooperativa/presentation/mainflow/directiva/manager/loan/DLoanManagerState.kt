@@ -16,6 +16,10 @@ data class DLoanManagerState(
     val interest: Float = 12.0f,
     val interestText: String = "12.00",
 
+    val totalQuota: Int = 0,
+    val totalQuotaText: String = "",
+
+    // Control de UI
     val isLoading: Boolean = false,
-    val errorMessage: String? = null
+    val errorMessage: String? = null,
 )
