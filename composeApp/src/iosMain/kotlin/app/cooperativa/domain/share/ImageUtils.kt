@@ -10,13 +10,10 @@ import platform.UIKit.UIImage
 import platform.UIKit.UIImageJPEGRepresentation
 
 @OptIn(ExperimentalForeignApi::class)
-actual fun convertHeicToJpeg(heicBytes: ByteArray): ByteArray? {
-    val nsData = heicBytes.usePinned {
-        NSData.dataWithBytes(it.addressOf(0), heicBytes.size.toULong())!!
-    }
-
-    val uiImage = UIImage(data = nsData)
-    val jpegData: NSData? = UIImageJPEGRepresentation(uiImage, 1.0)
-
-    return jpegData?.toByteString()?.toByteArray()
+actual fun convertToJpeg(bytes: ByteArray, quality: Int): ByteArray {
+    val nsData = bytes.usePinned { NSData.dataWithBytes(it.addressOf(0), bytes.size.toULong())!! }
+    val image = UIImage(data = nsData) ?: return bytes
+    val q = (quality.coerceIn(60, 100).toDouble() / 100.0)
+    val jpeg = UIImageJPEGRepresentation(image, q) ?: return bytes
+    return jpeg.toByteString().toByteArray()
 }

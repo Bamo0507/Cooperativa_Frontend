@@ -14,7 +14,7 @@ mutation ApproveOrRejectPayment(
         accountNum
         name
         paymentDate
-        photo
+        photoPath
         ticketNum
         totalAmount
     }

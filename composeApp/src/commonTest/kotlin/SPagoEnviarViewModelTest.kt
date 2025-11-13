@@ -1,13 +1,12 @@
 package app.cooperativa.presentation.mainflow.socios.pagos.agregarPago
 
 import app.cooperativa.data.localdb.socios.SPagoEnviarMockData
-import app.cooperativa.data.model.dto.BasicUserInfo
 import app.cooperativa.data.model.dto.FinePayAffiliate
 import app.cooperativa.data.model.dto.LoanQuota
 import app.cooperativa.data.model.dto.QuotaAffiliate
 import app.cooperativa.data.preferences.FakeDataStore
 import app.cooperativa.domain.socios.SPagoEnviarRepository
-import app.cooperativa.graphql.type.PayedTo
+import app.cooperativa.graphql.type.PayedToInput
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.StandardTestDispatcher
@@ -39,7 +38,7 @@ class SPagoEnviarViewModelTest {
             totalAmount: Float,
             ticketNumber: String,
             accountNumber: String,
-            beingPayed: List<PayedTo>,
+            beingPayed: List<PayedToInput>,
         ): String = "OK-MOCK"
     }
 

@@ -11,12 +11,12 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import app.cooperativa.data.model.dto.CapitalContribution
+import app.cooperativa.data.model.dto.PayedToInput
 import app.cooperativa.domain.localstorage.PreferencesLocalStorage
-import app.cooperativa.domain.share.convertHeicToJpeg
-import app.cooperativa.graphql.type.PayedTo
+import app.cooperativa.domain.share.convertToJpeg
+import app.cooperativa.graphql.type.PayedToInput
 import com.mohamedrejeb.calf.core.PlatformContext
 import com.mohamedrejeb.calf.io.KmpFile
-import com.mohamedrejeb.calf.io.getPath
 import com.mohamedrejeb.calf.io.readByteArray
 import kotlinx.coroutines.flow.update
 
@@ -215,42 +215,35 @@ class SPagoEnviarViewModel(
 
     fun handleImagePicked(ctx: PlatformContext, image: KmpFile) {
         viewModelScope.launch {
-            val path = image.getPath(ctx) ?: ""
-            val isHeic = path.endsWith(".heic", ignoreCase = true) || path.endsWith(".heif", ignoreCase = true)
-
-            val originalBytes = image.readByteArray(ctx)
-
-            val processedBytes = if (isHeic) {
-                convertHeicToJpeg(originalBytes)
-            } else {
-                originalBytes
-            }
-
-            _uiState.update {
-                it.copy(
-                    bytesImagen = processedBytes
-                )
-            }
+            val original = image.readByteArray(ctx)
+            val jpeg = convertToJpeg(original) // SIEMPRE JPEG
+            _uiState.update { it.copy(bytesImagen = jpeg) }
         }
     }
 
     fun submitPayment() {
         viewModelScope.launch {
-            // Validación local (opcional pero útil)
             val ok = validateDeclaredAmount()
             if (!ok) return@launch
+
+            val image = _uiState.value.bytesImagen
+            if (image == null || image.isEmpty()) {
+                _uiState.update { it.copy(errorMessage = "Adjunta una imagen del comprobante") }
+                return@launch
+            }
 
             _uiState.update { it.copy(isLoading = true, errorMessage = null) }
 
             try {
                 val accessToken = prefs.getAccessToken().orEmpty()
 
-                // Construir beingPayed
+                val ticketId = repository.uploadTicket(accessToken, image)
+
                 val payedItems = buildBeingPayed(_uiState.value)
 
-                // Ejecutar mutación
-                val response = repository.createUserPayment(
+                repository.createUserPayment(
                     accessToken = accessToken,
+                    comprobantePath = ticketId, // ← clave
                     name = _uiState.value.nombrePago.ifBlank { "Pago" },
                     totalAmount = _uiState.value.montoActualDeclarado,
                     ticketNumber = _uiState.value.numeroBoleta,
@@ -258,7 +251,6 @@ class SPagoEnviarViewModel(
                     beingPayed = payedItems,
                 )
 
-                // Exito
                 _uiState.update { it.copy(isLoading = false, paymentSentSuccesffully = true) }
             } catch (e: Exception) {
                 _uiState.update { it.copy(isLoading = false, errorMessage = e.message ?: "Error enviando pago") }
@@ -266,30 +258,31 @@ class SPagoEnviarViewModel(
         }
     }
 
-    private fun buildBeingPayed(state: SPagoEnviarState): List<PayedTo> {
+
+    private fun buildBeingPayed(state: SPagoEnviarState): List<PayedToInput> {
         val fromCuotas = state.selectedCuotas.map { c ->
-            PayedTo(
-                modelKey = c.idCuota.toString(), // tú cargaste userId aquí
+            PayedToInput(
+                modelKey = c.idCuota.toString(),
                 modelType = "AFILIADO",
                 amount = c.montoCuota.toDouble()
             )
         }
         val fromLoans = state.selectedLoanQuotas.map { l ->
-            PayedTo(
+            PayedToInput(
                 modelKey = l.id.toString(),
                 modelType = "PRESTAMO",
                 amount = l.monto.toDouble()
             )
         }
         val fromFines = state.selectedFines.map { f ->
-            PayedTo(
+            PayedToInput(
                 modelKey = f.id,
                 modelType = "FINE",
                 amount = f.fineAmount.toDouble()
             )
         }
         val fromCapital = state.aportesCapital.map { a ->
-            PayedTo(
+            PayedToInput(
                 modelKey = a.userId.toString(),
                 modelType = "CAPITAL",
                 amount = a.amount.toDouble()

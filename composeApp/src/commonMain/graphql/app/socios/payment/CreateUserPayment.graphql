@@ -1,17 +1,19 @@
 mutation CreateUserPayment(
     $accessToken: String!,
+    $comprobantePath: String!,
     $name: String!,
     $totalAmount: Float!,
     $ticketNumber: String!,
     $accountNumber: String!,
-    $beingPayed: [PayedTo!]!,
+    $beingPayed: [PayedToInput!]!
 ) {
     response: createUserPayment(
         accessToken: $accessToken,
+        comprobantePath: $comprobantePath,
         name: $name,
         totalAmount: $totalAmount,
         ticketNumber: $ticketNumber,
         accountNumber: $accountNumber,
-        beingPayed: $beingPayed,
+        beingPayed: $beingPayed
     )
 }

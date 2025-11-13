@@ -1,8 +1,9 @@
 package app.cooperativa.domain.socios
 
+import app.cooperativa.core.network.ktor.dto.UploadTicketResponse
 import app.cooperativa.data.model.dto.FinePayAffiliate
 import app.cooperativa.data.model.dto.LoanQuota
-import app.cooperativa.graphql.type.PayedTo
+import app.cooperativa.graphql.type.PayedToInput
 import app.cooperativa.data.model.dto.QuotaAffiliate
 import app.cooperativa.graphql.CreateUserPaymentMutation
 import app.cooperativa.graphql.GetFinesByIdQuery
@@ -10,26 +11,55 @@ import app.cooperativa.graphql.GetMonthlyAffiliateQuotaQuery
 import app.cooperativa.graphql.GetPendingLoansQuotasQuery
 import app.cooperativa.graphql.type.FineStatus
 import com.apollographql.apollo3.ApolloClient
+import io.ktor.client.HttpClient
+import io.ktor.client.call.body
+import io.ktor.client.request.post
+import io.ktor.client.request.setBody
+import io.ktor.http.ContentType
+import io.ktor.http.contentType
+import io.ktor.http.isSuccess
 
 interface SPagoEnviarRepository {
     suspend fun getMonthlyAffiliateQuota(accessToken: String): List<QuotaAffiliate>
     suspend fun getPendingLoansQuotas(accessToken: String): List<LoanQuota>
     suspend fun getFinesByAccessToken(accessToken: String): List<FinePayAffiliate>
+    suspend fun uploadTicket(accessToken: String, jpegBytes: ByteArray): String
     suspend fun createUserPayment(
         accessToken: String,
+        comprobantePath: String,
         name: String,
         totalAmount: Float,
         ticketNumber: String,
         accountNumber: String,
-        beingPayed: List<PayedTo>,
+        beingPayed: List<PayedToInput>,
     ): String
 }
 
 class SociosPagoEnviarRepository(
     private val fineApollo: ApolloClient, // /graphql/fine
     private val quotaApollo: ApolloClient, // /graphql/quota
-    private val paymentApollo: ApolloClient // /graphql/payment
+    private val paymentApollo: ApolloClient, // /graphql/payment
+    private val http: HttpClient,
 ) : SPagoEnviarRepository {
+    override suspend fun uploadTicket(accessToken: String, jpegBytes: ByteArray): String {
+        val url = "https://dev.cooperativa-isp.cc/general/upload_ticket_payment"
+        val resp = http.post(url) {
+            url {
+                parameters.append("access_token", accessToken)
+            }
+            contentType(ContentType.Image.JPEG)
+            setBody(jpegBytes) // cuerpo = bytes JPEG
+        }
+
+        if (!resp.status.isSuccess()) {
+            throw RuntimeException("Upload ticket failed: ${resp.status.value}")
+        }
+
+        val dto = resp.body<UploadTicketResponse>()
+        val ticket = dto.ok?.ticketId
+        return ticket ?: throw RuntimeException("Respuesta inválida del upload (sin ticket_id)")
+    }
+
     override suspend fun getFinesByAccessToken(accessToken: String): List<FinePayAffiliate> {
         val response = fineApollo.query(
             GetFinesByIdQuery(accessToken = accessToken)
@@ -113,17 +143,19 @@ class SociosPagoEnviarRepository(
     // MUTATION 2 SEND PAYMENT
     override suspend fun createUserPayment(
         accessToken: String,
+        comprobantePath: String,
         name: String,
         totalAmount: Float,
         ticketNumber: String,
         accountNumber: String,
-        beingPayed: List<PayedTo>,
+        beingPayed: List<PayedToInput>,
     ): String {
         val resp = paymentApollo.mutation(
             CreateUserPaymentMutation(
                 accessToken = accessToken,
+                comprobantePath = comprobantePath,
                 name = name,
-                totalAmount = totalAmount.toDouble(), // Apollo usa Double en scalars Float
+                totalAmount = totalAmount.toDouble(),
                 ticketNumber = ticketNumber,
                 accountNumber = accountNumber,
                 beingPayed = beingPayed,
@@ -134,8 +166,6 @@ class SociosPagoEnviarRepository(
             val msg = resp.errors?.joinToString { it.message }.orEmpty()
             throw RuntimeException(msg.ifBlank { "Error GraphQL (createUserPayment)" })
         }
-
-        // la mutación devuelve String!, con alias "response"
         return resp.data?.response ?: throw RuntimeException("Respuesta vacía (createUserPayment)")
     }
 }

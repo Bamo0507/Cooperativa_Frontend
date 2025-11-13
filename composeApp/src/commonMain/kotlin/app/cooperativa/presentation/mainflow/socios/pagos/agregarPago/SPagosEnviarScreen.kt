@@ -179,18 +179,20 @@ fun SPagoEnviarScreen(
                     onClick = {
                         val basicInfoComplete =
                             state.nombrePago.isNotBlank() &&
-                            state.montoPagoText.isNotBlank() &&
-                            state.montoPago > 0f &&
-                            state.numberoCuenta.isNotBlank() &&
-                            state.numeroBoleta.isNotBlank()
+                                    state.montoPagoText.isNotBlank() &&
+                                    state.montoPago > 0f &&
+                                    state.numberoCuenta.isNotBlank() &&
+                                    state.numeroBoleta.isNotBlank()
 
                         val hasAnyItem =
                             state.selectedCuotas.isNotEmpty() ||
-                            state.selectedLoanQuotas.isNotEmpty() ||
-                            state.selectedFines.isNotEmpty() ||
-                            state.aportesCapital.isNotEmpty()
+                                    state.selectedLoanQuotas.isNotEmpty() ||
+                                    state.selectedFines.isNotEmpty() ||
+                                    state.aportesCapital.isNotEmpty()
 
-                        if (!basicInfoComplete || !hasAnyItem) {
+                        val hasImage = state.bytesImagen != null
+
+                        if (!basicInfoComplete || !hasAnyItem || !hasImage) {
                             showMissingInfoDialog = true
                         } else {
                             onSend()

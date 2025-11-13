@@ -1,7 +1,7 @@
 package app.cooperativa.data.model.dto
 
-data class PayedTo(
+data class PayedToInput(
     val modelKey: String,
     val modelType: String,
-    val amount: Float
+    val amount: Double
 )

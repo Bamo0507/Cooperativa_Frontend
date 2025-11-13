@@ -1,238 +1,126 @@
 package app.cooperativa.data.localdb.directiva
 
-import kotlinx.datetime.LocalDate
 import app.cooperativa.data.model.dto.Payment
-import app.cooperativa.data.model.dto.Quotas
-import app.cooperativa.data.model.dto.QuotaType
-import app.cooperativa.data.model.dto.LoanPayment
-import app.cooperativa.data.model.dto.FinePayment
-import app.cooperativa.data.model.dto.Contribution
 import app.cooperativa.data.model.ui.BasicInfoPayment
+import app.cooperativa.graphql.type.PaymentStatus
 
 object PaymentMockData {
 
+    // Mock data adaptada al nuevo modelo Payment
     private val mockPayments = listOf(
         Payment(
             id = "1",
-            paymentName = "Pago Préstamo Casa",
-            userName = "Juan Alberto Martínez Orellana",
-            paymentDate = LocalDate(2025, 5, 1),
-            quotas = listOf(
-                Quotas(
-                    userName = "Juan Alberto Martínez Orellana",
-                    amount = 250.0f,
-                    quotaType = QuotaType.ORDINARY,
-                    date = LocalDate(2025, 5, 1)
-                )
-            ),
-            loanPayments = listOf(
-                LoanPayment(
-                    loanName = "Préstamo Casa",
-                    userName = "Juan Alberto Martínez Orellana",
-                    amountPayed = 250.0f,
-                    numberOfPayment = 1,
-                    totalLoanPayments = 12,
-                    date = LocalDate(2025, 5, 1)
-                )
-            ),
-            dateOfPayment = LocalDate(2025, 5, 1).toString(),
-            paymentImage = "https://example.com/images/house_loan.png",
+            name = "Pago Préstamo Casa",
+            presentedByName = "Juan Alberto Martínez Orellana",
+            commentary = "Pago de la primera cuota del préstamo de la casa",
+            paymentDate = "2025-05-01",
+            state = PaymentStatus.ON_REVISION,           // antes isPaymentPending = true
+            ticketNum = "TCK-0001",
+            photoPath = "https://example.com/images/house_loan.png",
             totalAmount = 250.0f,
-            isPaymentPending = true
+            accountNum = "ACC-0001"
         ),
 
         Payment(
             id = "2",
-            paymentName = "Pago Tarjeta Crédito",
-            userName = "María Fernanda López",
-            paymentDate = LocalDate(2025, 4, 28),
-            quotas = listOf(
-                Quotas(
-                    userName = "María Fernanda López",
-                    amount = 150.0f,
-                    quotaType = QuotaType.ORDINARY,
-                    date = LocalDate(2025, 4, 28)
-                ),
-                Quotas(
-                    userName = "María Fernanda López",
-                    amount = 150.0f,
-                    quotaType = QuotaType.ORDINARY,
-                    date = LocalDate(2025, 4, 28)
-                )
-            ),
-            loanPayments = null,
-            dateOfPayment = LocalDate(2025, 4, 28).toString(),
-            paymentImage = "https://example.com/images/credit_card.png",
+            name = "Pago Tarjeta Crédito",
+            presentedByName = "María Fernanda López",
+            commentary = "Pago de tarjeta de crédito del mes",
+            paymentDate = "2025-04-28",
+            state = PaymentStatus.ACCEPTED,
+            ticketNum = "TCK-0002",
+            photoPath = "https://example.com/images/credit_card.png",
             totalAmount = 300.0f,
-            isPaymentPending = false
+            accountNum = "ACC-0002"
         ),
 
         Payment(
             id = "3",
-            paymentName = "Pago Préstamo Vehículo",
-            userName = "Carlos Eduardo Gómez",
-            paymentDate = LocalDate(2025, 5, 3),
-            quotas = null,
-            loanPayments = listOf(
-                LoanPayment(
-                    loanName = "Préstamo Vehículo",
-                    userName = "Carlos Eduardo Gómez",
-                    amountPayed = 300.0f,
-                    numberOfPayment = 3,
-                    totalLoanPayments = 24,
-                    date = LocalDate(2025, 5, 3)
-                )
-            ),
-            dateOfPayment = LocalDate(2025, 5, 3).toString(),
-            paymentImage = "https://example.com/images/car_loan.png",
+            name = "Pago Préstamo Vehículo",
+            presentedByName = "Carlos Eduardo Gómez",
+            commentary = "Cuota 3 de préstamo de vehículo",
+            paymentDate = "2025-05-03",
+            state = PaymentStatus.ON_REVISION,          // antes isPaymentPending = true
+            ticketNum = "TCK-0003",
+            photoPath = "https://example.com/images/car_loan.png",
             totalAmount = 300.0f,
-            isPaymentPending = true
+            accountNum = "ACC-0003"
         ),
 
         Payment(
             id = "4",
-            paymentName = "Pago Servicio Internet",
-            userName = "Ana Patricia Morales",
-            paymentDate = LocalDate(2025, 4, 30),
-            quotas = listOf(
-                Quotas(
-                    userName = "Ana Patricia Morales",
-                    amount = 40.0f,
-                    quotaType = QuotaType.EXTRAORDINARY,
-                    date = LocalDate(2025, 4, 30)
-                )
-            ),
-            loanPayments = null,
-            dateOfPayment = LocalDate(2025, 4, 30).toString(),
-            paymentImage = "https://example.com/images/internet_bill.png",
+            name = "Pago Servicio Internet",
+            presentedByName = "Ana Patricia Morales",
+            commentary = "Pago mensual de servicio de internet",
+            paymentDate = "2025-04-30",
+            state = PaymentStatus.ACCEPTED,        // antes isPaymentPending = false
+            ticketNum = "TCK-0004",
+            photoPath = "https://example.com/images/internet_bill.png",
             totalAmount = 40.0f,
-            isPaymentPending = false
+            accountNum = "ACC-0004"
         ),
 
         Payment(
             id = "5",
-            paymentName = "Pago Préstamo Estudiantil",
-            userName = "Luis Fernando Castillo",
-            paymentDate = LocalDate(2025, 5, 5),
-            quotas = listOf(
-                Quotas(
-                    userName = "Luis Fernando Castillo",
-                    amount = 100.0f,
-                    quotaType = QuotaType.ORDINARY,
-                    date = LocalDate(2025, 5, 5)
-                )
-            ),
-            loanPayments = listOf(
-                LoanPayment(
-                    loanName = "Préstamo Estudiantil",
-                    userName = "Luis Fernando Castillo",
-                    amountPayed = 100.0f,
-                    numberOfPayment = 2,
-                    totalLoanPayments = 10,
-                    date = LocalDate(2025, 5, 5)
-                )
-            ),
-            dateOfPayment = LocalDate(2025, 5, 5).toString(),
-            paymentImage = "https://example.com/images/student_loan.png",
+            name = "Pago Préstamo Estudiantil",
+            presentedByName = "Luis Fernando Castillo",
+            commentary = "Cuota de préstamo estudiantil",
+            paymentDate = "2025-05-05",
+            state = PaymentStatus.ACCEPTED,        // antes isPaymentPending = false
+            ticketNum = "TCK-0005",
+            photoPath = "https://example.com/images/student_loan.png",
             totalAmount = 100.0f,
-            isPaymentPending = false
+            accountNum = "ACC-0005"
         ),
 
         Payment(
             id = "6",
-            paymentName = "Pago Multa Tardanza",
-            userName = "Andrea Paola Jiménez",
-            paymentDate = LocalDate(2025, 5, 6),
-            quotas = null,
-            loanPayments = null,
-            finePayments = listOf(
-                FinePayment(
-                    user = "Andrea Paola Jiménez",
-                    fineName = "Tardanza en reunión",
-                    amount = 20.0f
-                )
-            ),
-            dateOfPayment = LocalDate(2025, 5, 6).toString(),
-            paymentImage = "https://example.com/images/late_fee.png",
+            name = "Pago Multa Tardanza",
+            presentedByName = "Andrea Paola Jiménez",
+            commentary = "Multa por tardanza en reunión",
+            paymentDate = "2025-05-06",
+            state = PaymentStatus.ON_REVISION,          // antes isPaymentPending = true
+            ticketNum = "TCK-0006",
+            photoPath = "https://example.com/images/late_fee.png",
             totalAmount = 20.0f,
-            isPaymentPending = true
+            accountNum = "ACC-0006"
         ),
 
         Payment(
             id = "7",
-            paymentName = "Pago Aporte Mensual",
-            userName = "Roberto Carlos Mejía",
-            paymentDate = LocalDate(2025, 5, 7),
-            quotas = null,
-            loanPayments = null,
-            contributionPayments = listOf(
-                Contribution(
-                    user = "Roberto Carlos Mejía",
-                    amount = 50.0f
-                )
-            ),
-            dateOfPayment = LocalDate(2025, 5, 7).toString(),
-            paymentImage = "https://example.com/images/contribution.png",
+            name = "Pago Aporte Mensual",
+            presentedByName = "Roberto Carlos Mejía",
+            commentary = "Aporte mensual a la cooperativa",
+            paymentDate = "2025-05-07",
+            state = PaymentStatus.ACCEPTED,        // antes isPaymentPending = false
+            ticketNum = "TCK-0007",
+            photoPath = "https://example.com/images/contribution.png",
             totalAmount = 50.0f,
-            isPaymentPending = false
+            accountNum = "ACC-0007"
         ),
 
         Payment(
             id = "8",
-            paymentName = "Pago Completo Prueba",
-            userName = "Sofía Gabriela Hernández",
-            paymentDate = LocalDate(2025, 5, 8),
-            quotas = listOf(
-                Quotas(
-                    userName = "Sofía Gabriela Hernández",
-                    amount = 200.0f,
-                    quotaType = QuotaType.ORDINARY,
-                    date = LocalDate(2025, 5, 8)
-                ),
-                Quotas(
-                    userName = "Sofía Gabriela Hernández",
-                    amount = 50.0f,
-                    quotaType = QuotaType.EXTRAORDINARY,
-                    date = LocalDate(2025, 5, 8)
-                )
-            ),
-            loanPayments = listOf(
-                LoanPayment(
-                    loanName = "Préstamo Personal",
-                    userName = "Sofía Gabriela Hernández",
-                    amountPayed = 300.0f,
-                    numberOfPayment = 5,
-                    totalLoanPayments = 12,
-                    date = LocalDate(2025, 5, 8)
-                )
-            ),
-            finePayments = listOf(
-                FinePayment(
-                    user = "Sofía Gabriela Hernández",
-                    fineName = "Incumplimiento de normas",
-                    amount = 35.0f
-                )
-            ),
-            contributionPayments = listOf(
-                Contribution(
-                    user = "Sofía Gabriela Hernández",
-                    amount = 75.0f
-                )
-            ),
-            paymentImage = "https://example.com/images/full_payment.png",
+            name = "Pago Completo Prueba",
+            presentedByName = "Sofía Gabriela Hernández",
+            commentary = "Pago con cuotas, préstamo, multa y aporte (ejemplo completo)",
+            paymentDate = "2025-05-08",
+            state = PaymentStatus.ON_REVISION,          // antes isPaymentPending = true
+            ticketNum = "TCK-0008",
+            photoPath = "https://example.com/images/full_payment.png",
             totalAmount = 660.0f,
-            isPaymentPending = true,
-            dateOfPayment = LocalDate(2025, 5, 8).toString(),
+            accountNum = "ACC-0008"
         ),
     )
 
     fun getAllPaymentsBasicInfo(): List<BasicInfoPayment> = mockPayments.map {
         BasicInfoPayment(
             id = it.id,
-            paymentName = it.paymentName,
-            username = it.userName,
-            isPaymentPending = it.isPaymentPending,
-            dateOfPayment = it.paymentDate.toString()
+            paymentName = it.name,
+            username = it.presentedByName,
+            // Derivamos el "pendiente" del estado
+            isPaymentPending = it.state == PaymentStatus.ON_REVISION,
+            dateOfPayment = it.paymentDate
         )
     }
 

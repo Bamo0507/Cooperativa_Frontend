@@ -7,7 +7,7 @@ query GetAllPayments {
         totalAmount
         ticketNum
         accountNum
-        photo
+        photoPath
         commentary
     }
 }

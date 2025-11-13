@@ -1,3 +1,3 @@
 package app.cooperativa.domain.share
 
-expect fun convertHeicToJpeg(heicBytes: ByteArray): ByteArray?
+expect fun convertToJpeg(bytes: ByteArray, quality: Int = 90): ByteArray
